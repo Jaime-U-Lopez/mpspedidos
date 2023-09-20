@@ -1,29 +1,218 @@
 .main {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6rem;
+  
   min-height: 100vh;
+  background-color: #fff
 }
 
-.description {
+
+.navmenu {
   display: inherit;
   justify-content: inherit;
   align-items: inherit;
   font-size: 0.85rem;
-  max-width: var(--max-width);
-  width: 100%;
+  width: auto;
+  margin: 3%;
+  margin-left: 3%;
   z-index: 2;
   font-family: var(--font-mono);
+  
 }
 
-.description a {
+
+
+
+
+.container {
+  display: flex;
+  justify-content: row;
+  width: 100%;
+  height: 100%;
+}
+ 
+
+.ventaderecha {
+  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  margin: 3%;
+  margin-left: 6%;
+  width: auto;
+  font-family: var(--font-mono);
+  border: 2p solid red;
+  color: #fed700;
+}
+
+
+
+.navBar {
+  display: flex;
+  justify-content: right;
+  
+  width: 100%;
+  
+  height: 20%;
+  padding: 0% !important;
+  margin: 0%;
+  z-index: 2;
+  font-family: var(--font-mono);
+  background-color: #fed700
+}
+.nav{
+
+  display: flex;
+  width: 100%;
+
+}
+
+
+.navBar img{
+  margin: auto;
+  margin-left: 2%;
+  
+}
+
+
+
+.navmenu a {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
+  margin: 5%;
+  width: 150%;
+  
+  border: 2px solid red;
+  border-radius: 1px;
+  padding: 10px 15px; /* Espaciado dentro del borde (ajusta según sea necesario) */
+  text-decoration: none; /* Elimina la subrayado predeterminado de los enlaces */
+
+  color: #fff; /* Color del texto (blanco en este caso) */
+  background-color: rgba(var(--callout-rgb), 0.5); 
+  border-radius: 5px; /* Bordes redondeados */
+  transition: background-color 0.3s, color 0.3s; /* Efecto de transición suave */
+  font-weight: bold; /* Texto en negrilla */
+  font-size: 16px;
+  border-color: black;
 }
+
+.navmenu  li {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+
+.navmenu a:hover {
+  background-color: #fed700; /* Cambia el color de fondo a rojo al pasar el mouse */
+  color: #000; /* Cambia el color del texto a negro al pasar el mouse */
+  font-weight: bold; /* Texto en negrilla */
+  border-radius: 5px; /* Bordes redondeados */
+
+}
+
+
+
+.navmenu a.grow:hover {
+  transform: scale(1.05); /* Hace que el enlace crezca ligeramente */
+}
+
+
+.FormPedidos{
+
+  color: #fed700;
+
+  width: auto;
+  font-family: var(--font-mono);
+
+}
+
+.FormPedidos h1{
+
+  color: rgb(32, 31, 31);
+}
+
+
+.FormPedidos a{
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 2%;
+  margin-left: 0%;
+  width: 30%;
+  
+  border: 2px solid black;
+  border-radius: 1px;
+  padding: 10px 15px; /* Espaciado dentro del borde (ajusta según sea necesario) */
+  text-decoration: none; /* Elimina la subrayado predeterminado de los enlaces */
+
+  color: #fff; /* Color del texto (blanco en este caso) */
+  background-color: rgba(var(--callout-rgb), 0.5); 
+  border-radius: 5px; /* Bordes redondeados */
+  transition: background-color 0.3s, color 0.3s; /* Efecto de transición suave */
+  font-weight: bold; /* Texto en negrilla */
+  font-size: 16px;
+  border-color: black;
+
+}
+
+
+.FormPedidos a:hover {
+  background-color: #fed700; /* Cambia el color de fondo a rojo al pasar el mouse */
+  color: #000; /* Cambia el color del texto a negro al pasar el mouse */
+  font-weight: bold; /* Texto en negrilla */
+  border-radius: 5px; /* Bordes redondeados */
+
+}
+
+.FormPedidos p{
+
+  color: red;
+  font-weight: bold;
+  font-family: var(--font-mono);
+  font-size: 16px;
+}
+
+.FormPedidos  li{
+ 
+list-style-type: none;
+  padding: 0%;
+  margin: 0%;
+}
+    
+.FormPedidos  ul{
+ 
+list-style-type: none;
+  padding: 0%;
+  margin: 0%;
+}
+        
+
+
+
+
+.flooter{
+  color: black; /* Color del texto (blanco en este caso) */
+  display: flex;
+  justify-content: center;
+  
+
+}
+
+
+.flooter a {
+  gap: 0.5rem;
+  width: 150%;
+  height: 5%;
+  border-radius: 1px;
+  padding: 10px 15px; /* Espaciado dentro del borde (ajusta según sea necesario) */
+  text-decoration: none; /* Elimina la subrayado predeterminado de los enlaces */
+  color: black; /* Color del texto (blanco en este caso) */
+  
+}
+
 
 .description p {
   position: relative;
