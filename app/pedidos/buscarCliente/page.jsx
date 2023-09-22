@@ -1,7 +1,7 @@
 import Image from 'next/image'
-import styles from './page.module.css'
+import styles from 'app/page.module.css'
 import FormPedidosClientes from '@/componentes/FormpedidosClientes'
-import NavbarBotonesHome from '@/componentes/NavbarBotonesHome'
+import NavbarBotones from '@/componentes/NavbarBotones'
 import Navbar from '@/componentes/Navbar'
 import Flooter from '@/componentes/Flooter'
 
@@ -16,7 +16,7 @@ export default function Home() {
       <div className={styles.container}>
         
       <div className={styles.navmenu}>
-        <NavbarBotonesHome />
+        <NavbarBotones />
     
       </div>
     

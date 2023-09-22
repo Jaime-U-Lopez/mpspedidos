@@ -169,10 +169,11 @@
 
 .FormPedidos p{
 
-  color: red;
+  color: black;
   font-weight: bold;
   font-family: var(--font-mono);
-  font-size: 16px;
+  font-size: 20px;
+ 
 }
 
 .FormPedidos  li{
@@ -212,6 +213,19 @@ list-style-type: none;
   color: black; /* Color del texto (blanco en este caso) */
   
 }
+
+
+.ajusteCarrito{
+
+
+  display: flex;
+  justify-content: space-between;
+
+}
+
+
+
+
 
 
 .description p {

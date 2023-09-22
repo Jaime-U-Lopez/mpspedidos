@@ -16,7 +16,7 @@ export default function NavbarBotones() {
       </li> 
       
       <li>
-        <Link href="/pedidos">Realizar Pedido</Link>
+        <Link href="/pedidos/buscarCliente">Realizar Pedido</Link>
       </li>
       <li>
         <Link href="/controlPedidos">Control Pedidos</Link>

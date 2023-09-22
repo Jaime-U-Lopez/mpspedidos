@@ -18,41 +18,41 @@ export default function FormPedidos() {
   return (
 
 
-    <div class={` ${styles.FormPedidos} `}    >
+    <div className={` ${styles.FormPedidos} `}    >
 
 
-      <h1 class='mb-3 '> Solicitud de Pedido  </h1>
-      <h2 class='mb-3' > Buscar Cliente :    </h2>
+      <h1 className='mb-3 '> Solicitud de Pedido  </h1>
+      <h2 className='mb-3' > Buscar Cliente :    </h2>
 
       <form>
 
-        <div class="input-group">
-          <span class="input-group-text">Documento identificacion</span>
+        <div className="input-group">
+          <span className="input-group-text">Documento identificacion</span>
 
           <input
-            class="form-control "
+            className="form-control "
             type="number"
-            placeholder="Ingresa el DNI"
+            placeholder="Ingresar el Nit o CC"
             name="todoNombre"
-            defaultValue="Tarea #01"
+          
           />
         </div>
 
-        <div class="input-group">
-          <span class="input-group-text">Razon Social</span>
+        <div className="input-group">
+          <span className="input-group-text">Razon Social</span>
 
           <input
-            class="form-control "
-            type="number"
+            className="form-control "
+            type="text"
             placeholder="Nombre"
-            name="todoNombre"
-            defaultValue="Tarea #01"
+            name="nombreComercial"
+
           />
         </div>
 
         <div >
         <button
-          class="btn w-100 mt-4 mb-3 btn-primary"
+          className="btn w-100 mt-4 mb-3 btn-primary"
           type="submit"
         >
           Buscar
@@ -66,18 +66,18 @@ export default function FormPedidos() {
           </li>
  
           <li >
-            <Link href="https://www.mps.com.co/registro/distribuidor"  target="_blank">Continuar pedido</Link>
+          <Link href="/pedidos/buscarProductos">Continuar Pedido</Link>
           </li>
   
         </ul>
 
       </form>
       <p>Clientes Encontrados : </p>
-      <table class="table   table-hover  table-bordered border-primary" >
+      <table className="table   table-hover  table-bordered border-primary" >
 
         <thead>
     
-          <tr  class='table-dark' >
+          <tr  className='table-dark' >
             <th scope="col">N°</th>
             <th scope="col">Nit o CC </th>
             <th scope="col">Nombre comercial </th>
@@ -94,7 +94,8 @@ export default function FormPedidos() {
             <td>@mdo</td>
             <td>@mdo</td>   
    
-            <td> {imagen} </td>
+            <td className='d-flex justify-content-center align-items-center'> {imagen} </td>
+       
           </tr>
           <tr>
             <th scope="row">2</th>
@@ -102,15 +103,16 @@ export default function FormPedidos() {
             <td>Thornton</td>
             <td>Thornton</td>
             <td>@fat</td>
-            <td> {imagen} </td>
+            <td className='d-flex justify-content-center align-items-center'> {imagen} </td>
+       
           </tr>
           <tr>
             <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
             <td>@twitter</td>
             <td>@twitter</td>
             <td>@twitter</td>
-            <td> {imagen} </td>
+            <td>@twitter</td>
+            <td className='d-flex justify-content-center align-items-center'> {imagen} </td>
           </tr>
         </tbody>
       </table>

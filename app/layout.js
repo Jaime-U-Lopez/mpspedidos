@@ -7,13 +7,14 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
   title: 'MPS Mayorista - Control Pedidos',
-  description: 'Porta para el control de pedidos',
+  description: 'Portal para el control de pedidos',
 }
 
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
-      <body class={inter.class}>{children}</body>
+     
+      <body className={inter.class}>{children}</body>
     </html>
   )
 }

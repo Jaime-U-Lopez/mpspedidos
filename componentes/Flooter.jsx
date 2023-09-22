@@ -9,7 +9,7 @@ export default function NavbarBotones() {
   return (  
 
 
-    <div class="mb-3 mb-md-0">© <a href="#" >MPS</a> - Todos los
+    <div className="mb-3 mb-md-0">© <a href="#" >MPS</a> - Todos los
     Derechos Reservados
     
     </div>
