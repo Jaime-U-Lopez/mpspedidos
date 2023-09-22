@@ -176,6 +176,53 @@
  
 }
 
+
+
+.FormPedidos input{
+border: 1px solid rgb(116, 113, 113);
+
+}
+
+.FormPedidos select{
+  border: 1px solid rgb(116, 113, 113);
+  
+  }
+
+.FormPedidos span{
+
+width: 28%;
+background-color: white;
+color: black;
+border-color: #000;
+padding: auto;
+font-family: var(--font-mono);
+}
+
+
+.TablePedidos{
+  font-family: 10px var(--font-mono);
+
+    color: var(--bs-emphasis-color);
+    border-color: var(--bs-border-color);
+    
+    word-wrap: break-word !important;
+    width: 100%;
+    margin-bottom: 1rem;
+    vertical-align: middle; 
+    border-color: var(--bs-table-border-color);
+    text-align: justify;
+}
+
+.tabledark{
+background-color: rgb(219, 6, 6) !important;
+
+}
+
+.linkCancelar{
+
+  background-color: rgb(223, 71, 71) !important;
+}
+
 .FormPedidos  li{
  
 list-style-type: none;

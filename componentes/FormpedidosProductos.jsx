@@ -1,9 +1,8 @@
-'use client';
+
 import Image from 'next/image'
 import styles from 'app/page.module.css'
 import stylesForm from 'app/form.module.css'
 import Link from 'next/link';
-import { useState } from 'react';
 
 
 export default function FormPedidosProductos() {
@@ -31,11 +30,18 @@ width={80/2}
 height={50}></Image>
 
 var imagenCarrito=<Image 
-src="/img/icons8-carrito-de-compras.gif"
+src="/img/icons8-carrito-de-la-compra-cargado-100.png"
 alt="Picture of the author"
-width={80/2}
-height={50}></Image>
+width={50/2}
+height={50}>
+  
+</Image>
 
+var imagenBasuraDelete=<Image 
+src="/img/icons8-basura-llena-100.png"
+alt="Picture of the author"
+width={50/2}
+height={50}></Image>
 
   return (
 
@@ -45,6 +51,8 @@ height={50}></Image>
       <div className={styles.ajusteCarrito} >
 
       <h1 className='mb-3 '> Solicitud de Pedido  </h1>
+      {imageIzquierda}
+     {imagenDerecha}
       <p> {imagenCarrito} = {totalProductosEnCarrito}</p>  
         
       </div>
@@ -56,7 +64,7 @@ height={50}></Image>
         <div className="input-group">
           <span className="input-group-text">Marca </span>
 
-          <select value="Seleccione la marca"   className="form-select form-select-lg " aria-label=".form-select-lg example">
+          <select defaultValue="Seleccione la marca"   className="form-select form-select-lg " aria-label=".form-select-lg example">
    
         <option value="1">Seleccione la marca</option>
         <option value="2">Two</option>
@@ -68,7 +76,7 @@ height={50}></Image>
         <div className="input-group">
           <span className="input-group-text">Categoria </span>
 
-          <select value="Seleccione la Categoria (opcional)"  className="form-select form-select-lg " aria-label=".form-select-lg example">
+          <select defaultValue="Seleccione la Categoria (opcional)"  className="form-select form-select-lg " aria-label=".form-select-lg example">
        
         <option value="1">Seleccione la Categoria (opcional)</option>
         <option value="2">Two</option>
@@ -90,7 +98,7 @@ height={50}></Image>
         <ul>
        
           <li >
-            <Link href="#" >Continuar pedido</Link>
+            <Link href="/pedidos/confirmarPedido" >Continuar Pedido</Link>
           </li>
   
         </ul>
@@ -99,11 +107,11 @@ height={50}></Image>
       <p>Productos Encontrados : 10 de   {totalProductos}   </p>   
      {imageIzquierda}
      {imagenDerecha}
-      <table className="table   table-hover  table-bordered border-primary" >
+      <table className={`${styles.TablePedidos} table-responsive table  table-hover  table-bordered border-primary     `}>
 
         <thead>
     
-          <tr  className='table-dark' >
+          <tr  className='table-primary' >
             <th scope="col">N°</th>
             <th scope="col">Codigo </th> 
              <th scope="col">Numero  de parte </th>
@@ -115,6 +123,7 @@ height={50}></Image>
             <th scope="col" >Valor  </th>
             <th scope="col" >Clasificación tributaria </th>
             <th scope="col" >Ingresar al Carrito </th>
+            <th scope="col" >Eliminar del Carrito </th>
           </tr>
         </thead>
         <tbody>
@@ -131,7 +140,8 @@ height={50}></Image>
             <td>@mdo</td> 
             
             <td className='d-flex justify-content-center align-items-center'> {imagen} </td>
-       
+          
+            <td className='justify-content-center ' > {imagenBasuraDelete} </td>
           </tr>
           <tr>
             <th scope="row">2</th>
@@ -145,7 +155,9 @@ height={50}></Image>
             <td>@mdo</td> 
             <td>@mdo</td> 
             <td className='d-flex justify-content-center align-items-center'> {imagen} </td>
-       
+
+      
+            <td className=' justify-content-center ' > {imagenBasuraDelete} </td>
           </tr>
           <tr>
             <th scope="row">3</th>
@@ -159,6 +171,8 @@ height={50}></Image>
             <td>@mdo</td> 
             <td>@mdo</td> 
             <td className='d-flex justify-content-center align-items-center'> {imagen} </td>
+         
+            <td className='justify-content-center ' > {imagenBasuraDelete} </td>
           </tr>
         </tbody>
       </table>

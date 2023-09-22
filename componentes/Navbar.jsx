@@ -19,7 +19,8 @@ export default function NavbarBotones() {
    alt="Picture of the author"
    width={220/2}
    height={50}
- />
+   loading="lazy"
+/>
 
 <h3 className="fw-bold mb-3 mt-3 " >      MPS Control de pedidos</h3>  
 
