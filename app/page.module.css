@@ -211,12 +211,14 @@ font-family: var(--font-mono);
     vertical-align: middle; 
     border-color: var(--bs-table-border-color);
     text-align: justify;
+    cursor: pointer; /* Cambia el cursor al estilo de selección */
 }
 
 .tabledark{
 background-color: rgb(219, 6, 6) !important;
 
 }
+
 
 .linkCancelar{
 
@@ -238,7 +240,10 @@ list-style-type: none;
 }
         
 
+.FormPedidos select{
 
+  color: #5c594b;
+}
 
 
 .flooter{
@@ -270,6 +275,11 @@ list-style-type: none;
 
 }
 
+
+.btnAtrasAdelante{
+
+  display: flex;
+}
 
 
 

@@ -21,14 +21,11 @@ export default function Home() {
       </div>
     
       <div className={styles.ventaderecha}>
-      <FormPedidosClientes />
   
       </div>
-      
         
         </div>
-        
-    
+      
       
 <div className={styles.flooter}>
 <Flooter/>
