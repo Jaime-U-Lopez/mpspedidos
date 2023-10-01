@@ -6,12 +6,11 @@ import Link from 'next/link'
 export default function NavbarBotones() {
   
   return (
- <div>
-
-<ul>
 
 
- <li>
+<ul  >
+
+      <li>
       <Link href="/">Home</Link>
       </li> 
       
@@ -26,7 +25,7 @@ export default function NavbarBotones() {
       </li>
   
     </ul>
- </div>
+
    
     )
 }

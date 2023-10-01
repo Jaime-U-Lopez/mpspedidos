@@ -30,7 +30,7 @@ export default function FormPedidos() {
 
 
   var imageIzquierda = <Image
-    src="/img/icons8-flecha-izquierda-64 (1).png"
+    src="/img/icons8-flecha-izquierda.png"
     alt="Picture of the author"
     width={80 / 2}
     height={50}></Image>

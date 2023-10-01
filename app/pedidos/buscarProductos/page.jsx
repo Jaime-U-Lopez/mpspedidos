@@ -16,7 +16,7 @@ export default function Home() {
 
       <div className={styles.container}>
         
-      <div className={styles.navmenu}>
+      <div className={styles.navmenuClienteYProductos}>
         <NavbarBotones />
     
       </div>

@@ -3,7 +3,11 @@
   flex-direction: column;
   
   min-height: 100vh;
-  background-color: #fff
+  background-color: #fff;
+  padding: auto;
+  margin: auto;
+  
+  
 }
 
 
@@ -12,9 +16,10 @@
   justify-content: inherit;
   align-items: inherit;
   font-size: 0.85rem;
-  width: auto;
-  margin: 3%;
-  margin-left: 3%;
+  width: 95%;
+  margin: 2%;
+  margin-top: 8%;
+  margin-bottom: 50%;
   z-index: 2;
   font-family: var(--font-mono);
   
@@ -22,13 +27,39 @@
 
 
 
+.navmenuClienteYProductos {
+  display: flex;
+  flex-direction: row; /* Establece la dirección como fila (en línea) */
+  align-items: center;
+  font-size: 0.85rem;
+  width: auto;
+  margin: 3%;
+  margin-left: 3%;
+  z-index: 2;
+  font-family: var(--font-mono);
+  justify-content: space-between;
+  
+}
+
+
+.navmenuClienteYProductos ul{
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+}
+
+
+
 
 
 .container {
-  display: flex;
-  justify-content: row;
-  width: 100%;
+
+  width: 95%;
   height: 100%;
+  overflow: auto; /* Esto permitirá la barra de desplazamiento cuando sea necesario */
+
 
 }
  
@@ -38,7 +69,7 @@
   font-family: var(--font-mono);
   margin: 3%;
   margin-left: 6%;
-padding-right: 5%;
+padding: auto;;
   width: auto;
   font-family: var(--font-mono);
   border: 2p solid red;
@@ -81,8 +112,9 @@ padding-right: 5%;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
-  margin: 5%;
-  width: 150%;
+  margin: 2%;
+
+  width: 40%;
   
   border: 2px solid red;
   border-radius: 1px;
@@ -114,10 +146,59 @@ padding-right: 5%;
 }
 
 
-
-.navmenu a.grow:hover {
+.navmenuClienteYProductos a.grow:hover {
   transform: scale(1.05); /* Hace que el enlace crezca ligeramente */
 }
+
+
+.navmenuClienteYProductos a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 2px;
+  width: 200px;
+  height: 45px;
+  
+  border: 2px solid red;
+  border-radius: 1px;
+  padding: 10px 15px; /* Espaciado dentro del borde (ajusta según sea necesario) */
+  text-decoration: none; /* Elimina la subrayado predeterminado de los enlaces */
+
+  color: #fff; /* Color del texto (blanco en este caso) */
+  background-color: rgba(var(--callout-rgb), 0.5); 
+  border-radius: 5px; /* Bordes redondeados */
+  transition: background-color 0.3s, color 0.3s; /* Efecto de transición suave */
+  font-weight: bold; /* Texto en negrilla */
+  font-size: 16px;
+  border-color: black;
+}
+
+.navmenuClienteYProductos  li {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+
+.navmenuClienteYProductos a:hover {
+  background-color: #fed700; /* Cambia el color de fondo a rojo al pasar el mouse */
+  color: #000; /* Cambia el color del texto a negro al pasar el mouse */
+  font-weight: bold; /* Texto en negrilla */
+  border-radius: 5px; /* Bordes redondeados */
+
+}
+
+
+
+.navmenuClienteYProductos a.grow:hover {
+  transform: scale(1.05); /* Hace que el enlace crezca ligeramente */
+}
+
+
+
+
+
 
 
 .FormPedidos{
@@ -383,6 +464,27 @@ border-color: #fed700 !important;
 .logo {
   position: relative;
 }
+
+
+@media screen and (max-width: 768px) {
+
+
+  .navmenuClienteYProductos{
+    display: none;
+  }
+
+
+.TablePedidos{
+
+  padding: 5%;
+  margin-right: 8px;
+  font-size: 2px;
+}
+
+}
+
+
+
 /* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {
   .card:hover {
