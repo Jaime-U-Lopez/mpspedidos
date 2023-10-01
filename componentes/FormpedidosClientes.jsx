@@ -38,7 +38,7 @@ export default function FormPedidos() {
     setError(false); // Reinicia el estado de error
     try {
 
-      const response = await axios.get(`http://localhost:8082/apiPedidosMps/v1/clientes/${formData.nit}`);
+      const response = await axios.get(`http://192.168.1.38:8082/apiPedidosMps/v1/clientes/${formData.nit}`);
 
       Swal.fire({
         title: 'Cargando...',
@@ -125,7 +125,6 @@ export default function FormPedidos() {
 
           />
         </div>
-
         <div >
         <button
           className="btn w-100 mt-4 mb-3 btn-primary"
@@ -135,8 +134,6 @@ export default function FormPedidos() {
           Buscar
         </button>
         </div>
-        
-        
         <ul>
         <li >
             <Link href="https://www.mps.com.co/registro/distribuidor"  target="_blank">Registrarse</Link>
@@ -145,16 +142,13 @@ export default function FormPedidos() {
           <li >
           <Link href="/pedidos/buscarProductos">Continuar Pedido</Link>
           </li>
-  
         </ul>
-
       </form>
       <p>Clientes Encontrados : </p>
 
 <table className={`${styles.TablePedidos} table-responsive table  table-hover  table-bordered border-primary     `} >
 
         <thead>
-
           <tr  className='table-primary' >
             <th scope="col">N°</th>
             <th scope="col">Nit o CC </th>
@@ -163,8 +157,6 @@ export default function FormPedidos() {
             <th scope="col" >seleccion Cliente</th>
           </tr>
         </thead>
-
-      
        {
        isLoading ? (
         <p>Cargando...</p>
@@ -172,10 +164,8 @@ export default function FormPedidos() {
   <tbody>
     {data.map((item, index) => (
       <tr key={item.id} 
-      
       onClick={() => setSelectedRow(item)}
       className={ selectedRow === item ? "selectedrow" : ''}
-      
       >
         <th scope="row">{index + 1}</th>
         <td>{item.nit}</td>
@@ -186,9 +176,8 @@ export default function FormPedidos() {
     ))}
   </tbody>
 )}
-       
-      </table>
-
+  
+  </table>
     </div>
   );
 };

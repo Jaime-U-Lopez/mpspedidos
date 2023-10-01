@@ -12,6 +12,9 @@ const nextConfig = {
 
 */
 
+  distDir: 'build',
+  // Otras configuraciones...
+
 }
 
 module.exports = nextConfig
