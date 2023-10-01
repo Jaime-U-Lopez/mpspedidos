@@ -4,6 +4,7 @@ import FormControlPedidos from '@/componentes/FormControlPedidos'
 import NavbarBotones from '@/componentes/NavbarBotones'
 import Navbar from '@/componentes/Navbar'
 import Flooter from '@/componentes/Flooter'
+//copia
 
 
 export default function Home() {
