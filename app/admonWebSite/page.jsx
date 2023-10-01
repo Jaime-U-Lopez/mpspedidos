@@ -4,7 +4,7 @@ import FormAdmon from '@/componentes/FormAdmon'
 import NavbarBotonesAdmon from '@/componentes/NavbarBotonesAdmon'
 import Navbar from '@/componentes/Navbar'
 import Flooter from '@/componentes/Flooter'
-
+//p
 
 export default function Home() {
   return (
@@ -15,7 +15,7 @@ export default function Home() {
 
       <div className={styles.container}>
         
-      <div className={styles.navmenu}>
+      <div className={styles.navmenuClienteYProductos}>
         <NavbarBotonesAdmon />
     
       </div>
