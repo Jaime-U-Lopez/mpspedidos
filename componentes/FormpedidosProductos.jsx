@@ -281,7 +281,7 @@ export default function FormPedidosProductos() {
     <div className={` ${styles.FormPedidos} `}    >
       <div className={styles.ajusteCarrito} >
         <h1 className='mb-3 '> Solicitud de Pedido  </h1>
-        <div onClick={handleClickAtras} style={{ cursor: 'pointer' }}>
+        <div >
    
         
          
