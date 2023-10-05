@@ -6,7 +6,12 @@ import Navbar from '@/componentes/Navbar'
 import Flooter from '@/componentes/Flooter'
 
 
+
 export default function Home() {
+
+
+
+
   return (
     
     <main className={styles.main}>
@@ -21,6 +26,11 @@ export default function Home() {
       </div>
     
       <div className={styles.ventaderecha}>
+     
+
+
+
+        
   
       </div>
         

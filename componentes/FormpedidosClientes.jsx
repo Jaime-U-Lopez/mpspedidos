@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import React, { useEffect } from 'react';
 import axios from 'axios';
-
+import PaginationControls from './PaginationControls';
 
 import Swal from 'sweetalert2';
 export default function FormPedidos() {
@@ -20,6 +20,15 @@ export default function FormPedidos() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false); // Estado para rastrear errores
   const [selectedRow, setSelectedRow] = useState(null);
+  const itemsPerPage = 10; // Cantidad de elementos por página
+  const [currentPage, setCurrentPage] = useState(1);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const dataToShow = data.slice(startIndex, endIndex);
+
+  const goToPage = (page) => {
+    setCurrentPage(page);
+  };
 
   
   const handleChange = (e) => {
@@ -28,19 +37,31 @@ export default function FormPedidos() {
     setFormData({ ...formData, [name]: value });
   };
 
-  console.log(formData)
-  console.log(selectedRow)
-
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true); // Establece isLoading en true durante la carga
     setError(false); // Reinicia el estado de error
+
+
+    let apiUrl = `http://localhost:8082/apiPedidosMps/v1/clientes/`;
+
+    if (formData.nit >= 0 && formData.nombre=='') {
+      apiUrl += `nit/?nit=${formData.nit}`;
+    }
+    if (formData.nombre!='' && formData.nit==0) {
+      apiUrl += `nombre/?nombre=${formData.nombre}`;
+    }else if( formData.nombre!='' && formData.nit!=0  )
+    apiUrl += `nombre/?nombre=${formData.nombre}&nit=${formData.nit}`;
+        
     try {
+      const response = await axios.get(apiUrl);
+    //const response = await axios.get(`http://localhost:8082/apiPedidosMps/v1/clientes/nombre/?nombre=${formData.nombre}`);
+      console.log(formData.nombre);
 
-      const response = await axios.get(`http://192.168.1.38:8082/apiPedidosMps/v1/clientes/${formData.nit}`);
 
-      Swal.fire({
+    Swal.fire({
         title: 'Cargando...',
         allowOutsideClick: false, // Evita que el usuario cierre la alerta haciendo clic afuera
         onBeforeOpen: () => {
@@ -53,7 +74,11 @@ export default function FormPedidos() {
         
       }, 500); 
       
-      setData([response.data]); // Almacena los datos en un arreglo para que puedan ser mapeados
+   
+      
+
+      const dataInicial = response.data;
+      setData(dataInicial);
     } catch (error) {
       console.error(error);
       setError(true); // Establece el estado de error en true
@@ -105,7 +130,7 @@ export default function FormPedidos() {
             type="number"
             placeholder="Ingresar el Nit o CC"
             name="nit"
-            value={formData.nit}
+            //value={formData.nit}
             onChange={handleChange}
 
 
@@ -120,7 +145,7 @@ export default function FormPedidos() {
             type="text"
             placeholder="Nombre"
             name="nombre"
-            value={formData.nombre}
+           // value="felipe"
             onChange={handleChange}
 
           />
@@ -144,7 +169,15 @@ export default function FormPedidos() {
           </li>
         </ul>
       </form>
-      <p>Clientes Encontrados : </p>
+    
+
+      <PaginationControls
+        currentPage={currentPage}
+        totalItems={data.length}
+        itemsPerPage={itemsPerPage}
+        goToPage={goToPage}
+      />
+
 
 <table className={`${styles.TablePedidos} table-responsive table  table-hover  table-bordered border-primary     `} >
 
@@ -154,7 +187,7 @@ export default function FormPedidos() {
             <th scope="col">Nit o CC </th>
             <th scope="col">Nombre comercial </th>   
             <th scope="col" >Correo electronico</th>
-            <th scope="col" >seleccion Cliente</th>
+            <th scope="col" >Seleccion Cliente</th>
           </tr>
         </thead>
        {
@@ -162,8 +195,8 @@ export default function FormPedidos() {
         <p>Cargando...</p>
       ) : (
   <tbody>
-    {data.map((item, index) => (
-      <tr key={item.id} 
+    {dataToShow.map((item, index) => (
+      <tr key={item.codigo}
       onClick={() => setSelectedRow(item)}
       className={ selectedRow === item ? "selectedrow" : ''}
       >
@@ -177,7 +210,10 @@ export default function FormPedidos() {
   </tbody>
 )}
   
+
   </table>
+
+
     </div>
   );
 };

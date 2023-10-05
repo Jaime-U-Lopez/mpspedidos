@@ -16,8 +16,7 @@ export default function Home() {
       <div className={styles.container}>
         
       <div className={styles.navmenuClienteYProductos}>
-        <NavbarBotonesAdmon />
-    
+        <NavbarBotonesAdmon />    
       </div>
     
       <div className={styles.ventaderecha}>

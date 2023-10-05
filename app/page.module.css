@@ -11,6 +11,30 @@
 }
 
 
+.StyleIconosForm{
+
+  background-color:transparent;
+
+display: block; /* Cambia la visualización a "block" para poder centrar verticalmente */
+  margin: 0 auto;
+  border: 0;
+}
+
+.StyleIconosForm img {
+  background-color: transparent; /* O simplemente eliminar esta línea */
+}
+
+
+.descripcionProducto {
+  font-size: 12px; /* Tamaño de fuente más pequeño */
+  max-width: 200px; /* Ancho máximo para controlar la longitud */
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  overflow: hidden; /* Oculta cualquier texto que desborde el ancho máximo */
+  text-overflow: ellipsis; /* Agrega puntos suspensivos (...) para indicar texto truncado */
+}
+
+
+
 .navmenu {
   display: inherit;
   justify-content: inherit;
@@ -120,7 +144,7 @@ padding: auto;;
   border-radius: 1px;
   padding: 10px 15px; /* Espaciado dentro del borde (ajusta según sea necesario) */
   text-decoration: none; /* Elimina la subrayado predeterminado de los enlaces */
-
+  /*color:black; */
   color: #fff; /* Color del texto (blanco en este caso) */
   background-color: rgba(var(--callout-rgb), 0.5); 
   border-radius: 5px; /* Bordes redondeados */
@@ -147,7 +171,7 @@ padding: auto;;
 
 
 .navmenuClienteYProductos a.grow:hover {
-  transform: scale(1.05); /* Hace que el enlace crezca ligeramente */
+ transform: scale(2.05); /* Hace que el enlace crezca ligeramente */
 }
 
 
@@ -164,7 +188,7 @@ padding: auto;;
   border-radius: 1px;
   padding: 10px 15px; /* Espaciado dentro del borde (ajusta según sea necesario) */
   text-decoration: none; /* Elimina la subrayado predeterminado de los enlaces */
-
+  /*color:black; */
   color: #fff; /* Color del texto (blanco en este caso) */
   background-color: rgba(var(--callout-rgb), 0.5); 
   border-radius: 5px; /* Bordes redondeados */
@@ -204,7 +228,6 @@ padding: auto;;
 .FormPedidos{
 
   color: #fed700;
-
   width: auto;
   font-family: var(--font-mono);
 
@@ -225,16 +248,16 @@ padding: auto;;
   margin: 2%;
   margin-left: 0%;
   width: 30%;
-  
+
   border: 2px solid black;
   border-radius: 1px;
   padding: 10px 15px; /* Espaciado dentro del borde (ajusta según sea necesario) */
   text-decoration: none; /* Elimina la subrayado predeterminado de los enlaces */
-
+/*color: black; */
   color: #fff; /* Color del texto (blanco en este caso) */
   background-color: rgba(var(--callout-rgb), 0.5); 
   border-radius: 5px; /* Bordes redondeados */
-  transition: background-color 0.3s, color 0.3s; /* Efecto de transición suave */
+  transition: background-color 0.5s, color 0.3s; /* Efecto de transición suave */
   font-weight: bold; /* Texto en negrilla */
   font-size: 16px;
   border-color: black;
