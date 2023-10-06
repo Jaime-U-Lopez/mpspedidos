@@ -15,13 +15,13 @@ export default function NavbarBotones() {
       </li> 
       
       <li>
-        <Link href="/pedidos/buscarCliente">Realizar Pedido</Link>
+        <Link href="/pedidos/buscarCliente"  prefetch={false}>Realizar Pedido</Link>
       </li>
       <li>
-        <Link href="/controlPedidos">Control Pedidos</Link>
+        <Link href="/controlPedidos"  prefetch={false}>Control Pedidos</Link>
       </li>
       <li>
-        <Link href="/admonWebSite">Administracion</Link>
+        <Link href="/admonWebSite"  prefetch={false}>Administracion</Link>
       </li>
   
     </ul>

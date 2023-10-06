@@ -4,16 +4,21 @@ import Image from 'next/image'
 import styles from 'app/page.module.css'
 import stylesForm from 'app/form.module.css'
 import Link from 'next/link';
-import { useDispatch, useSelector } from "react-redux";
+
+
+import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import { useState , useEffect } from 'react';
 
 import axios from 'axios';
-import { useRouter } from 'next/router';
+
 
 import Swal from 'sweetalert2';
 
 
 export default function FormPedidosProductos() {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
 
 
 
@@ -223,38 +228,11 @@ export default function FormPedidosProductos() {
     }).then((result) => {
       if (result.isConfirmed) {
 
-        <Link href="/pedidos/buscarCliente">{imageIzquierda}</Link>
+        <Link href="/pedidos/buscarCliente"   prefetch={false}>{imageIzquierda}</Link>
 
       }
     });
   }
-
-
-
-  /*
-    const handleCantidadChange = (itemId, cantidad) => {
-      if (cantidadPorItem.length === 0) {
-        // Si la cantidad es vacía, elimina el valor del estado
-        const newCantidadPorItem = { cantidad: cantidad  };
-      
-        setCantidadPorItem(newCantidadPorItem);
-      } else {
-        // Actualiza el valor del estado con la cantidad ingresada
-        setCantidadPorItem({ ...cantidadPorItem, cantidad: cantidad });
-  
-        setPedidoPorItem({
-          ...pedidoPorItem,
-          [selectedRow.id]: {
-            ...pedidoPorItem[selectedRow.id],
-            cantidad: cantidadPorItem[selectedRow.id] ,
-          },
-        });
-      }
-    };
-  
-  */
-
-
 
 
   const getCantidadEnCarrito = (productoId) => {
@@ -308,7 +286,7 @@ export default function FormPedidosProductos() {
     alt="Picture of the author"
     width={50 / 2}
     height={50}></Image>
-
+    const idp = searchParams.get('45');
 
   return (
 
@@ -316,19 +294,13 @@ export default function FormPedidosProductos() {
     <div className={` ${styles.FormPedidos} `}    >
       <div className={styles.ajusteCarrito} >
         <h1 className='mb-3 '> Solicitud de Pedido  </h1>
-        <div >
-  
-     {imageIzquierda}
-      
-        </div>
-        <div>
-          {imagenDerecha}
-        </div>
+    
+
         <p> {imagenCarrito} = {totalProductosEnCarrito}</p>
       </div>
 
       <h2 className='mb-3' > Seleccionar Articulos :    </h2>
-
+      <p>Post: {idp}</p>
       <form onSubmit={handleSubmit}>
         <div className="input-group">
           <span className="input-group-text">Marca </span>

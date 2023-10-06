@@ -4,7 +4,7 @@ import FormPedidosProductos from '@/componentes/FormpedidosProductos'
 import NavbarBotones from '@/componentes/NavbarBotones'
 import Navbar from '@/componentes/Navbar'
 import Flooter from '@/componentes/Flooter'
-
+import ActiveLink from '@/componentes/ActiveLink'
 
 
 export default function Home() {
@@ -20,7 +20,8 @@ export default function Home() {
         <NavbarBotones />
     
       </div>
-    
+        
+      <ActiveLink></ActiveLink>
       <div className={styles.ventaderecha}>
       <FormPedidosProductos />
  
