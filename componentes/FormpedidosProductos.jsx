@@ -4,24 +4,15 @@ import Image from 'next/image'
 import styles from 'app/page.module.css'
 import stylesForm from 'app/form.module.css'
 import Link from 'next/link';
-
-
-import { useRouter, usePathname, useSearchParams } from 'next/navigation'
+import { router, usePathname, useSearchParams } from 'next/navigation'
 import { useState , useEffect } from 'react';
-
 import axios from 'axios';
-
-
 import Swal from 'sweetalert2';
 
 
 export default function FormPedidosProductos() {
-  const router = useRouter()
+
   const pathname = usePathname()
-  const searchParams = useSearchParams()
-
-
-
   const [selectedRow, setSelectedRow] = useState(null);
   const [cantidadPorItem, setCantidadPorItem] = useState({});
   const [pedidoPorItem, setpedidoPorItem] = useState({});
@@ -34,7 +25,12 @@ export default function FormPedidosProductos() {
     numerodeparteTable:'',
   });
   const [carrito, setCarrito] = useState([]);
-  const [cantidad, setCantidad] = useState();
+  const [cliente, setCliente]=useState(0);
+  const [cantidad, setCantidad] = useState({
+
+    cantidadProd:0,
+
+  });
 
 
 
@@ -52,10 +48,12 @@ export default function FormPedidosProductos() {
 
     const handleCantidadChange = (e) => {
       const nuevaCantidad = parseInt(e.target.value, 10); // Convierte el valor del input a entero
+      
       setCantidad(nuevaCantidad); // Actualiza el estado de la cantidad
+    
     };
 
-
+console.log(carrito)
 
     const handleChange = (e) => {
       // Actualiza el estado cuando se cambia el valor de un campo del formulario
@@ -66,10 +64,9 @@ export default function FormPedidosProductos() {
   
 
 
-    console.log(formData.nombre)
 
-  const agregarAlCarrito = (producto) => {
 
+  const agregarAlCarrito = (producto,) => {
 
     if (cantidad > 0) {
       Swal.fire({
@@ -80,7 +77,11 @@ export default function FormPedidosProductos() {
         timer: 2000,
       });
      
-      setCarrito([...carrito, producto]);
+
+
+      
+      setCarrito([...carrito, producto.codigo]);
+
 
     } else {
       // Muestra un mensaje de error si la cantidad es menor o igual a cero
@@ -141,7 +142,7 @@ export default function FormPedidosProductos() {
 
 
 
-  const handleSubmit = async (e) => {
+  const handleSubmitGet = async (e) => {
 
     e.preventDefault();
     setIsLoading(true); // Establece isLoading en true durante la carga
@@ -195,6 +196,31 @@ export default function FormPedidosProductos() {
 
     setCurrentPage(1);
   };
+
+
+
+  const handleSubmitPost = async (e) => {
+
+    e.preventDefault();
+    setIsLoading(true); // Establece isLoading en true durante la carga
+    setError(false); // Reinicia el estado de error
+
+
+    const url=pathname;
+    extraerIdCliente(url);
+
+//cliente solo en nit
+    cliente
+// producto 
+carrito
+
+
+
+  };
+
+
+
+
 
   useEffect(() => {
     // Hacer la solicitud para obtener la lista de marcas
@@ -286,7 +312,33 @@ export default function FormPedidosProductos() {
     alt="Picture of the author"
     width={50 / 2}
     height={50}></Image>
-    const idp = searchParams.get('45');
+
+
+
+    const extraerIdCliente = (url) => {
+
+    const numeroMatch = url.match(/\/(\d+)$/);
+
+    if (numeroMatch) {
+      try{
+        const numero = parseInt(numeroMatch[1]);
+
+        setCliente(numero);
+        Swal.fire('ok bien ', numero+' la identificacion del cliente no es numerica!.', 'error');
+      }catch{
+        console.error(error);
+        setError(true); // Establece el estado de error en true
+        Swal.fire('Error', 'la identificacion del cliente no es numerica!.', 'error');
+
+      }
+    
+    } 
+        }
+
+
+
+//<<<<<<<<___________________________________>>>>>>>>>>>>>
+
 
   return (
 
@@ -300,8 +352,8 @@ export default function FormPedidosProductos() {
       </div>
 
       <h2 className='mb-3' > Seleccionar Articulos :    </h2>
-      <p>Post: {idp}</p>
-      <form onSubmit={handleSubmit}>
+  
+      <form onSubmit={handleSubmitGet}>
         <div className="input-group">
           <span className="input-group-text">Marca </span>
           <select
@@ -327,11 +379,7 @@ export default function FormPedidosProductos() {
             type="text"
             placeholder="Numero de parte"
             name="numerodeparte"
-
-   
             onChange={handleChange}
-
-
           />
         </div>
 
@@ -339,12 +387,23 @@ export default function FormPedidosProductos() {
           <button
             className="btn w-100 mt-4 mb-3 btn-primary"
             type="submit"
-            disabled={isLoading} // Deshabilita el botón durante la carga
+            //disabled={isLoading} // Deshabilita el botón durante la carga
           >
             Buscar
           </button>
         </div>
 
+
+      
+        <button
+            className="btn w40- mt-4 mb-3 btn-primary"
+            type="submit"
+            //disabled={isLoading} // Deshabilita el botón durante la carga
+            onClick={handleSubmitPost}
+          >
+            Guardar Pedido
+          </button>
+        
         <ul>
           <li >
             <Link href="/pedidos/confirmarPedido" >Continuar Pedido</Link>
@@ -352,6 +411,7 @@ export default function FormPedidosProductos() {
           <li >
             <Link href="/pedidos/confirmarPedido" className={styles.linkCancelar} >Cancelar Pedido</Link>
           </li>
+
         </ul>
 
       </form>
@@ -397,14 +457,15 @@ export default function FormPedidosProductos() {
               <td>{producto.preciocompra}</td>
             <td>{producto.clasificaciontributaria}</td>
 
+
               <td><input 
                className={styles.inputCantidad}
                type="number"
                placeholder="Ingresa Cantidad"
                name="cantidad"
-  
                onChange={handleCantidadChange}
                min="1" 
+             
                style={{
                  textAlign: 'center', // Centra horizontalmente el contenido
                }}
