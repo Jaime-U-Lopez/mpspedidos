@@ -5,79 +5,77 @@ import styles from 'app/page.module.css'
 import stylesForm from 'app/form.module.css'
 import Link from 'next/link';
 import { router, usePathname, useSearchParams } from 'next/navigation'
-import { useState , useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-
+import { v4 as uuidv4 } from 'uuid';
 
 export default function FormPedidosProductos() {
 
   const pathname = usePathname()
-  const [selectedRow, setSelectedRow] = useState(null);
-  const [cantidadPorItem, setCantidadPorItem] = useState({});
-  const [pedidoPorItem, setpedidoPorItem] = useState({});
+  let codigoInterno = 0;
   const [data, setData] = useState([]);
   const [marcas, setMarcas] = useState([]);
   const [formData, setFormData] = useState({
     numerodeparte: '0',
     marca: '',
-    nombre:'',
-    numerodeparteTable:'',
+    nombre: '',
+    numerodeparteTable: '',
   });
+
+
+  const itemsPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const dataToShow = data.slice(startIndex, endIndex);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+
   const [carrito, setCarrito] = useState([]);
-  const [cliente, setCliente]=useState(0);
-  const [cantidades, setCantidades] = useState({id:0,cantidad:0});
-  const [cantidadesCopia, setCantidadesCopia] = useState({});
+  const [cliente, setCliente] = useState(0);
+  const [cantidades, setCantidades] = useState({});
   const [totalCantidades, setTotalCantidades] = useState([]); // Estado para almacenar el total de cantidades
-  const[controlInput, setControlInput]=useState(false)
-  
-
-    const handleCantidadChange = (e, productoId) => {
-   
-      const nuevaCantidad = parseInt(e.target.value, 10);
-  
+  const [controlInput, setControlInput] = useState(false)
+  const [cantidadPedidoActuales, setCantidadPedidoActuales] = useState(0);
+  const [pedido, setPedido] = useState();
 
 
 
-      setCantidades((prevCantidades) => ({
-        ...prevCantidades,
-        
-        [productoId]: 
+  const handleCantidadChange = (e, productoId) => {
+
+    const nuevaCantidad = parseInt(e.target.value, 10);
+
+    setCantidades((prevCantidades) => ({
+      ...prevCantidades,
+      [productoId]:
         nuevaCantidad,
-           id:productoId,
-           cantidad: nuevaCantidad
-      }));
+      id: productoId,
+      cantidad: nuevaCantidad
+    }));
+
+    setControlInput(true);
 
 
-      setControlInput(true);
-      setCantidadesCopia(cantidades)
 
-   
   };
-  
-console.log(controlInput)
 
-console.log(cantidades)
+  const handleChange = (e) => {
+    // Actualiza el estado cuando se cambia el valor de un campo del formulario
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
 
-console.log(carrito)
-console.log(totalCantidades)
-    const handleChange = (e) => {
-      // Actualiza el estado cuando se cambia el valor de un campo del formulario
-      const { name, value } = e.target;
-      setFormData({ ...formData, [name]: value });
-  
-    };
-  
-
-
-
+  };
 
   const agregarAlCarrito = (producto) => {
 
-    if (controlInput && cantidades.cantidad>0 ) {
+    if (controlInput && cantidades.cantidad > 0) {
 
-      setTotalCantidades([...totalCantidades , cantidadesCopia]);
+      setTotalCantidades([...totalCantidades, cantidades]);
       setCarrito([...carrito, producto]);
+      conteoProductos(totalCantidades)
+
 
       Swal.fire({
         icon: 'success',
@@ -86,10 +84,11 @@ console.log(totalCantidades)
         showConfirmButton: false,
         timer: 2000,
       });
-     
-      setCantidadesCopia({})
-    
+
       setControlInput(false)
+
+
+
     } else {
       // Muestra un mensaje de error si la cantidad es menor o igual a cero
       Swal.fire({
@@ -98,10 +97,10 @@ console.log(totalCantidades)
         text: 'La cantidad debe ser mayor a cero para agregar el producto al carrito.',
       });
     }
-   
+
   };
-  
-  
+
+
   const eliminarDelCarrito = (producto) => {
 
 
@@ -116,12 +115,13 @@ console.log(totalCantidades)
       if (result.isConfirmed) {
         const nuevoCarrito = carrito.filter((item) => item.id !== producto.id);
         const nuevasCantidades = totalCantidades.filter((item) => item.id !== producto.id);
-       
 
-        console.log(nuevoCarrito)
+
+
         setTotalCantidades(nuevasCantidades);
         setCarrito(nuevoCarrito);
-       
+        conteoProductos(nuevasCantidades)
+
         Swal.fire({
           icon: 'success',
           title: 'Producto eliminado del carrito',
@@ -134,29 +134,10 @@ console.log(totalCantidades)
   };
 
 
- 
-  const itemsPerPage = 10; // Cantidad de elementos por página
-  const [currentPage, setCurrentPage] = useState(1);
 
-
-  // Calcula el índice inicial y final de los elementos a mostrar en la página actual
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-
-  // Filtra los datos según la página actual
-  const dataToShow = data.slice(startIndex, endIndex);
-  // Función para cambiar de página
   const goToPage = (page) => {
     setCurrentPage(page);
   };
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false); // Estado para rastrear errores
-
-
-
-
 
   const handleSubmitGet = async (e) => {
 
@@ -167,15 +148,15 @@ console.log(totalCantidades)
 
     let apiUrl = "http://192.168.1.38:8082/apiPedidosMps/v1/productos/";
 
-    if (formData.marca !== "no" && formData.numerodeparte=='0' ||formData.numerodeparte==''|| formData.numerodeparte==null) {
+    if (formData.marca !== "no" && formData.numerodeparte == '0' || formData.numerodeparte == '' || formData.numerodeparte == null) {
       apiUrl += `marcas/${formData.marca}`;
 
-    if (formData.numerodeparte && formData.numerodeparte !== "0") {
-      apiUrl += `/${formData.marca}/${formData.numerodeparte}`;
-    }
+      if (formData.numerodeparte && formData.numerodeparte !== "0") {
+        apiUrl += `/${formData.marca}/${formData.numerodeparte}`;
+      }
     } else if (formData.numerodeparte) {
       apiUrl += `filtro/${formData.numerodeparte}`;
-    }else {
+    } else {
       apiUrl += `marcas/${formData.marca}`;
 
     }
@@ -184,7 +165,7 @@ console.log(totalCantidades)
       const response = await axios.get(apiUrl);
       const dataInicial = response.data;
       setData(dataInicial);
-    
+
 
 
       Swal.fire({
@@ -213,29 +194,64 @@ console.log(totalCantidades)
     setCurrentPage(1);
   };
 
-
-
   const handleSubmitPost = async (e) => {
 
     e.preventDefault();
     setIsLoading(true); // Establece isLoading en true durante la carga
     setError(false); // Reinicia el estado de error
+    const codigoUnico = uuidv4();
 
-
-    const url=pathname;
+    const url = pathname;
     extraerIdCliente(url);
 
-//cliente solo en nit
-    cliente
-// producto 
-carrito
+
+    codigoInterno = `${cliente}${totalCantidades.length}`
+
+    const ListaProductosMapeados = totalCantidades.map((item) => ({
+      id: item.id,
+      cantidad: item.cantidad,
+    }));
+
+    const pedidoInicial = { idCliente: cliente, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno: codigoInterno }
+
+    setPedido(pedidoInicial)
 
 
+    //enviamos pedido
 
+    let apiUrl = `http://localhost:8082/apiPedidosMps/v1/pedidos/`;
+    
+    let numRetries = 0;
+    let success = true;
+
+      try {
+      
+        const response = await axios.post(apiUrl, pedidoInicial);
+        const dataInicial = response.data;
+        console.log(dataInicial)
+        Swal.fire({
+          title: 'Cargando exitosamente...',
+          allowOutsideClick: false,
+          onBeforeOpen: () => {
+            Swal.showLoading();
+          },
+        });
+        setTimeout(() => {
+          setIsLoading(false);
+          Swal.close();
+
+        }, 500);
+    
+      } catch (error) {
+        console.error(error);
+        setError(true); // Establece el estado de error en true
+        Swal.fire('Error', 'No se pudo guardar el pedido, valide su conexion a internet.', 'error');
+
+      } finally {
+        setIsLoading(false); // Establece isLoading en false después de la carga
+
+      }
   };
-
-
-
 
 
   useEffect(() => {
@@ -270,17 +286,34 @@ carrito
     }).then((result) => {
       if (result.isConfirmed) {
 
-        <Link href="/pedidos/buscarCliente"   prefetch={false}>{imageIzquierda}</Link>
+        <Link href="/pedidos/buscarCliente" prefetch={false}>{imageIzquierda}</Link>
 
       }
     });
   }
 
 
-  const getCantidadEnCarrito = (productoId) => {
-    return carrito[productoId] || 0;
+
+  const conteoProductos = (nuevasCantidades) => {
+    let total = 0;
+
+    if (!nuevasCantidades) {
+
+      total += cantidades.cantidad;
+
+    } else {
+
+      for (const producto of nuevasCantidades) {
+        total += producto.cantidad;
+      }
+
+    }
+
+    setCantidadPedidoActuales(total);
   };
-  
+
+
+
 
   // Función para calcular el total de la compra
   const calcularTotal = () => {
@@ -295,7 +328,7 @@ carrito
 
   var totalProductos = data.length;
   var totalProductosActualesTable = dataToShow.length;
-  var totalProductosEnCarrito = 0;
+  var totalProductosEnCarrito = cantidadPedidoActuales;
 
 
   var imagen = <Image
@@ -331,31 +364,31 @@ carrito
 
 
 
-    const extraerIdCliente = (url) => {
+  const extraerIdCliente = (url) => {
 
     const numeroMatch = url.match(/\/(\d+)$/);
 
     if (numeroMatch) {
-      try{
+      try {
         const numero = parseInt(numeroMatch[1]);
 
         setCliente(numero);
-        Swal.fire('ok bien ', numero+' la identificacion del cliente no es numerica!.', 'error');
-      }catch{
+       
+      } catch {
         console.error(error);
         setError(true); // Establece el estado de error en true
         Swal.fire('Error', 'la identificacion del cliente no es numerica!.', 'error');
 
       }
-    
-    } 
-        }
+
+    }
+  }
 
 
 
 
 
-//<<<<<<<<___________________________________>>>>>>>>>>>>>
+  //<<<<<<<<___________________________________>>>>>>>>>>>>>
 
 
   return (
@@ -364,13 +397,13 @@ carrito
     <div className={` ${styles.FormPedidos} `}    >
       <div className={styles.ajusteCarrito} >
         <h1 className='mb-3 '> Solicitud de Pedido  </h1>
-    
+
 
         <p> {imagenCarrito} = {totalProductosEnCarrito}</p>
       </div>
 
       <h2 className='mb-3' > Seleccionar Articulos :    </h2>
-  
+
       <form onSubmit={handleSubmitGet}>
         <div className="input-group">
           <span className="input-group-text">Marca </span>
@@ -405,21 +438,21 @@ carrito
           <button
             className="btn w-100 mt-4 mb-3 btn-primary"
             type="submit"
-            //disabled={isLoading} // Deshabilita el botón durante la carga
+          //disabled={isLoading} // Deshabilita el botón durante la carga
           >
             Buscar
           </button>
         </div>
 
         <button
-            className="btn w40- mt-4 mb-3 btn-primary"
-            type="submit"
-            //disabled={isLoading} // Deshabilita el botón durante la carga
-            onClick={handleSubmitPost}
-          >
-            Guardar Pedido
-          </button>
-        
+          className="btn w40- mt-4 mb-3 btn-primary"
+          type="submit"
+          //disabled={isLoading} // Deshabilita el botón durante la carga
+          onClick={handleSubmitPost}
+        >
+          Guardar Pedido
+        </button>
+
         <ul>
           <li >
             <Link href="/pedidos/confirmarPedido" >Continuar Pedido</Link>
@@ -441,14 +474,14 @@ carrito
         <div onClick={() => goToPage(currentPage + 1)}
           disabled={endIndex >= data.length}>
           {imagenDerecha}
-        </div> 
-        </div> 
+        </div>
+      </div>
 
 
-        
+
       <table className={`${styles.TablePedidos} table-responsive table  table-hover  table-bordered border-primary     `}>
         <thead>
-            <tr>
+          <tr>
             <th scope="col">N°</th>
             <th scope="col">N° de parte </th>
             <th scope="col">Nombre Articulo </th>
@@ -461,12 +494,12 @@ carrito
             <th scope="col" >Carrito </th>
 
 
-         
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((producto, index) => (
-              <tr key={producto.id}>
+
+          </tr>
+        </thead>
+        <tbody>
+          {dataToShow.map((producto, index) => (
+            <tr key={producto.id}>
               <th scope="row">{index + 1}</th>
               <td name="numerodeparteTable">{producto.numerodeparte}</td>
               <td name="nombre" >{producto.nombre}</td>
@@ -474,20 +507,20 @@ carrito
               <td>{producto.color}</td>
               <td>{producto.marca}</td>
               <td>{producto.preciocompra}</td>
-            <td>{producto.clasificaciontributaria}</td>
+              <td>{producto.clasificaciontributaria}</td>
 
 
 
-                <td>
+              <td>
                 {carrito.includes(producto) ? (
-                 <input
-                 type="number"
-                 placeholder="Ingresa Cantidad"
-                 className={styles.inputCantidad}
-                 value={cantidades[producto.id] || ''}
-                 onChange={(e) => handleCantidadChange(e, producto.id)}
-                 disabled="true"
-               />
+                  <input
+                    type="number"
+                    placeholder="Ingresa Cantidad"
+                    className={styles.inputCantidad}
+                    value={cantidades[producto.id] || ''}
+                    onChange={(e) => handleCantidadChange(e, producto.id)}
+                    disabled="true"
+                  />
                 ) : (
                   <input
                     type="number"
@@ -495,40 +528,37 @@ carrito
                     className={styles.inputCantidad}
                     value={cantidades[producto.id] || ''}
                     onChange={(e) => handleCantidadChange(e, producto.id)}
-                 
+
                   />
                 )}
 
-
-
-                  
-                </td>
-                <td     >
+              </td>
+              <td     >
                 {carrito.includes(producto) ? (
-                  <button 
-                  className={styles.StyleIconosForm}
-                  onClick={() => eliminarDelCarrito(producto)}>
-                   { imagenBasuraDelete}
+                  <button
+                    className={styles.StyleIconosForm}
+                    onClick={() => eliminarDelCarrito(producto)}>
+                    {imagenBasuraDelete}
                   </button>
                 ) : (
-                  <button 
-                  className={styles.StyleIconosForm} 
-                  onClick={() => agregarAlCarrito(producto)}>
+                  <button
+                    className={styles.StyleIconosForm}
+                    onClick={() => agregarAlCarrito(producto)}>
                     {imagen}
                   </button>
                 )}
               </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
 
 
 
-     
+
     </div>
- 
-  
+
+
   );
 };
