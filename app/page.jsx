@@ -5,12 +5,13 @@ import NavbarBotonesHome from '@/componentes/NavbarBotonesHome'
 import Navbar from '@/componentes/Navbar'
 import Flooter from '@/componentes/Flooter'
 import ActiveLink from '@/componentes/ActiveLink'
-
+import ProductForm from '@/componentes/formulario'
 
 
 export default function Home() {
 
 
+    
 
 
   return (
@@ -22,13 +23,12 @@ export default function Home() {
       <div className={styles.container}>
         
       <div className={styles.navmenu}>
-        <NavbarBotonesHome />
-    
+      <NavbarBotonesHome />
       </div>
     
       <div className={styles.ventaderecha}>
      
-     <ActiveLink></ActiveLink>
+
 
       </div>
         

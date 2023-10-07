@@ -26,32 +26,20 @@ export default function FormPedidosProductos() {
   });
   const [carrito, setCarrito] = useState([]);
   const [cliente, setCliente]=useState(0);
-  const [cantidad, setCantidad] = useState({
-
-    cantidadProd:0,
-
-  });
+  const [cantidades, setCantidades] = useState({});
 
 
-
-     const handleChangeCantidadtotal = (productoId, nuevaCantidad) => {
-      // Copiamos el carrito actual
-      const nuevoCarrito = { ...carrito };
+    const handleCantidadChange = (e, productoId) => {
+      const nuevaCantidad = parseInt(e.target.value, 10);
   
-      // Actualizamos la cantidad para el producto específico
-      nuevoCarrito[productoId] = nuevaCantidad;
-  
-      // Actualizamos el estado del carrito
-      setCarrito(nuevoCarrito);
+      // Actualiza el estado de las cantidades con la nueva cantidad
+      setCantidades((prevCantidades) => ({
+        ...prevCantidades,
+        [productoId]: nuevaCantidad,
+      }));
     };
   
 
-    const handleCantidadChange = (e) => {
-      const nuevaCantidad = parseInt(e.target.value, 10); // Convierte el valor del input a entero
-      
-      setCantidad(nuevaCantidad); // Actualiza el estado de la cantidad
-    
-    };
 
 console.log(carrito)
 
@@ -463,9 +451,9 @@ carrito
                type="number"
                placeholder="Ingresa Cantidad"
                name="cantidad"
-               onChange={handleCantidadChange}
+               onChange={(e) => handleCantidadChange(e, producto.id)}
                min="1" 
-             
+               value={cantidades[producto.id] || ''}
                style={{
                  textAlign: 'center', // Centra horizontalmente el contenido
                }}
