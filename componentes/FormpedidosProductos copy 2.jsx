@@ -4,19 +4,15 @@ import Image from 'next/image'
 import styles from 'app/page.module.css'
 import stylesForm from 'app/form.module.css'
 import Link from 'next/link';
-import { useDispatch, useSelector } from "react-redux";
+import { router, usePathname, useSearchParams } from 'next/navigation'
 import { useState , useEffect } from 'react';
-
 import axios from 'axios';
-import { useRouter } from 'next/router';
-import CarritoDeProductos from './CarritoDeProductos';
 import Swal from 'sweetalert2';
-import ProductoRow from './ProductoRow';
+
 
 export default function FormPedidosProductos() {
 
-
-
+  const pathname = usePathname()
   const [selectedRow, setSelectedRow] = useState(null);
   const [cantidadPorItem, setCantidadPorItem] = useState({});
   const [pedidoPorItem, setpedidoPorItem] = useState({});
@@ -29,28 +25,23 @@ export default function FormPedidosProductos() {
     numerodeparteTable:'',
   });
   const [carrito, setCarrito] = useState([]);
-  const [cantidad, setCantidad] = useState();
+  const [cliente, setCliente]=useState(0);
+  const [cantidades, setCantidades] = useState({});
 
 
-
-     const handleChangeCantidadtotal = (productoId, nuevaCantidad) => {
-      // Copiamos el carrito actual
-      const nuevoCarrito = { ...carrito };
+    const handleCantidadChange = (e, productoId) => {
+      const nuevaCantidad = parseInt(e.target.value, 10);
   
-      // Actualizamos la cantidad para el producto específico
-      nuevoCarrito[productoId] = nuevaCantidad;
-  
-      // Actualizamos el estado del carrito
-      setCarrito(nuevoCarrito);
+      // Actualiza el estado de las cantidades con la nueva cantidad
+      setCantidades((prevCantidades) => ({
+        ...prevCantidades,
+        [productoId]: nuevaCantidad,
+      }));
     };
   
 
-    const handleCantidadChange = (e) => {
-      const nuevaCantidad = parseInt(e.target.value, 10); // Convierte el valor del input a entero
-      setCantidad(nuevaCantidad); // Actualiza el estado de la cantidad
-    };
 
-
+console.log(carrito)
 
     const handleChange = (e) => {
       // Actualiza el estado cuando se cambia el valor de un campo del formulario
@@ -61,10 +52,9 @@ export default function FormPedidosProductos() {
   
 
 
-    console.log(formData.nombre)
 
-  const agregarAlCarrito = (producto) => {
 
+  const agregarAlCarrito = (producto,) => {
 
     if (cantidad > 0) {
       Swal.fire({
@@ -75,7 +65,11 @@ export default function FormPedidosProductos() {
         timer: 2000,
       });
      
-      setCarrito([...carrito, producto]);
+
+
+      
+      setCarrito([...carrito, producto.codigo]);
+
 
     } else {
       // Muestra un mensaje de error si la cantidad es menor o igual a cero
@@ -136,7 +130,7 @@ export default function FormPedidosProductos() {
 
 
 
-  const handleSubmit = async (e) => {
+  const handleSubmitGet = async (e) => {
 
     e.preventDefault();
     setIsLoading(true); // Establece isLoading en true durante la carga
@@ -191,6 +185,31 @@ export default function FormPedidosProductos() {
     setCurrentPage(1);
   };
 
+
+
+  const handleSubmitPost = async (e) => {
+
+    e.preventDefault();
+    setIsLoading(true); // Establece isLoading en true durante la carga
+    setError(false); // Reinicia el estado de error
+
+
+    const url=pathname;
+    extraerIdCliente(url);
+
+//cliente solo en nit
+    cliente
+// producto 
+carrito
+
+
+
+  };
+
+
+
+
+
   useEffect(() => {
     // Hacer la solicitud para obtener la lista de marcas
 
@@ -223,38 +242,11 @@ export default function FormPedidosProductos() {
     }).then((result) => {
       if (result.isConfirmed) {
 
-        <Link href="/pedidos/buscarCliente">{imageIzquierda}</Link>
+        <Link href="/pedidos/buscarCliente"   prefetch={false}>{imageIzquierda}</Link>
 
       }
     });
   }
-
-
-
-  /*
-    const handleCantidadChange = (itemId, cantidad) => {
-      if (cantidadPorItem.length === 0) {
-        // Si la cantidad es vacía, elimina el valor del estado
-        const newCantidadPorItem = { cantidad: cantidad  };
-      
-        setCantidadPorItem(newCantidadPorItem);
-      } else {
-        // Actualiza el valor del estado con la cantidad ingresada
-        setCantidadPorItem({ ...cantidadPorItem, cantidad: cantidad });
-  
-        setPedidoPorItem({
-          ...pedidoPorItem,
-          [selectedRow.id]: {
-            ...pedidoPorItem[selectedRow.id],
-            cantidad: cantidadPorItem[selectedRow.id] ,
-          },
-        });
-      }
-    };
-  
-  */
-
-
 
 
   const getCantidadEnCarrito = (productoId) => {
@@ -310,26 +302,46 @@ export default function FormPedidosProductos() {
     height={50}></Image>
 
 
+
+    const extraerIdCliente = (url) => {
+
+    const numeroMatch = url.match(/\/(\d+)$/);
+
+    if (numeroMatch) {
+      try{
+        const numero = parseInt(numeroMatch[1]);
+
+        setCliente(numero);
+        Swal.fire('ok bien ', numero+' la identificacion del cliente no es numerica!.', 'error');
+      }catch{
+        console.error(error);
+        setError(true); // Establece el estado de error en true
+        Swal.fire('Error', 'la identificacion del cliente no es numerica!.', 'error');
+
+      }
+    
+    } 
+        }
+
+
+
+//<<<<<<<<___________________________________>>>>>>>>>>>>>
+
+
   return (
 
 
     <div className={` ${styles.FormPedidos} `}    >
       <div className={styles.ajusteCarrito} >
         <h1 className='mb-3 '> Solicitud de Pedido  </h1>
-        <div >
-  
-     {imageIzquierda}
-      
-        </div>
-        <div>
-          {imagenDerecha}
-        </div>
+    
+
         <p> {imagenCarrito} = {totalProductosEnCarrito}</p>
       </div>
 
       <h2 className='mb-3' > Seleccionar Articulos :    </h2>
-
-      <form onSubmit={handleSubmit}>
+  
+      <form onSubmit={handleSubmitGet}>
         <div className="input-group">
           <span className="input-group-text">Marca </span>
           <select
@@ -355,11 +367,7 @@ export default function FormPedidosProductos() {
             type="text"
             placeholder="Numero de parte"
             name="numerodeparte"
-
-   
             onChange={handleChange}
-
-
           />
         </div>
 
@@ -367,12 +375,23 @@ export default function FormPedidosProductos() {
           <button
             className="btn w-100 mt-4 mb-3 btn-primary"
             type="submit"
-            disabled={isLoading} // Deshabilita el botón durante la carga
+            //disabled={isLoading} // Deshabilita el botón durante la carga
           >
             Buscar
           </button>
         </div>
 
+
+      
+        <button
+            className="btn w40- mt-4 mb-3 btn-primary"
+            type="submit"
+            //disabled={isLoading} // Deshabilita el botón durante la carga
+            onClick={handleSubmitPost}
+          >
+            Guardar Pedido
+          </button>
+        
         <ul>
           <li >
             <Link href="/pedidos/confirmarPedido" >Continuar Pedido</Link>
@@ -380,6 +399,7 @@ export default function FormPedidosProductos() {
           <li >
             <Link href="/pedidos/confirmarPedido" className={styles.linkCancelar} >Cancelar Pedido</Link>
           </li>
+
         </ul>
 
       </form>
@@ -425,14 +445,15 @@ export default function FormPedidosProductos() {
               <td>{producto.preciocompra}</td>
             <td>{producto.clasificaciontributaria}</td>
 
+
               <td><input 
                className={styles.inputCantidad}
                type="number"
                placeholder="Ingresa Cantidad"
                name="cantidad"
-  
-               onChange={handleCantidadChange}
+               onChange={(e) => handleCantidadChange(e, producto.id)}
                min="1" 
+               value={cantidades[producto.id] || ''}
                style={{
                  textAlign: 'center', // Centra horizontalmente el contenido
                }}

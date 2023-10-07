@@ -41,7 +41,7 @@ export default function FormPedidosProductos() {
   
 
 
-console.log(carrito)
+console.log(cantidades)
 
     const handleChange = (e) => {
       // Actualiza el estado cuando se cambia el valor de un campo del formulario
@@ -56,7 +56,7 @@ console.log(carrito)
 
   const agregarAlCarrito = (producto,) => {
 
-    if (cantidad > 0) {
+    if (cantidades > 0) {
       Swal.fire({
         icon: 'success',
         title: 'Producto agregado al carrito',
@@ -325,6 +325,8 @@ carrito
 
 
 
+
+
 //<<<<<<<<___________________________________>>>>>>>>>>>>>
 
 
@@ -381,8 +383,6 @@ carrito
           </button>
         </div>
 
-
-      
         <button
             className="btn w40- mt-4 mb-3 btn-primary"
             type="submit"
@@ -413,13 +413,14 @@ carrito
         <div onClick={() => goToPage(currentPage + 1)}
           disabled={endIndex >= data.length}>
           {imagenDerecha}
-        </div>  </div>
+        </div> 
+        </div> 
 
+
+        
       <table className={`${styles.TablePedidos} table-responsive table  table-hover  table-bordered border-primary     `}>
-      
-    
-           <thead>
-          <tr className='table-primary' >
+        <thead>
+            <tr>
             <th scope="col">N°</th>
             <th scope="col">N° de parte </th>
             <th scope="col">Nombre Articulo </th>
@@ -428,15 +429,17 @@ carrito
             <th scope="col" >Marca </th>
             <th scope="col" >Valor  </th>
             <th scope="col" >Clasif trib </th>
-            <th scope="col" >Cant Articulos</th>
+            <th scope="col">Cantidad</th>
             <th scope="col" >Carrito </th>
-    
-          </tr>
-        </thead>
-        <tbody>
-          {dataToShow.map((producto,index) => (
-            <tr key={producto.id}>
-               <th scope="row">{index + 1}</th>
+
+
+         
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((producto, index) => (
+              <tr key={producto.id}>
+              <th scope="row">{index + 1}</th>
               <td name="numerodeparteTable">{producto.numerodeparte}</td>
               <td name="nombre" >{producto.nombre}</td>
               <td className={styles.descripcionProducto}>{producto.descripcion}</td>
@@ -446,23 +449,16 @@ carrito
             <td>{producto.clasificaciontributaria}</td>
 
 
-              <td><input 
-               className={styles.inputCantidad}
-               type="number"
-               placeholder="Ingresa Cantidad"
-               name="cantidad"
-               onChange={(e) => handleCantidadChange(e, producto.id)}
-               min="1" 
-               value={cantidades[producto.id] || ''}
-               style={{
-                 textAlign: 'center', // Centra horizontalmente el contenido
-               }}
-            
-              /> 
-            
-               </td>
-            
-              <td     >
+
+                <td>
+                  <input
+                    type="number"
+                    className={styles.inputCantidad}
+                    value={cantidades[producto.id] || ''}
+                    onChange={(e) => handleCantidadChange(e, producto.id)}
+                  />
+                </td>
+                <td     >
                 {carrito.includes(producto) ? (
                   <button 
                   className={styles.StyleIconosForm}
@@ -477,10 +473,14 @@ carrito
                   </button>
                 )}
               </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+
+
+
      
     </div>
  
