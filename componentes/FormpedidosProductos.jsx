@@ -26,23 +26,41 @@ export default function FormPedidosProductos() {
   });
   const [carrito, setCarrito] = useState([]);
   const [cliente, setCliente]=useState(0);
-  const [cantidades, setCantidades] = useState({});
-
+  const [cantidades, setCantidades] = useState({id:0,cantidad:0});
+  const [cantidadesCopia, setCantidadesCopia] = useState({});
+  const [totalCantidades, setTotalCantidades] = useState([]); // Estado para almacenar el total de cantidades
+  const[controlInput, setControlInput]=useState(false)
+  
 
     const handleCantidadChange = (e, productoId) => {
+   
       const nuevaCantidad = parseInt(e.target.value, 10);
   
-      // Actualiza el estado de las cantidades con la nueva cantidad
+
+
+
       setCantidades((prevCantidades) => ({
         ...prevCantidades,
-        [productoId]: nuevaCantidad,
+        
+        [productoId]: 
+        nuevaCantidad,
+           id:productoId,
+           cantidad: nuevaCantidad
       }));
-    };
-  
 
+
+      setControlInput(true);
+      setCantidadesCopia(cantidades)
+
+   
+  };
+  
+console.log(controlInput)
 
 console.log(cantidades)
 
+console.log(carrito)
+console.log(totalCantidades)
     const handleChange = (e) => {
       // Actualiza el estado cuando se cambia el valor de un campo del formulario
       const { name, value } = e.target;
@@ -54,9 +72,13 @@ console.log(cantidades)
 
 
 
-  const agregarAlCarrito = (producto,) => {
+  const agregarAlCarrito = (producto) => {
 
-    if (cantidades > 0) {
+    if (controlInput && cantidades.cantidad>0 ) {
+
+      setTotalCantidades([...totalCantidades , cantidadesCopia]);
+      setCarrito([...carrito, producto]);
+
       Swal.fire({
         icon: 'success',
         title: 'Producto agregado al carrito',
@@ -65,12 +87,9 @@ console.log(cantidades)
         timer: 2000,
       });
      
-
-
-      
-      setCarrito([...carrito, producto.codigo]);
-
-
+      setCantidadesCopia({})
+    
+      setControlInput(false)
     } else {
       // Muestra un mensaje de error si la cantidad es menor o igual a cero
       Swal.fire({
@@ -84,6 +103,8 @@ console.log(cantidades)
   
   
   const eliminarDelCarrito = (producto) => {
+
+
     Swal.fire({
       icon: 'question',
       title: '¿Estás seguro?',
@@ -94,8 +115,13 @@ console.log(cantidades)
     }).then((result) => {
       if (result.isConfirmed) {
         const nuevoCarrito = carrito.filter((item) => item.id !== producto.id);
+        const nuevasCantidades = totalCantidades.filter((item) => item.id !== producto.id);
+       
+
+        console.log(nuevoCarrito)
+        setTotalCantidades(nuevasCantidades);
         setCarrito(nuevoCarrito);
-  
+       
         Swal.fire({
           icon: 'success',
           title: 'Producto eliminado del carrito',
@@ -107,6 +133,8 @@ console.log(cantidades)
     });
   };
 
+
+ 
   const itemsPerPage = 10; // Cantidad de elementos por página
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -451,12 +479,29 @@ carrito
 
 
                 <td>
+                {carrito.includes(producto) ? (
+                 <input
+                 type="number"
+                 placeholder="Ingresa Cantidad"
+                 className={styles.inputCantidad}
+                 value={cantidades[producto.id] || ''}
+                 onChange={(e) => handleCantidadChange(e, producto.id)}
+                 disabled="true"
+               />
+                ) : (
                   <input
                     type="number"
+                    placeholder="Ingresa Cantidad"
                     className={styles.inputCantidad}
                     value={cantidades[producto.id] || ''}
                     onChange={(e) => handleCantidadChange(e, producto.id)}
+                 
                   />
+                )}
+
+
+
+                  
                 </td>
                 <td     >
                 {carrito.includes(producto) ? (
