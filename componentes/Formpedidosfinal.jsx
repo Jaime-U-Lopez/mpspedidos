@@ -6,9 +6,12 @@ import stylesForm from 'app/form.module.css'
 import Link from 'next/link';
 import {useState, useEffect} from 'react';
 import axios from 'axios';
+import {  usePathname} from 'next/navigation'
+import Swal from 'sweetalert2';
 
 export default function FormPedidos() {
-
+  const pathname = usePathname();
+  const url = pathname;
   const [selectedRow, setSelectedRow] = useState(null);
   const [cantidadPorItem, setCantidadPorItem] = useState({});
   const [pedidoPorItem, setpedidoPorItem] = useState({});
@@ -22,34 +25,137 @@ export default function FormPedidos() {
   const itemsPerPage = 10; // Cantidad de elementos por página
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [cliente, setCliente] = useState();
+  const [clienteForm1, setClienteForm1]=useState({});
 
   var totalProductosActuales = data.length;
   var totalProductos = data.length;
   var totalProductosEnCarrito = 0;
 
 
+  const extraerIdCliente = (url) => {
+    const numeroMatch = url.match(/\/([^/]+)$/);
 
+    if (numeroMatch) {
+      try {
+        const parametro = numeroMatch[1].trim();
+ 
+        setCliente(parametro);
+      } catch (error) {
+        console.error(error);
+        setError(true); // Establece el estado de error en true
+        Swal.fire('Error', 'Hubo un error al procesar el identificador del cliente.', 'error');
+      }
+    }
+  }
+  
   useEffect(() => {
-    // Hacer la solicitud para obtener la lista de marcas
 
+    extraerIdCliente(url)
     axios
-      .get('http://localhost:8082/apiPedidosMps/v1/pedidos/orden/75107724ycma')
+      .get(`http://localhost:8082/apiPedidosMps/v1/pedidos/orden/${cliente}`)
       .then((response2) => {
         
 
         const dataFromApi = response2.data;
-       setData([dataFromApi])
+       setData(dataFromApi)
        setDataInput(dataFromApi)
-       console.log(dataFromApi)
+       calcularTotales(pedidos)
+      
+console.log(response2)
+
+
       })
 
 
       .catch((error) => {
         console.error(error);
-        Swal.fire('Error', 'Sin marcas para seleccionar en Base de datos.', 'error');
+
       });
-  }, []); // Este efecto se ejecuta una vez al cargar el componente para obtener la lista de marcas
+  }, [cliente]); // Este efecto se ejecuta una vez al cargar el componente para obtener la lista de marcas
+
+
+  const pedidos = [
+    {
+      cantidad: 55,
+      celular: null,
+      codigoInterno: "1193142332UG4V",
+      correoElectronico: "NULL",
+      direccion: null,
+      dni: 1193142332,
+      estado: "sinConfirmacion",
+      formaDePago: null,
+      iva: 0,
+      marca: "DELLSERVIDORES",
+      precio: 1,
+    },
+    {
+      cantidad: 55,
+      celular: null,
+      codigoInterno: "1193142332UG4V",
+      correoElectronico: "NULL",
+      precio: 4,
+      dni: 1193142332,
+      estado: "sinConfirmacion",
+      formaDePago: null,
+      iva: 0,
+      marca: "DELLSERVIDORES"
+    },
+    {
+      cantidad: 55,
+      celular: null,
+      codigoInterno: "1193142332UG4V",
+      correoElectronico: "NULL",
+      direccion: null,
+      dni: 1193142332,
+      estado: "sinConfirmacion",
+      formaDePago: null,
+      iva: 0,
+      marca: "DELLSERVIDORES",
+      precio: 1
+    }
+  ];
+
+
+
+
+    let valorTotal = 0;
+    let iva = 0;
+    let nombreComercial="";
+  
+    // Calcular la suma del valor total y el IVA
+    pedidos.forEach((producto) => {
+      valorTotal += producto.precio;
+      // Suponiendo que el IVA es el 15% del precio (puedes ajustarlo según tus necesidades)
+      iva += producto.precio * 0.15;
+      nombreComercial= producto.nombreComercial
+
+
+
+    });
+  
+const datosCliente={
+
+  orden:55,
+}
+
+    // Calcular el neto a pagar
+    const netoAPagar = valorTotal + iva;
+  
+
+    
+console.log(valorTotal)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -76,6 +182,12 @@ export default function FormPedidos() {
     alt="Picture of the author"
     width={80 / 2}
     height={50}></Image>
+
+
+
+
+  //<<<<<<<<___________________________________>>>>>>>>>>>>>
+
   return (
 
 
@@ -103,7 +215,7 @@ export default function FormPedidos() {
             placeholder="Numero orden"
             name="todoNombre"
             disabled
-            value={dataInput.id}
+            value={dataInput.dni}
           />
 
 
@@ -145,7 +257,7 @@ export default function FormPedidos() {
             placeholder="Nombre Razon social"
             name="todoNombre"
             disabled
-            value={dataInput.nombreComercial}
+            value={dataInput.dni}
           />
         </div>
        
@@ -334,7 +446,7 @@ export default function FormPedidos() {
               >
                 <th scope="row">{index + 1}</th>
                 <td>{item.numerodeparte}</td>
-                <td>{item.nombre}</td>
+                <td>{item.nombreArticulo}</td>
                 <td>{item.marca}</td>
                 <td>{item.cantidad}</td>
             

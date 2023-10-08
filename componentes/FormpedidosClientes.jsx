@@ -160,11 +160,16 @@ export default function FormPedidos() {
             <Link href="https://www.mps.com.co/registro/distribuidor" target="_blank">Registrarse</Link>
           </li>
 
-
-          <li >
-            <Link href={`/pedidos/buscarProductos/${encodeURIComponent(cliente)}`} scroll={false} prefetch={false}>Continuar Pedido</Link>
-
-          </li>
+        {cliente!=0? (
+       
+           <li>
+              <Link href={`/pedidos/buscarProductos/${encodeURIComponent(cliente)}`} scroll={false} prefetch={false}>Continuar Pedido</Link>
+          </li> 
+          ):( 
+            <li>
+            <Link href={`/pedidos/buscarCliente`} scroll={false} prefetch={false}>Continuar Pedido</Link>
+          </li> 
+          )}
         </ul>
       </form>
 
