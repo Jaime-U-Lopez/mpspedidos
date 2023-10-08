@@ -22,7 +22,7 @@ export default function FormPedidosProductos() {
     nombre: '',
     numerodeparteTable: '',
   });
-
+  const [codigoInternoTraspaso,setCodigoInternoTraspaso]=useState();
 
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,8 +31,6 @@ export default function FormPedidosProductos() {
   const dataToShow = data.slice(startIndex, endIndex);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
-
-
   const [carrito, setCarrito] = useState([]);
   const [cliente, setCliente] = useState(0);
   const [cantidades, setCantidades] = useState({});
@@ -40,7 +38,7 @@ export default function FormPedidosProductos() {
   const [controlInput, setControlInput] = useState(false)
   const [cantidadPedidoActuales, setCantidadPedidoActuales] = useState(0);
   const [pedido, setPedido] = useState();
-
+  const [actualizarProductos, setActualizarProductos] = useState(false);
 
 
   const handleCantidadChange = (e, productoId) => {
@@ -139,6 +137,17 @@ export default function FormPedidosProductos() {
     setCurrentPage(page);
   };
 
+  function generarCodigoAleatorio(longitud) {
+    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let codigo = '';
+    for (let i = 0; i < longitud; i++) {
+      const indiceAleatorio = Math.floor(Math.random() * caracteres.length);
+      codigo += caracteres.charAt(indiceAleatorio);
+    }
+    return codigo;
+  }
+
+
   const handleSubmitGet = async (e) => {
 
     e.preventDefault();
@@ -204,8 +213,9 @@ export default function FormPedidosProductos() {
     const url = pathname;
     extraerIdCliente(url);
 
-
-    codigoInterno = `${cliente}${totalCantidades.length}`
+    const codigoAleatorio = generarCodigoAleatorio(4);
+    codigoInterno = `${cliente}${codigoAleatorio}`
+    setCodigoInternoTraspaso(codigoInterno);
 
     const ListaProductosMapeados = totalCantidades.map((item) => ({
       id: item.id,
@@ -215,7 +225,7 @@ export default function FormPedidosProductos() {
     const pedidoInicial = { idCliente: cliente, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno: codigoInterno }
 
     setPedido(pedidoInicial)
-
+    console.log(ListaProductosMapeados)
 
     //enviamos pedido
 
@@ -224,10 +234,12 @@ export default function FormPedidosProductos() {
     let numRetries = 0;
     let success = true;
 
+    if(ListaProductosMapeados.length>=1){
       try {
       
         const response = await axios.post(apiUrl, pedidoInicial);
         const dataInicial = response.data;
+        console.log(dataInicial)
         console.log(dataInicial)
         Swal.fire({
           title: 'Cargando exitosamente...',
@@ -241,7 +253,7 @@ export default function FormPedidosProductos() {
           Swal.close();
 
         }, 500);
-    
+        setActualizarProductos(true)
       } catch (error) {
         console.error(error);
         setError(true); // Establece el estado de error en true
@@ -251,6 +263,12 @@ export default function FormPedidosProductos() {
         setIsLoading(false); // Establece isLoading en false después de la carga
 
       }
+   
+
+    }else{
+
+      Swal.fire('Error', 'Debe seleccionar como minimo un producto.', 'error');
+    }
   };
 
 
@@ -442,20 +460,38 @@ export default function FormPedidosProductos() {
           >
             Buscar
           </button>
-        </div>
-
-        <button
+          </div>
+          <div >
+          {!actualizarProductos?  ( <button
           className="btn w40- mt-4 mb-3 btn-primary"
           type="submit"
           //disabled={isLoading} // Deshabilita el botón durante la carga
           onClick={handleSubmitPost}
         >
           Guardar Pedido
-        </button>
+        </button>) :(
+
+        <button className="btn w40- mt-4 mb-3 btn-primary"
+        type="submit"
+        //disabled={isLoading} // Deshabilita el botón durante la carga
+        onClick={handleSubmitPost}
+      >
+        Actualizar  Pedido
+      </button>
+      
+    
+    )}
+
+       
+
+</div>
+        
 
         <ul>
           <li >
-            <Link href="/pedidos/confirmarPedido" >Continuar Pedido</Link>
+            <Link href={`/pedidos/confirmarPedido/${encodeURIComponent(codigoInternoTraspaso)}`} scroll={false} prefetch={false} >Continuar Pedido</Link>
+
+
           </li>
           <li >
             <Link href="/pedidos/confirmarPedido" className={styles.linkCancelar} >Cancelar Pedido</Link>

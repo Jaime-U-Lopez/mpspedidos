@@ -169,13 +169,6 @@ export default function FormPedidos() {
       </form>
 
 
-      <PaginationControls
-        currentPage={currentPage}
-        totalItems={data.length}
-        itemsPerPage={itemsPerPage}
-        goToPage={goToPage}
-      />
-
 
       <table className={`${styles.TablePedidos} table-responsive table  table-hover  table-bordered border-primary     `} >
 
