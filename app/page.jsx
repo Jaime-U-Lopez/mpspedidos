@@ -1,3 +1,5 @@
+
+'use client';
 import Image from 'next/image'
 import styles from './page.module.css'
 import FormPedidosClientes from '@/componentes/FormpedidosClientes'
@@ -6,12 +8,18 @@ import Navbar from '@/componentes/Navbar'
 import Flooter from '@/componentes/Flooter'
 import ActiveLink from '@/componentes/ActiveLink'
 import ProductForm from '@/componentes/formulario'
+import Formulario from '@/componentes/formulariopruebas'
+import {useState, useEffect} from 'react';
+
+import axios from 'axios';
 
 
-export default function Home() {
 
 
-    
+
+export default function Home({cliente}) {
+
+
 
 
   return (

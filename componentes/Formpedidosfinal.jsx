@@ -9,28 +9,36 @@ import axios from 'axios';
 import {  usePathname} from 'next/navigation'
 import Swal from 'sweetalert2';
 
+
+
+
 export default function FormPedidos() {
+
+
   const pathname = usePathname();
   const url = pathname;
   const [selectedRow, setSelectedRow] = useState(null);
-  const [cantidadPorItem, setCantidadPorItem] = useState({});
-  const [pedidoPorItem, setpedidoPorItem] = useState({});
   const [data, setData] = useState([]);
-  const [dataInput, setDataInput] = useState({});
-  const [marcas, setMarcas] = useState([]);
-  const [formData, setFormData] = useState({
-    numerodeparte: '0',
-    marca: '',
-  });
-  const itemsPerPage = 10; // Cantidad de elementos por página
-  const [currentPage, setCurrentPage] = useState(1);
+
+  const [formData, setFormData] = useState(
+    
+  
+  );
+
   const [isLoading, setIsLoading] = useState(false);
   const [cliente, setCliente] = useState();
-  const [clienteForm1, setClienteForm1]=useState({});
 
-  var totalProductosActuales = data.length;
+
+
   var totalProductos = data.length;
   var totalProductosEnCarrito = 0;
+  const [productoData, setProductoData] = useState({}
+  
+    
+    );
+
+
+
 
 
   const extraerIdCliente = (url) => {
@@ -49,24 +57,24 @@ export default function FormPedidos() {
     }
   }
   
+
+
+
+
   useEffect(() => {
 
     extraerIdCliente(url)
     axios
       .get(`http://localhost:8082/apiPedidosMps/v1/pedidos/orden/${cliente}`)
       .then((response2) => {
-        
-
+         
         const dataFromApi = response2.data;
        setData(dataFromApi)
-       setDataInput(dataFromApi)
-       calcularTotales(pedidos)
-      
-console.log(response2)
-
-
-      })
-
+  
+      console.log(dataFromApi)
+       actualizacionDatos(dataFromApi);
+     
+    })
 
       .catch((error) => {
         console.error(error);
@@ -75,88 +83,95 @@ console.log(response2)
   }, [cliente]); // Este efecto se ejecuta una vez al cargar el componente para obtener la lista de marcas
 
 
-  const pedidos = [
-    {
-      cantidad: 55,
-      celular: null,
-      codigoInterno: "1193142332UG4V",
-      correoElectronico: "NULL",
-      direccion: null,
-      dni: 1193142332,
-      estado: "sinConfirmacion",
-      formaDePago: null,
-      iva: 0,
-      marca: "DELLSERVIDORES",
-      precio: 1,
-    },
-    {
-      cantidad: 55,
-      celular: null,
-      codigoInterno: "1193142332UG4V",
-      correoElectronico: "NULL",
-      precio: 4,
-      dni: 1193142332,
-      estado: "sinConfirmacion",
-      formaDePago: null,
-      iva: 0,
-      marca: "DELLSERVIDORES"
-    },
-    {
-      cantidad: 55,
-      celular: null,
-      codigoInterno: "1193142332UG4V",
-      correoElectronico: "NULL",
-      direccion: null,
-      dni: 1193142332,
-      estado: "sinConfirmacion",
-      formaDePago: null,
-      iva: 0,
-      marca: "DELLSERVIDORES",
-      precio: 1
-    }
-  ];
+
+  console.log(data);
+  console.log(formData);
 
 
 
 
-    let valorTotal = 0;
-    let iva = 0;
-    let nombreComercial="";
+const actualizacionDatos=(dataFromApi)=>{
+  let iva = 0;
+  let nombreComercial="";
+  let evento = "Evento de ejemplo";
+  let idCliente = 123; // ID del cliente
+
+  let personaContacto = "";
+  let direccion = "";
+  let celular = "";
+  let telefonoFijo = "";
+  let email = "";
+  let formaDePago = "";
+  let estado = "";
+  let observaciones = "";
+console.log(dataFromApi)
+  // Calcular la suma del valor total y el IVA
+  dataFromApi.forEach((producto) => {
+    
+    // Suponiendo que el IVA es el 15% del precio (puedes ajustarlo según tus necesidades)
+    nombreComercial=producto.nombreComercial
+    personaContacto= producto.personaContacto,
+    direccion= producto.direccion,
+    celular=producto.celular,
+    telefonoFijo= producto.telefonoFijo,
+    email= producto.correoElectronico;
   
-    // Calcular la suma del valor total y el IVA
-    pedidos.forEach((producto) => {
-      valorTotal += producto.precio;
-      // Suponiendo que el IVA es el 15% del precio (puedes ajustarlo según tus necesidades)
-      iva += producto.precio * 0.15;
-      nombreComercial= producto.nombreComercial
+    formaDePago=producto.formaDePago,
+    estado= producto.estado,
+    observaciones= producto.observaciones
+  });
 
-
-
-    });
-  
-const datosCliente={
-
-  orden:55,
+  const datosCliente=   {
+    celular: String(celular),
+    correoElectronico: String(email),  
+    direccion:String(direccion), 
+    nombreComercial:String(nombreComercial),
+    telefonoFijo:String(telefonoFijo),
+    personaContacto:String(personaContacto),
+    observaciones:String(observaciones),
+    estado: String(estado),
+    formaPago: String(formaDePago),
 }
 
-    // Calcular el neto a pagar
-    const netoAPagar = valorTotal + iva;
-  
+setFormData(datosCliente);
+
+}
 
     
-console.log(valorTotal)
+ 
+    // Calcular el neto a pagar
+
+  
 
 
 
+    const totalCantidad = data.reduce((total, producto) => total + producto.cantidad, 0);
+    const valorTotal = data.reduce((total, producto) => total + producto.preciocompra, 0);
+    const ivaTotal = data.reduce((total, producto) => total + producto.iva, 0);
+   
+    const netoAPagar = valorTotal - ivaTotal;
+  
+  
+
+  
+  // Manejar cambios en los campos de entrada
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  // Manejar el envío del formulario
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Aquí puedes hacer algo con los datos actualizados, como enviarlos a una API.
+    console.log('Datos actualizados:', formData);
+  };
 
 
-
-
-
-
-
-
-
+  
 
 
 
@@ -188,6 +203,7 @@ console.log(valorTotal)
 
   //<<<<<<<<___________________________________>>>>>>>>>>>>>
 
+  
   return (
 
 
@@ -206,132 +222,207 @@ console.log(valorTotal)
 
       <form   >
 
+
+
+      {data && data.length > 0 && (
         <div className="input-group">
           <span className="input-group-text">Orden</span>
 
           <input
             className="form-control "
-            type="number"
+            type="text"
             placeholder="Numero orden"
             name="todoNombre"
             disabled
-            value={dataInput.dni}
+            value={cliente}
           />
 
 
         </div>
+
+      )}
+
+{data && data.length > 0 && (
         <div className="input-group">
           <span className="input-group-text">Evento</span>
 
           <input
             className="form-control "
-            type="number"
+            type="text"
             placeholder="Nombre Evento"
             name="todoNombre"
             disabled
+            value={data[0].dni}
           />
 
 
         </div>
+)}
 
+
+{data && data.length > 0 && (
         <div className="input-group">
           <span className="input-group-text">Documento identificacion  </span>
 
           <input
             className="form-control "
-            type="text"
+            type="number"
             placeholder="Ingresar el Nit o CC"
             name="todoNombre"
             disabled
-            value={dataInput.dni}
+            value={data[0].dni}
 
           />
-        </div>
 
+
+
+
+
+        </div>
+)}
+
+{formData && (
         <div className="input-group">
           <span className="input-group-text">Razon Social   </span>
 
-          <input
-            className="form-control "
-            type="text"
-            placeholder="Nombre Razon social"
-            name="todoNombre"
-            disabled
-            value={dataInput.dni}
-          />
+        
+<input
+                className="form-control"
+                type="text"
+                id="nombreComercial"
+                name="nombreComercial"
+                placeholder="Nombre Razon social"
+                value={formData.nombreComercial}
+                onChange={handleInputChange}
+              />
+
+
         </div>
        
-        <div className="input-group">
-          <span className="input-group-text">Persona de contacto </span>
+)}
+{formData &&  (
+<div className="input-group">
+        <span className="input-group-text">Persona de Contacto</span>
 
-          <input
-            className="form-control "
-            type="text"
-            placeholder="Ingresa Persona de contacto "
-            name="todoNombre"
+              <input
+                className="form-control"
+                type="text"
+                id="personaContacto"
+                name="personaContacto"
+                placeholder="Persona de Contacto"
+                value={formData.personaContacto}
+                onChange={handleInputChange}
+              />
 
 
-          />
-        </div>
+
+
+      </div>
+)}
+
+{formData &&  (
 
         <div className="input-group">
           <span className="input-group-text">Dirección  </span>
-          <input
-            className="form-control "
-            type="text"
-            placeholder="Ingresa la dirección"
-            name="todoNombre"
-
-          />
+        
+            <input
+                className="form-control"
+                type="text"
+                id="direccion"
+                name="direccion"
+                placeholder="Ingresa la dirección"
+                value={formData.direccion}
+                onChange={handleInputChange}
+              />
         </div>
+)}
+
+
+{formData &&  (
 
         <div className="input-group">
           <span className="input-group-text">Celular de contacto  </span>
-          <input
-            className="form-control "
-            type="text"
-            placeholder="Ingresa el Celular"
-            name="todoNombre"
-          />
-        </div>
+       
 
+<input
+                className="form-control"
+                type="text"
+                id="celular"
+                name="celular"
+                placeholder="Ingresa la dirección"
+                value={formData.celular}
+                onChange={handleInputChange}
+              />
+
+
+
+
+        </div>
+        )}
+
+
+{formData &&  (
         <div className="input-group">
           <span className="input-group-text">Tel. Fijo de contacto  </span>
-          <input
-            className="form-control "
-            type="number"
-            placeholder="Ingresa el numero Fijo"
-            name="todoNombre"
-            value={dataInput.correoElectronico}
+  
 
-          />
+            <input
+                className="form-control"
+                type="text"
+                id="telefonoFijo"
+                name="telefonoFijo"
+                placeholder="Ingresa el numero Fijo"
+                value={formData.telefonoFijo}
+                onChange={handleInputChange}
+              />
+
+
+
+
         </div>
+        )}
 
+
+{formData && (
         <div className="input-group">
           <span className="input-group-text">Email de contacto </span>
 
-          <input
-            className="form-control "
-            type="email"
-            placeholder="Ingresa el Email de contacto"
-            name="todoNombre"
-            value={dataInput.correoElectronico}
+     
 
-            
-          />
+<input
+                className="form-control"
+                type="text"
+                id="correoElectronico"
+                name="correoElectronico"
+                placeholder="Ingresa el Email de contacto"
+                value={formData.correoElectronico}
+                onChange={handleInputChange}
+              />
+
+
         </div>
-
+        )}
         <div className="input-group">
           <span className="input-group-text">Total Productos  </span>
-          <input
-            className="form-control "
-            type="number"
-            placeholder="Cantidad de Productos a comprar"
-            name="todoNombre"
-            disabled
-          />
-        </div>
+     
 
+
+<input
+                className="form-control"
+                type="text"
+                id="totalCantidad"
+                name="totalCantidad"
+                placeholder="Cantidad de Productos a comprar"
+                value={totalCantidad}
+                onChange={handleInputChange}
+                disabled
+              />
+
+
+
+
+        </div>
+        {data && data.length > 0 && (
         <div className="input-group">
           <span className="input-group-text"> Valor Total   </span>
           <input
@@ -340,9 +431,12 @@ console.log(valorTotal)
             placeholder="Valor  Total "
             name="todoNombre"
             disabled
+            value={valorTotal}
           />
         </div>
+        )}
 
+{data && data.length > 0 && (
         <div className="input-group">
           <span className="input-group-text"> Iva total   </span>
           <input
@@ -351,19 +445,24 @@ console.log(valorTotal)
             placeholder="Valor Iva Total "
             name="todoNombre"
             disabled
+            value={ivaTotal}
           />
         </div>
+)}
+       {data && data.length > 0 && (
+  <div className="input-group">
+    <span className="input-group-text">Neto a pagar</span>
+    <input
+      className="form-control"
+      type="text"
+      placeholder="Nombre Comercial"
+      name="nombreComercial"
+      disabled
+      value={netoAPagar}
+    />
+  </div>
+)}
 
-        <div className="input-group">
-          <span className="input-group-text"> Neto a Pagar    </span>
-          <input
-            className="form-control "
-            type="number"
-            placeholder="Neto a Pagar "
-            name="todoNombre"
-            disabled
-          />
-        </div>
 
         <div className="input-group">
           <span className="input-group-text"> Forma de pago     </span>
@@ -375,31 +474,39 @@ console.log(valorTotal)
           </select>
 
         </div>
+
+        {formData &&  (
         <div className="input-group">
-          <span className="input-group-text"> Estado     </span>
+          <span className="input-group-text"> Estado   </span>
 
           <input
             className="form-control "
             type="text"
             placeholder="Estado "
-            name="todoNombre"
-
+            name="estado"
+        
+            disabled
+            value={formData.estado}
+                onChange={handleInputChange}
           />
         </div>
+        )}
 
+{formData &&   (
         <div className="input-group">
-          <span className="input-group-text"> Observaciones     </span>
+          <span className="input-group-text"> Observaciones  </span>
 
           <textarea
             className="form-control "
             type="textbox"
             placeholder="Observaciones "
-            name="todoNombre"
+            name="observaciones"
             rows="4" 
-
+            value={formData.observaciones}
+            onChange={handleInputChange}
           />
         </div>
-
+)}
         <ul>
 
           <li >
@@ -465,6 +572,7 @@ console.log(valorTotal)
        
       </table>
 
+   
     </div>
   );
 };
