@@ -520,12 +520,15 @@ export default function FormPedidosProductos() {
           <tr>
             <th scope="col">N°</th>
             <th scope="col">N° de parte </th>
-            <th scope="col">Nombre Articulo </th>
+     
             <th scope="col" >Descripción </th>
             <th scope="col" >Color </th>
             <th scope="col" >Marca </th>
+            <th scope="col" >Stock </th>
+
             <th scope="col" >Valor  </th>
-            <th scope="col" >Clasif trib </th>
+            <th scope="col">Precion Unit COP</th>
+            <th scope="col">Precion Unit USD</th>
             <th scope="col">Cantidad</th>
             <th scope="col" >Carrito </th>
 
@@ -538,12 +541,14 @@ export default function FormPedidosProductos() {
             <tr key={producto.id}>
               <th scope="row">{index + 1}</th>
               <td name="numerodeparteTable">{producto.numerodeparte}</td>
-              <td name="nombre" >{producto.nombre}</td>
+
               <td className={styles.descripcionProducto}>{producto.descripcion}</td>
               <td>{producto.color}</td>
               <td>{producto.marca}</td>
+              <td>{producto.stock}</td>
               <td>{producto.preciocompra}</td>
-              <td>{producto.clasificaciontributaria}</td>
+              <td>{producto.preciominimocop}</td>
+              <td>{producto.preciominimousd}</td>
 
 
 
