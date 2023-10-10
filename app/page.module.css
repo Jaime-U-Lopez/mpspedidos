@@ -327,10 +327,20 @@ background-color: rgb(219, 6, 6) !important;
 }
 
 
+.linkCancelarPedido{
+  width: 175px !important;
+  background-color: rgb(223, 71, 71) !important;
+}
+
+
+
 .linkCancelar{
 
   background-color: rgb(223, 71, 71) !important;
 }
+
+
+
 
 .FormPedidos  li{
  
@@ -391,6 +401,7 @@ list-style-type: none;
 
 .inputCantidad{
   align-items: center;
+  text-align: center;
   color: black; 
   background: white;
   border-radius: 5px;
