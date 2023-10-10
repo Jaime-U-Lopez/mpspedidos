@@ -21,6 +21,8 @@ export default function FormPedidosProductos() {
     marca: '',
     nombre: '',
     numerodeparteTable: '',
+    cantidadInp:0,
+    precioUnitarioInp:0,
   });
   const [codigoInternoTraspaso,setCodigoInternoTraspaso]=useState();
 
@@ -32,12 +34,14 @@ export default function FormPedidosProductos() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const [carrito, setCarrito] = useState([]);
+  const [carritoEnvio, setCarritoEnvio] = useState([]);
   const [cliente, setCliente] = useState(0);
   const [cantidades, setCantidades] = useState({});
-  const [totalCantidades, setTotalCantidades] = useState([]); // Estado para almacenar el total de cantidades
+  const [precioUnitario, setPrecioUnitario] = useState({});
+  const [totalCantidades, setTotalCantidades] = useState([{cantidad:0}]); // Estado para almacenar el total de cantidades
   const [controlInput, setControlInput] = useState(false)
   const [cantidadPedidoActuales, setCantidadPedidoActuales] = useState(0);
-  const [pedido, setPedido] = useState();
+
   const [actualizarProductos, setActualizarProductos] = useState(false);
 
 
@@ -53,11 +57,41 @@ export default function FormPedidosProductos() {
       cantidad: nuevaCantidad
     }));
 
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
     setControlInput(true);
 
 
 
   };
+
+
+  const handlePrecioChange = (e, productoId) => {
+
+    const nuevoPrecio = parseInt(e.target.value, 10);
+
+    setPrecioUnitario((prevPrecioUnitario) => ({
+      ...prevPrecioUnitario,
+      [productoId]:
+      nuevoPrecio,
+      id: productoId,
+      preciocompra: nuevoPrecio
+    }));
+
+
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    setControlInput(true);
+
+
+
+  };
+
+
+
+
 
   const handleChange = (e) => {
     // Actualiza el estado cuando se cambia el valor de un campo del formulario
@@ -68,12 +102,33 @@ export default function FormPedidosProductos() {
 
   const agregarAlCarrito = (producto) => {
 
-    if (controlInput && cantidades.cantidad > 0) {
+    if (controlInput && cantidades.cantidad > 0 && precioUnitario.preciocompra>0) {
 
-      setTotalCantidades([...totalCantidades, cantidades]);
+
       setCarrito([...carrito, producto]);
-      conteoProductos(totalCantidades)
+      setCarritoEnvio([...carritoEnvio, producto]);
+   
 
+
+const cantidadesInput={ 
+  id:cantidades.id,
+ cantidad: cantidades.cantidad}
+
+
+ const precioUnitarioInput={
+  id:precioUnitario.id,
+  preciocompra:precioUnitario.preciocompra,
+ }
+
+
+
+ const productoSeleccionado = Object.assign({},  cantidadesInput,precioUnitarioInput);
+ setTotalCantidades([...totalCantidades, productoSeleccionado]);
+
+const valor = cantidades.cantidad;
+const valorTotal=cantidadPedidoActuales+valor;
+
+ setCantidadPedidoActuales(valorTotal)
 
       Swal.fire({
         icon: 'success',
@@ -92,7 +147,7 @@ export default function FormPedidosProductos() {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'La cantidad debe ser mayor a cero para agregar el producto al carrito.',
+        text: 'La Cantidad y Precio Unitario,  deben ser mayor a cero para agregar el producto al carrito.',
       });
     }
 
@@ -136,6 +191,11 @@ export default function FormPedidosProductos() {
   const goToPage = (page) => {
     setCurrentPage(page);
   };
+
+
+
+  console.log(totalCantidades)
+
 
   function generarCodigoAleatorio(longitud) {
     const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -310,38 +370,10 @@ export default function FormPedidosProductos() {
     });
   }
 
-
-
-  const conteoProductos = (nuevasCantidades) => {
-    let total = 0;
-
-    if (!nuevasCantidades) {
-
-      total += cantidades.cantidad;
-
-    } else {
-
-      for (const producto of nuevasCantidades) {
-        total += producto.cantidad;
-      }
-
-    }
-
-    setCantidadPedidoActuales(total);
-  };
+ 
 
 
 
-
-  // Función para calcular el total de la compra
-  const calcularTotal = () => {
-    let total = 0;
-    for (const producto of productos) {
-      const cantidad = getCantidadEnCarrito(producto.id);
-      total += cantidad * producto.precio;
-    }
-    return total;
-  };
 
 
   var totalProductos = data.length;
@@ -401,7 +433,6 @@ export default function FormPedidosProductos() {
 
     }
   }
-
 
 
 
@@ -517,7 +548,7 @@ export default function FormPedidosProductos() {
 
       <table className={`${styles.TablePedidos} table-responsive table  table-hover  table-bordered border-primary     `}>
         <thead>
-          <tr>
+          <tr className='text-center'>
             <th scope="col">N°</th>
             <th scope="col">N° de parte </th>
      
@@ -526,7 +557,7 @@ export default function FormPedidosProductos() {
             <th scope="col" >Marca </th>
             <th scope="col" >Stock </th>
 
-            <th scope="col" >Valor  </th>
+            <th scope="col" >Valor Unitario  </th>
             <th scope="col">Precion Unit COP</th>
             <th scope="col">Precion Unit USD</th>
             <th scope="col">Cantidad</th>
@@ -538,7 +569,7 @@ export default function FormPedidosProductos() {
         </thead>
         <tbody>
           {dataToShow.map((producto, index) => (
-            <tr key={producto.id}>
+            <tr className='text-center' key={producto.id}>
               <th scope="row">{index + 1}</th>
               <td name="numerodeparteTable">{producto.numerodeparte}</td>
 
@@ -546,8 +577,41 @@ export default function FormPedidosProductos() {
               <td>{producto.color}</td>
               <td>{producto.marca}</td>
               <td>{producto.stock}</td>
-              <td>{producto.preciocompra}</td>
-              <td>{producto.preciominimocop}</td>
+              <td>
+
+              {carrito.includes(producto) ? (
+                
+                  <input
+                    type="number"
+                    name='precioUnitarioInp'
+                    placeholder="Ingresa el precio"
+                    className={styles.inputCantidad}
+                    value={precioUnitario[producto.id] || ''}
+                    onChange={(e) => handlePrecioChange(e, producto.id)}
+                    disabled="true"
+                  />
+
+
+                ) : (
+                  <input
+                    type="number"
+                    name='precioUnitarioInp'
+                    placeholder="Ingresa el precio"
+                    className={styles.inputCantidad}
+                    value={precioUnitario[producto.id] || ''}
+                    onChange={(e) => handlePrecioChange(e, producto.id)}
+
+                  />
+                )}
+
+
+
+
+
+              
+
+              </td>
+              <td> {producto.preciominimocop}</td>
               <td>{producto.preciominimousd}</td>
 
 
@@ -556,6 +620,7 @@ export default function FormPedidosProductos() {
                 {carrito.includes(producto) ? (
                   <input
                     type="number"
+                    name='cantidadInp'
                     placeholder="Ingresa Cantidad"
                     className={styles.inputCantidad}
                     value={cantidades[producto.id] || ''}
@@ -565,6 +630,7 @@ export default function FormPedidosProductos() {
                 ) : (
                   <input
                     type="number"
+                    name='cantidadInp'
                     placeholder="Ingresa Cantidad"
                     className={styles.inputCantidad}
                     value={cantidades[producto.id] || ''}

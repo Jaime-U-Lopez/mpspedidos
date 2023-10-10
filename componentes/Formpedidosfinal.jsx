@@ -528,7 +528,7 @@ export default function FormPedidos() {
 
         <thead>
 
-          <tr className="table-primary">
+          <tr className="table-primary  'text-center'">
             <th scope="col">N°</th>
             <th scope="col">Numero de parte </th>
             <th scope="col">Nombre Articulo </th>

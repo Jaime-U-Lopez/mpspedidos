@@ -180,7 +180,7 @@ export default function FormPedidos() {
       <table className={`${styles.TablePedidos} table-responsive table  table-hover  table-bordered border-primary     `} >
 
         <thead>
-          <tr className='table-primary' >
+          <tr className={'table-primary text-center'} >
             <th scope="col">N°</th>
             <th scope="col">Nit o CC </th>
             <th scope="col">Nombre comercial </th>
@@ -194,9 +194,9 @@ export default function FormPedidos() {
           ) : (
             <tbody>
               {dataToShow.map((item, index) => (
-                <tr key={item.codigo}
+                <tr  key={item.codigo}
                   onClick={() => setSelectedRow(item)}
-                  className={selectedRow === item ? "selectedrow" : ''}
+                  className={selectedRow === item ? ("selectedrow",'text-center') : 'text-center'}
                 >
                   <th scope="row">{index + 1}</th>
                   <td name="idCliente">{item.nit}</td>
