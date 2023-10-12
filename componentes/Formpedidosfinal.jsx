@@ -22,7 +22,6 @@ export default function FormPedidos() {
 
   const [formData, setFormData] = useState(
 
-
   );
 
   const [isLoading, setIsLoading] = useState(false);
@@ -146,7 +145,7 @@ export default function FormPedidos() {
 
 
   const totalCantidad = data.reduce((total, producto) => total + producto.cantidad, 0);
-  const valorTotal = data.reduce((total, producto) => total + producto.preciocompra, 0);
+  const valorTotal = data.reduce((total, producto) => total + producto.valorUnitario, 0);
   const ivaTotal = data.reduce((total, producto) => total + producto.iva, 0);
 
   const netoAPagar = valorTotal - ivaTotal;
@@ -531,10 +530,12 @@ export default function FormPedidos() {
           <tr className="table-primary  'text-center'">
             <th scope="col">N°</th>
             <th scope="col">Numero de parte </th>
-            <th scope="col">Nombre Articulo </th>
+            <th scope="col">Tipo Negocio  </th>
+            <th scope="col">Descripción  </th>
             <th scope="col">Marca </th>
             <th scope="col" >Unidades </th>
-            <th scope="col" >Valor Unit P   </th>
+            <th scope="col" >Precio Unitario   </th>
+            <th scope="col" >Valor Unit COP   </th>
             <th scope="col" >Valor Unit USD </th>
             <th scope="col" >Iva   </th>
             <th scope="col" > Carrito </th>
@@ -554,6 +555,7 @@ export default function FormPedidos() {
               >
                 <th scope="row">{index + 1}</th>
                 <td>{item.numerodeparte}</td>
+                <td>{item.tipodeNegocio}</td>
                 <td>{item.nombreArticulo}</td>
                 <td>{item.marca}</td>
                 <td>{item.cantidad}</td>

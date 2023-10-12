@@ -35,13 +35,15 @@ export default function FormPedidosProductos() {
   const [error, setError] = useState(false);
   const [carrito, setCarrito] = useState([]);
   const [carritoEnvio, setCarritoEnvio] = useState([]);
-  const [cliente, setCliente] = useState(0);
-  const [cantidades, setCantidades] = useState({});
+   const [cantidades, setCantidades] = useState({});
   const [precioUnitario, setPrecioUnitario] = useState({});
-  const [totalCantidades, setTotalCantidades] = useState([{cantidad:0}]); // Estado para almacenar el total de cantidades
+  const [totalCantidades, setTotalCantidades] = useState([]); // Estado para almacenar el total de cantidades
   const [controlInput, setControlInput] = useState(false)
   const [cantidadPedidoActuales, setCantidadPedidoActuales] = useState(0);
+  const [controEnvio, setControEnvio] = useState(false)
+  
 
+ 
   const [actualizarProductos, setActualizarProductos] = useState(false);
 
 
@@ -117,7 +119,7 @@ const cantidadesInput={
 
  const precioUnitarioInput={
   id:precioUnitario.id,
-  preciocompra:precioUnitario.preciocompra,
+  valorUnitario:precioUnitario.preciocompra,
  }
 
 
@@ -173,7 +175,7 @@ const valorTotal=cantidadPedidoActuales+valor;
 
         setTotalCantidades(nuevasCantidades);
         setCarrito(nuevoCarrito);
-        conteoProductos(nuevasCantidades)
+    
 
         Swal.fire({
           icon: 'success',
@@ -270,37 +272,48 @@ const valorTotal=cantidadPedidoActuales+valor;
     setError(false); // Reinicia el estado de error
     const codigoUnico = uuidv4();
 
-    const url = pathname;
-    extraerIdCliente(url);
 
-    const codigoAleatorio = generarCodigoAleatorio(4);
-    codigoInterno = `${cliente}${codigoAleatorio}`
-    setCodigoInternoTraspaso(codigoInterno);
+    const url = pathname;
+     
+
 
     const ListaProductosMapeados = totalCantidades.map((item) => ({
       id: item.id,
       cantidad: item.cantidad,
+      valorUnitario:item.precioUnitario,
     }));
 
-    const pedidoInicial = { idCliente: cliente, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno: codigoInterno }
-
-    setPedido(pedidoInicial)
+    
+ 
     console.log(ListaProductosMapeados)
 
     //enviamos pedido
 
     let apiUrl = `http://localhost:8082/apiPedidosMps/v1/pedidos/`;
-    
+
+
     let numRetries = 0;
     let success = true;
 
     if(ListaProductosMapeados.length>=1){
-      try {
+
+      let dataInicial="";
+
       
+      try {
+       
+        const cliente = await extraerIdCliente(url);
+
+        const codigoAleatorio = generarCodigoAleatorio(4);
+        codigoInterno = `${cliente}${codigoAleatorio}`
+
+        setCodigoInternoTraspaso(codigoInterno);
+        const pedidoInicial = { idCliente: cliente, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno: codigoInterno }
+  
+
         const response = await axios.post(apiUrl, pedidoInicial);
-        const dataInicial = response.data;
-        console.log(dataInicial)
-        console.log(dataInicial)
+         dataInicial = response.data.message;
+
         Swal.fire({
           title: 'Cargando exitosamente...',
           allowOutsideClick: false,
@@ -314,11 +327,24 @@ const valorTotal=cantidadPedidoActuales+valor;
 
         }, 500);
         setActualizarProductos(true)
+        setControEnvio(true);
       } catch (error) {
         console.error(error);
-        setError(true); // Establece el estado de error en true
-        Swal.fire('Error', 'No se pudo guardar el pedido, valide su conexion a internet.', 'error');
 
+        if (error.response) {
+          // Si la respuesta del servidor está presente en el error, accede a ella.
+          const responseData = error.response.data.message;
+      
+          console.log("Mensaje de error:", responseData); // Accede al mensaje de error específico
+          console.log("Código de estado:", error.response.status); // Accede al código de estado HTTP (en este caso, 400)
+          // Otras propiedades de la respuesta, como headers, statusText, etc., también están disponibles en error.response
+          setError(true); // Establece el estado de error en true
+          Swal.fire('Error', 'No se pudo guardar el pedido, error: ' + responseData, 'error');
+        } else {
+          console.log("Error sin respuesta del servidor:", error.message);
+          setError(true); // Establece el estado de error en true
+          Swal.fire('Error', 'No se pudo guardar el pedido, error: ' + error.message, 'error');
+        }
       } finally {
         setIsLoading(false); // Establece isLoading en false después de la carga
 
@@ -370,11 +396,6 @@ const valorTotal=cantidadPedidoActuales+valor;
     });
   }
 
- 
-
-
-
-
 
   var totalProductos = data.length;
   var totalProductosActualesTable = dataToShow.length;
@@ -414,25 +435,22 @@ const valorTotal=cantidadPedidoActuales+valor;
 
 
 
-  const extraerIdCliente = (url) => {
-
-    const numeroMatch = url.match(/\/(\d+)$/);
-
-    if (numeroMatch) {
-      try {
-        const numero = parseInt(numeroMatch[1]);
-
-        setCliente(numero);
-       
-      } catch {
-        console.error(error);
-        setError(true); // Establece el estado de error en true
-        Swal.fire('Error', 'la identificacion del cliente no es numerica!.', 'error');
-
-      }
-
+    const extraerIdCliente = (url) => {
+      return new Promise((resolve, reject) => {
+        const numeroMatch = url.match(/\/(\d+)$/);
+        if (numeroMatch) {
+          try {
+            const numero = parseInt(numeroMatch[1]);
+            resolve(numero);
+      
+          } catch (error) {
+            reject(error);
+          }
+        } else {
+          reject(new Error('No se encontró un número de cliente en la URL.'));
+        }
+      });
     }
-  }
 
 
 
@@ -518,12 +536,26 @@ const valorTotal=cantidadPedidoActuales+valor;
 </div>
         
 
-        <ul>
-          <li >
-            <Link href={`/pedidos/confirmarPedido/${encodeURIComponent(codigoInternoTraspaso)}`} scroll={false} prefetch={false} >Continuar Pedido</Link>
+<ul>
+{controEnvio? (
+       
+       <li>
+    <Link href={`/pedidos/confirmarPedido/${encodeURIComponent(codigoInternoTraspaso)}`} scroll={false} prefetch={false} >Continuar Pedido</Link>
+
+   
+         </li> 
+      ):( 
+        <li>
+     
+            </li> 
+      )}
 
 
-          </li>
+
+        
+
+
+
           <li >
             <Link href="/pedidos/confirmarPedido" className={styles.linkCancelar} >Cancelar Pedido</Link>
           </li>
