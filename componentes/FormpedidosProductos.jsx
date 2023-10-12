@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { v4 as uuidv4 } from 'uuid';
-
+import numeral from 'numeral';
 export default function FormPedidosProductos() {
 
   const pathname = usePathname()
@@ -280,7 +280,7 @@ const valorTotal=cantidadPedidoActuales+valor;
     const ListaProductosMapeados = totalCantidades.map((item) => ({
       id: item.id,
       cantidad: item.cantidad,
-      valorUnitario:item.precioUnitario,
+      valorUnitario:item.valorUnitario,
     }));
 
     
@@ -590,8 +590,8 @@ const valorTotal=cantidadPedidoActuales+valor;
             <th scope="col" >Stock </th>
 
             <th scope="col" >Valor Unitario  </th>
-            <th scope="col">Precion Unit COP</th>
-            <th scope="col">Precion Unit USD</th>
+            <th scope="col">Precio Unit COP</th>
+            <th scope="col">Precio Unit USD</th>
             <th scope="col">Cantidad</th>
             <th scope="col" >Carrito </th>
 
@@ -618,7 +618,7 @@ const valorTotal=cantidadPedidoActuales+valor;
                     name='precioUnitarioInp'
                     placeholder="Ingresa el precio"
                     className={styles.inputCantidad}
-                    value={precioUnitario[producto.id] || ''}
+                    value={   precioUnitario[producto.id] || ''}
                     onChange={(e) => handlePrecioChange(e, producto.id)}
                     disabled="true"
                   />
@@ -636,15 +636,9 @@ const valorTotal=cantidadPedidoActuales+valor;
                   />
                 )}
 
-
-
-
-
-              
-
               </td>
-              <td> {producto.preciominimocop}</td>
-              <td>{producto.preciominimousd}</td>
+              <td> {producto.preciominimocop   }</td>
+              <td>{producto.preciominimousd }</td>
 
 
 

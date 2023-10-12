@@ -9,7 +9,7 @@ import axios from 'axios';
 import { usePathname } from 'next/navigation'
 import Swal from 'sweetalert2';
 
-
+import numeral from 'numeral';
 
 
 export default function FormPedidos() {
@@ -32,7 +32,6 @@ export default function FormPedidos() {
   var totalProductos = data.length;
   var totalProductosEnCarrito = 0;
   const [productoData, setProductoData] = useState({}
-
 
   );
 
@@ -145,7 +144,7 @@ export default function FormPedidos() {
 
 
   const totalCantidad = data.reduce((total, producto) => total + producto.cantidad, 0);
-  const valorTotal = data.reduce((total, producto) => total + producto.valorUnitario, 0);
+  const valorTotal = data.reduce((total, producto) => total + producto.valorTotalPorPro, 0);
   const ivaTotal = data.reduce((total, producto) => total + producto.iva, 0);
 
   const netoAPagar = valorTotal - ivaTotal;
@@ -274,9 +273,6 @@ export default function FormPedidos() {
             />
 
 
-
-
-
           </div>
         )}
 
@@ -313,9 +309,6 @@ export default function FormPedidos() {
               onChange={handleInputChange}
             />
 
-
-
-
           </div>
         )}
 
@@ -342,7 +335,6 @@ export default function FormPedidos() {
           <div className="input-group">
             <span className="input-group-text">Celular de contacto  </span>
 
-
             <input
               className="form-control"
               type="text"
@@ -352,9 +344,6 @@ export default function FormPedidos() {
               value={formData.celular}
               onChange={handleInputChange}
             />
-
-
-
 
           </div>
         )}
@@ -374,9 +363,6 @@ export default function FormPedidos() {
               value={formData.telefonoFijo}
               onChange={handleInputChange}
             />
-
-
-
 
           </div>
         )}
@@ -430,7 +416,7 @@ export default function FormPedidos() {
               placeholder="Valor  Total "
               name="todoNombre"
               disabled
-              value={valorTotal}
+              value={numeral(valorTotal).format('$') }
             />
           </div>
         )}
@@ -451,13 +437,17 @@ export default function FormPedidos() {
         {data && data.length > 0 && (
           <div className="input-group">
             <span className="input-group-text">Neto a pagar</span>
+
+
+
+
             <input
               className="form-control"
               type="text"
               placeholder="Nombre Comercial"
               name="nombreComercial"
               disabled
-              value={netoAPagar}
+              value={numeral(netoAPagar).format('$ 0,0') }
             />
           </div>
         )}
@@ -483,7 +473,6 @@ export default function FormPedidos() {
               type="text"
               placeholder="Estado "
               name="estado"
-
               disabled
               value={formData.estado}
               onChange={handleInputChange}
@@ -530,7 +519,7 @@ export default function FormPedidos() {
           <tr className="table-primary  'text-center'">
             <th scope="col">N°</th>
             <th scope="col">Numero de parte </th>
-            <th scope="col">Tipo Negocio  </th>
+            <th scope="col">Tipo Negocio </th>
             <th scope="col">Descripción  </th>
             <th scope="col">Marca </th>
             <th scope="col" >Unidades </th>
@@ -555,14 +544,19 @@ export default function FormPedidos() {
               >
                 <th scope="row">{index + 1}</th>
                 <td>{item.numerodeparte}</td>
-                <td>{item.tipodeNegocio}</td>
-                <td>{item.nombreArticulo}</td>
+                <td>{item.tipoDeNegocio}</td>
+
+                <td className={styles.descripcionProducto}>{item.descripcion}</td>
                 <td>{item.marca}</td>
                 <td>{item.cantidad}</td>
 
-                <td>{item.preciocompra}</td>
-                <td>{item.preciocomprausd}</td>
-                <td>{item.iva}</td>
+                <td>   {numeral(item.valorUnitario).format('$ 0,0') } </td>
+                <td>   {numeral(item.preciominimocop).format('$ 0,0') } </td>
+                <td>   {numeral(item.preciominimousd).format('$ 0,0') } </td>
+                <td>   {numeral(item.iva).format('$ 0,0.00') } </td>
+               
+      
+               
 
 
 
