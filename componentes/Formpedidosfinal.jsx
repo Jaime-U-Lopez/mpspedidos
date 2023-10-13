@@ -19,12 +19,14 @@ export default function FormPedidos() {
   const url = pathname;
   const [selectedRow, setSelectedRow] = useState(null);
   const [data, setData] = useState([]);
-  const [dataFormInicial, setDataFormInicial] = useState([]);
+  const [dataTable, setDataTable] = useState([]);
   const [dataInicial, setDataInicial] = useState([]);
-  const [formData, setFormData] = useState();
+  const [pedidosEliminados, setPedidosEliminados] = useState([]);
+  const [formData, setFormData] = useState({formaPago:""});
+
   const [isLoading, setIsLoading] = useState(false);
   const [cliente, setCliente] = useState();
-
+  const [error, setError] = useState(false);
 
 
   var totalProductos = data.length;
@@ -57,13 +59,10 @@ export default function FormPedidos() {
     axios
       .get(`http://localhost:8082/apiPedidosMps/v1/pedidos/orden/${cliente}`)
       .then((response2) => {
-
         const dataFromApi = response2.data;
+        setDataInicial(dataFromApi)
 
-        setDataInicial(dataFromApi);
-      
-
-      })
+            })
 
       .catch((error) => {
         console.error(error);
@@ -78,7 +77,6 @@ export default function FormPedidos() {
     let nombreComercial = "";
     let evento = "Evento de ejemplo";
     let idCliente = 123; // ID del cliente
-
     let personaContacto = "";
     let direccion = "";
     let celular = "";
@@ -122,17 +120,10 @@ export default function FormPedidos() {
   }
 
 
-
-  // Calcular el neto a pagar
-
-
   const totalCantidad = data.reduce((total, producto) => total + producto.cantidad, 0);
   const valorTotal = data.reduce((total, producto) => total + producto.valorTotalPorPro, 0);
   const ivaTotal = data.reduce((total, producto) => total + producto.iva, 0);
-
   const netoAPagar = valorTotal - ivaTotal;
-
-
 
 
   // Manejar cambios en los campos de entrada
@@ -152,7 +143,11 @@ export default function FormPedidos() {
   };
 
 
-
+  const seleccionarPedido = () => {
+    setData(dataInicial)
+   actualizacionDatos(data)
+      setDataTable(data)
+  };
 
 
 
@@ -210,29 +205,30 @@ export default function FormPedidos() {
         showCancelButton: true,
         confirmButtonText: 'Sí, eliminar',
         cancelButtonText: 'No, cancelar',
-      }).then(async (result) => {
+      }).then(async(result) => {
         if (result.isConfirmed) {
       
-          try {
+         
             // Realiza la solicitud DELETE con Axios
-            const id = producto.id;
-          console.log(data)
-            await axios.delete(`http://localhost:8082/apiPedidosMps/v1/pedidos/{id}?id=${id}`);
+            const id  = producto.id;
+        //  console.log(data)
+           await axios.delete(`http://localhost:8082/apiPedidosMps/v1/pedidos/{id}?id=${id}`);
     
+
 
      
             // Actualiza el carrito y la lista de cantidades después de eliminar el producto
-           // const nuevoCarrito = carrito.filter((item) => item.id !== producto.id);
-          
-           
+           const nuevoProductos = dataTable.filter((item) => item.id !== producto.id);
+           const idEliminar = dataTable.filter((item) => item.id == producto.id);
+           setDataTable(nuevoProductos)
+           setData(nuevoProductos)
+         
+           if(nuevoProductos.length==0){
+            setDataInicial([])
+           }
 
 
-            // Actualiza el carrito después de eliminar el producto
-        const nuevoCarrito = dataInicial.filter((item) => item.id !== producto.id);
 
-        setDataFormInicial(nuevoCarrito)
-console.log(data);
-console.log(nuevoCarrito);
     
             Swal.fire({
               icon: 'success',
@@ -241,19 +237,116 @@ console.log(nuevoCarrito);
               showConfirmButton: false,
               timer: 2000,
             });
-          } catch (error) {
-            // Maneja errores de la solicitud DELETE (puedes mostrar un mensaje de error)
-            console.error('Error al eliminar el producto:', error);
-            Swal.fire({
-              icon: 'error',
-              title: 'Error al eliminar el producto',
-              text: 'Hubo un problema al eliminar el producto del carrito.',
-            });
-          }
+      
         }
       });
     };
       
+
+    const confirmarPedido = async () => {
+     
+      setError(false); // Reinicia el estado de error
+
+
+
+
+      const url = pathname;
+       
+  
+      //enviamos pedido
+  
+      let apiUrl = `http://localhost:8082/apiPedidosMps/v1/pedidos/`;
+
+
+
+      const datofijos={valorTotalPedido:valorTotal   , netoApagar: netoAPagar   ,  ivaTotalPed : ivaTotal   }
+
+      const datosEnvioModificado= formData
+
+      const cambiosAenviar = {
+        ...datofijos,
+        ...datosEnvioModificado,
+      };
+
+ 
+
+
+if(formData.formaPago!="null"){
+
+  if(dataTable.length>0) {
+    try {
+     
+
+      const pedidoInicial = { codigoInterno: cliente, datosUpdate: cambiosAenviar , estado: "Confirmado",  evento:"prueba" }
+
+
+      const response = await axios.patch(apiUrl, pedidoInicial);
+
+
+      Swal.fire({
+        title: 'Cargando exitosamente...',
+        allowOutsideClick: false,
+        onBeforeOpen: () => {
+          Swal.showLoading();
+        },
+      });
+      setTimeout(() => {
+        setIsLoading(false);
+        Swal.close();
+
+      }, 500);
+  
+     // setControEnvio(true);
+    } catch (error) {
+      console.error(error);
+
+      if (error.response) {
+        // Si la respuesta del servidor está presente en el error, accede a ella.
+        const responseData = error.response.data.message;
+    
+        console.log("Mensaje de error:", responseData); // Accede al mensaje de error específico
+        console.log("Código de estado:", error.response.status); // Accede al código de estado HTTP (en este caso, 400)
+        // Otras propiedades de la respuesta, como headers, statusText, etc., también están disponibles en error.response
+        setError(true); // Establece el estado de error en true
+        Swal.fire('Error', 'No se pudo guardar el pedido, error: ' + responseData, 'error');
+      } else {
+        console.log("Error sin respuesta del servidor:", error.message);
+        setError(true); // Establece el estado de error en true
+        Swal.fire('Error', 'No se pudo guardar el pedido, error: ' + error.message, 'error');
+      }
+    } finally {
+      setIsLoading(false); // Establece isLoading en false después de la carga
+
+    }
+ 
+
+  }else{
+
+    Swal.fire('Error', 'Debe seleccionar como minimo un producto.', 'error');
+  }
+}else{
+
+  Swal.fire('Error', 'Debe seleccionar la forma de pago.', 'error');
+
+}
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   //<<<<<<<<___________________________________>>>>>>>>>>>>>
@@ -277,8 +370,6 @@ console.log(nuevoCarrito);
       <form onSubmit={handleSubmit}  >
 
 
-
-
           <div className="input-group">
             <span className="input-group-text">Orden</span>
 
@@ -288,13 +379,9 @@ console.log(nuevoCarrito);
               placeholder="Numero orden"
               name="todoNombre"
               disabled
-              value={data[0].numeroPedido}
+              value={data.length > 0 ? data[0].numeroPedido : ''}
             />
-
-
           </div>
-
-
 
 
           <div className="input-group">
@@ -306,7 +393,7 @@ console.log(nuevoCarrito);
               placeholder="Nombre Evento"
               name="todoNombre"
               disabled
-              value={data[0].dni}
+              value={data.length > 0 ? data[0].dni : ''} 
             />
 
 
@@ -324,15 +411,14 @@ console.log(nuevoCarrito);
               placeholder="Ingresar el Nit o CC"
               name="todoNombre"
               disabled
-              value={data[0].dni}
+              value={data.length > 0 ? data[0].dni : ''} 
 
             />
 
 
           </div>
-
-
    
+
           <div className="input-group">
             <span className="input-group-text">Razon Social   </span>
 
@@ -343,14 +429,14 @@ console.log(nuevoCarrito);
               id="nombreComercial"
               name="nombreComercial"
               placeholder="Nombre Razon social"
-              value={formData.nombreComercial}
+              value={formData ? formData.nombreComercial : ''}
               onChange={handleInputChange}
             />
 
 
           </div>
 
-   
+    
           <div className="input-group">
             <span className="input-group-text">Persona de Contacto</span>
 
@@ -360,14 +446,16 @@ console.log(nuevoCarrito);
               id="personaContacto"
               name="personaContacto"
               placeholder="Persona de Contacto"
-              value={formData.personaContacto}
+ 
+              value={formData ? formData.personaContacto : ''}
               onChange={handleInputChange}
             />
 
           </div>
- 
 
-    
+
+
+
           <div className="input-group">
             <span className="input-group-text">Dirección  </span>
 
@@ -377,11 +465,15 @@ console.log(nuevoCarrito);
               id="direccion"
               name="direccion"
               placeholder="Ingresa la dirección"
-              value={formData.direccion}
+  
+              value={formData ? formData.direccion : ''}
               onChange={handleInputChange}
             />
           </div>
- 
+
+
+
+
 
           <div className="input-group">
             <span className="input-group-text">Celular de contacto  </span>
@@ -392,12 +484,13 @@ console.log(nuevoCarrito);
               id="celular"
               name="celular"
               placeholder="Ingresa la dirección"
-              value={formData.celular}
+              value={formData ? formData.celular : ''}
+            
               onChange={handleInputChange}
             />
 
           </div>
-        
+
 
 
 
@@ -411,7 +504,7 @@ console.log(nuevoCarrito);
               id="telefonoFijo"
               name="telefonoFijo"
               placeholder="Ingresa el numero Fijo"
-              value={formData.telefonoFijo}
+              value={formData ? formData.telefonoFijo : ''}
               onChange={handleInputChange}
             />
 
@@ -431,7 +524,8 @@ console.log(nuevoCarrito);
               id="correoElectronico"
               name="correoElectronico"
               placeholder="Ingresa el Email de contacto"
-              value={formData.correoElectronico}
+              value={formData ? formData.correoElectronico : ''}
+  
               onChange={handleInputChange}
             />
 
@@ -458,7 +552,7 @@ console.log(nuevoCarrito);
 
 
         </div>
-
+ 
           <div className="input-group">
             <span className="input-group-text"> Valor Total   </span>
             <input
@@ -471,7 +565,8 @@ console.log(nuevoCarrito);
             />
           </div>
 
-     
+
+   
           <div className="input-group">
             <span className="input-group-text"> Iva total   </span>
             <input
@@ -502,16 +597,21 @@ console.log(nuevoCarrito);
 
         <div className="input-group">
           <span className="input-group-text"> Forma de pago     </span>
-          <select defaultValue="Seleccione el tipo" className="form-select form-select-lg " aria-label=".form-select-lg example">
+          <select defaultValue="Seleccione el tipo"
+     
+          name="formaPago"
+            onChange={handleInputChange}
+           className="form-select form-select-lg "
+            aria-label=".form-select-lg example">
             <option value="1">Seleccione el Tipo</option>
-            <option value="2">Contado </option>
-            <option value="3">Credito</option>
-            <option value="3">Contado y Credito</option>
+            <option value="contado">Contado </option>
+            <option value="credito">Credito</option>
+            <option value="contadoYCredito">Contado y Credito</option>
           </select>
 
         </div>
 
-     
+
           <div className="input-group">
             <span className="input-group-text"> Estado   </span>
 
@@ -521,13 +621,12 @@ console.log(nuevoCarrito);
               placeholder="Estado "
               name="estado"
               disabled
-              value={formData.estado}
+
+              value={formData ? formData.estado : ''}
               onChange={handleInputChange}
             />
           </div>
-
-
-
+        
 
 
         
@@ -540,17 +639,33 @@ console.log(nuevoCarrito);
               placeholder="Observaciones "
               name="observaciones"
               rows="4"
-              value={formData.observaciones}
+
+              value={formData ? formData.observaciones : ''}
               onChange={handleInputChange}
             />
           </div>
-
+  
         <ul>
 
-          <li >
+
+
         
-            <button     className="btn w100- mt-3 mb-14 btn-primary" type="submit">Confirmar Pedido</button>
-          </li>
+        <button     className="btn w100- mt-3 mb-14 btn-primary" type="button" onClick={() => seleccionarPedido()}>
+          
+          
+           Seleccionar Pedido
+           
+           </button>
+      
+      
+        <button     className="btn w100- mt-3 mb-14 btn-primary" type="Button" onClick={() => confirmarPedido()} >
+          
+          
+          
+        Confirmar Pedido
+          
+          </button>
+      
           <li >
             <Link href="/pedidos/confirmarPedido" className={styles.linkCancelarPedido} >Cancelar Pedido</Link>
           </li>
@@ -589,7 +704,7 @@ console.log(nuevoCarrito);
           <tbody>
 
 
-            {dataInicial.map((item, index) => (
+            {dataTable.map((item, index) => (
               <tr key={item.id}
 
                 onClick={() => setSelectedRow(item)}
@@ -627,7 +742,9 @@ console.log(nuevoCarrito);
                 )}
               </td>
                
-              
+               
+
+
 
               </tr>
 

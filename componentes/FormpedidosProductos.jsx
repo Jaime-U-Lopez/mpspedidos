@@ -392,7 +392,6 @@ const valorTotal=cantidadPedidoActuales+valor;
     });
   }
 
-
   var totalProductos = data.length;
   var totalProductosActualesTable = dataToShow.length;
   var totalProductosEnCarrito = cantidadPedidoActuales;
@@ -428,7 +427,6 @@ const valorTotal=cantidadPedidoActuales+valor;
     alt="Picture of the author"
     width={50 / 2}
     height={50}></Image>
-
 
 
     const extraerIdCliente = (url) => {
@@ -545,11 +543,6 @@ const valorTotal=cantidadPedidoActuales+valor;
      
             </li> 
       )}
-
-
-
-        
-
 
 
           <li >
