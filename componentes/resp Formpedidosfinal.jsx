@@ -21,7 +21,9 @@ export default function FormPedidos() {
   const [data, setData] = useState([]);
   const [dataFormInicial, setDataFormInicial] = useState([]);
   const [dataInicial, setDataInicial] = useState([]);
+
   const [formData, setFormData] = useState();
+
   const [isLoading, setIsLoading] = useState(false);
   const [cliente, setCliente] = useState();
 
@@ -59,9 +61,17 @@ export default function FormPedidos() {
       .then((response2) => {
 
         const dataFromApi = response2.data;
+        setData(dataFromApi)
 
-        setDataInicial(dataFromApi);
+        if(dataFormInicial.length>=1){
+          setDataInicial(dataFormInicial);
+        }else{
+
+          setDataInicial(dataFromApi);
+        }
       
+
+        actualizacionDatos(dataFromApi);
 
       })
 
@@ -70,6 +80,20 @@ export default function FormPedidos() {
 
       });
   }, [cliente]); // Este efecto se ejecuta una vez al cargar el componente para obtener la lista de marcas
+
+
+
+
+  http://localhost:8082/apiPedidosMps/v1/pedidos/{id}?id=51
+
+
+
+
+
+
+  console.log(data);
+  console.log(formData);
+
 
 
 
@@ -278,7 +302,7 @@ console.log(nuevoCarrito);
 
 
 
-
+        {data && data.length > 0 && (
           <div className="input-group">
             <span className="input-group-text">Orden</span>
 
@@ -294,9 +318,9 @@ console.log(nuevoCarrito);
 
           </div>
 
+        )}
 
-
-
+        {data && data.length > 0 && (
           <div className="input-group">
             <span className="input-group-text">Evento</span>
 
@@ -311,10 +335,10 @@ console.log(nuevoCarrito);
 
 
           </div>
+        )}
 
 
-
-
+        {data && data.length > 0 && (
           <div className="input-group">
             <span className="input-group-text">Documento identificacion  </span>
 
@@ -330,9 +354,9 @@ console.log(nuevoCarrito);
 
 
           </div>
+        )}
 
-
-   
+        {formData && (
           <div className="input-group">
             <span className="input-group-text">Razon Social   </span>
 
@@ -350,7 +374,8 @@ console.log(nuevoCarrito);
 
           </div>
 
-   
+        )}
+        {formData && (
           <div className="input-group">
             <span className="input-group-text">Persona de Contacto</span>
 
@@ -365,9 +390,10 @@ console.log(nuevoCarrito);
             />
 
           </div>
- 
+        )}
 
-    
+        {formData && (
+
           <div className="input-group">
             <span className="input-group-text">Dirección  </span>
 
@@ -381,7 +407,10 @@ console.log(nuevoCarrito);
               onChange={handleInputChange}
             />
           </div>
- 
+        )}
+
+
+        {formData && (
 
           <div className="input-group">
             <span className="input-group-text">Celular de contacto  </span>
@@ -397,10 +426,10 @@ console.log(nuevoCarrito);
             />
 
           </div>
-        
+        )}
 
 
-
+        {formData && (
           <div className="input-group">
             <span className="input-group-text">Tel. Fijo de contacto  </span>
 
@@ -416,10 +445,10 @@ console.log(nuevoCarrito);
             />
 
           </div>
+        )}
 
 
-
-
+        {formData && (
           <div className="input-group">
             <span className="input-group-text">Email de contacto </span>
 
@@ -437,7 +466,7 @@ console.log(nuevoCarrito);
 
 
           </div>
-
+        )}
         <div className="input-group">
           <span className="input-group-text">Total Productos  </span>
 
@@ -458,7 +487,7 @@ console.log(nuevoCarrito);
 
 
         </div>
-
+        {data && data.length > 0 && (
           <div className="input-group">
             <span className="input-group-text"> Valor Total   </span>
             <input
@@ -470,8 +499,9 @@ console.log(nuevoCarrito);
               value={valorTotal}
             />
           </div>
+        )}
 
-     
+        {data && data.length > 0 && (
           <div className="input-group">
             <span className="input-group-text"> Iva total   </span>
             <input
@@ -483,8 +513,8 @@ console.log(nuevoCarrito);
               value={ivaTotal }
             />
           </div>
-
-
+        )}
+        {data && data.length > 0 && (
           <div className="input-group">
             <span className="input-group-text">Neto a pagar</span>
 
@@ -497,7 +527,7 @@ console.log(nuevoCarrito);
               value={formatNumberWithCurrency(netoAPagar) }
             />
           </div>
-
+        )}
 
 
         <div className="input-group">
@@ -511,7 +541,7 @@ console.log(nuevoCarrito);
 
         </div>
 
-     
+        {formData && (
           <div className="input-group">
             <span className="input-group-text"> Estado   </span>
 
@@ -525,9 +555,9 @@ console.log(nuevoCarrito);
               onChange={handleInputChange}
             />
           </div>
+        )}
 
-
-
+        {formData && (
 
 
         
@@ -544,7 +574,7 @@ console.log(nuevoCarrito);
               onChange={handleInputChange}
             />
           </div>
-
+        )}
         <ul>
 
           <li >
@@ -627,7 +657,9 @@ console.log(nuevoCarrito);
                 )}
               </td>
                
-              
+               
+
+
 
               </tr>
 

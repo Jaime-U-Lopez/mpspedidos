@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import styles from 'app/page.module.css'
-import FormPedidosfinal from '@/componentes/Formpedidosfinal'
+import FormPedidosfinal from '@/componentes/resp Formpedidosfinal'
 import NavbarBotones from '@/componentes/NavbarBotones'
 import Navbar from '@/componentes/Navbar'
 import Flooter from '@/componentes/Flooter'

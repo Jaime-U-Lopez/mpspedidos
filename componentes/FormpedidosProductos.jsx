@@ -195,10 +195,6 @@ const valorTotal=cantidadPedidoActuales+valor;
   };
 
 
-
-  console.log(totalCantidades)
-
-
   function generarCodigoAleatorio(longitud) {
     const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let codigo = '';
