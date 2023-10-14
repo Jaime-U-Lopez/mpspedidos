@@ -604,7 +604,11 @@ if(formData.formaPago!="null"){
           name="formaPago"
             onChange={handleInputChange}
            className="form-select form-select-lg "
-            aria-label=".form-select-lg example">
+            aria-label=".form-select-lg example"
+     
+            value={formData ? formData.formaPago : ''}
+            >
+
             <option value="1">Seleccione el Tipo</option>
             <option value="contado">Contado </option>
             <option value="credito">Credito</option>
@@ -623,8 +627,9 @@ if(formData.formaPago!="null"){
               placeholder="Estado "
               name="estado"
               disabled
+          
+            value={confirmados || formData.estado=="Confirmado"? "Confirmado" :formData.estado } 
 
-              value={formData ? formData.estado : ''}
               onChange={handleInputChange}
             />
           </div>
@@ -646,10 +651,6 @@ if(formData.formaPago!="null"){
           </div>
   
         <ul>
-
-
-
-        
       
 
         <li>
@@ -663,7 +664,6 @@ if(formData.formaPago!="null"){
             </Link>
         </div>
         </li> 
-
       
         <button     className="btn w100- mt-3 mb-14 btn-primary" type="Button" onClick={() => confirmarPedido()} 
         
@@ -681,8 +681,6 @@ if(formData.formaPago!="null"){
        :
        <Link href="/pedidos/buscarCliente"
        className={styles.linkCancelarPedido} >Cancelar Pedido</Link>
-     
-
      
       }
             </li>

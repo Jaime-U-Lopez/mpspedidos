@@ -692,7 +692,6 @@ const valorTotal=cantidadPedidoActuales+valor;
         </tbody>
       </table>
 
-
       ): (
   <p>Por favor, seleccione una marca y un número de parte antes de buscar productos.</p>
         )}
