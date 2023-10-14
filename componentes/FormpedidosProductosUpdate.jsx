@@ -50,10 +50,8 @@ export default function FormPedidosProductos() {
   useEffect(() => {
     // Hacer la solicitud para obtener la lista de marcas
 
+    extraerIdCodigoInternoCancelar(pathname)
 
-    var codigo = extraerIdCodigoInternoCancelar(pathname)
-    setCodigoInternoTraspaso(codigo);
-    console.log(codigo)
     axios
       .get('http://192.168.1.38:8082/apiPedidosMps/v1/productos/marcas/')
       .then((response2) => {
@@ -61,8 +59,8 @@ export default function FormPedidosProductos() {
 
         const dataFromApi = response2.data;
         setMarcas(dataFromApi);
-        var extracionCliente=extraerIdCliente(pathname)
-        setClientePed(extracionCliente)
+
+
 
       })
 
@@ -71,7 +69,7 @@ export default function FormPedidosProductos() {
         console.error(error);
         Swal.fire('Error', 'Sin marcas para seleccionar en Base de datos.', 'error');
       });
-  }, []); // Este efecto se ejecuta una vez al cargar el componente para obtener la lista de marcas
+  }, [codigoInternoTraspaso, pathname]); // Este efecto se ejecuta una vez al cargar el componente para obtener la lista de marcas
 
 
   const handleCantidadChange = (e, productoId) => {
@@ -424,25 +422,17 @@ const valorTotal=cantidadPedidoActuales+valor;
     height={50}></Image>
 
 
-       
-const cancelarActualizacion= async () =>{
+      
 
-  try{
+    const extraerIdCodigoInternoCancelar = (url) => {
 
-    const codigoInterno = await extraerIdCodigoInterno(url);
+      const segments = url.split('/'); // Divide la URL en segmentos utilizando "/"
+      const ultimoSegmento = segments[segments.length - 1]; // Obtén el último segmento
+      setCodigoInternoTraspaso(ultimoSegmento);
+      return ultimoSegmento;
+    }
 
-    const codigoInternoString=`${codigoInterno}`;
 
-
-    setCodigoInternoTraspaso(codigoInternoString);
-
-    console.log(codigoInternoString)
-
-  }catch (error) {
-    console.error(error);
- 
-}
-}
 
 
 
@@ -458,13 +448,10 @@ const cancelarActualizacion= async () =>{
             reject(error);
           }
         } else {
-          reject(new Error('No se encontró un id de cliente en la  URL.'));
+        
         }
       });
     };
-
-
-
 
     const extraerIdCodigoInterno = (url) => {
       return new Promise((resolve, reject) => {
@@ -484,21 +471,7 @@ const cancelarActualizacion= async () =>{
     };
    
 
-    const extraerIdCodigoInternoCancelar = (url) => {
-      const numeroMatch = url.match(/\/(\d+)[a-zA-Z]*$/);
-    
-      if (numeroMatch) {
-        try {
-          const ultimoSegmento = url.split('/').pop();
-          return ultimoSegmento;
-        } catch (error) {
-          throw error;
-        }
-      } else {
-        throw new Error('No se encontró un número interno en la URL.');
-      }
-    };
-    
+
 
     
     
@@ -601,7 +574,7 @@ const cancelarActualizacion= async () =>{
 
 
           <li >
-             <Link href={`/pedidos/confirmarPedido/${encodeURIComponent(codigoInternoTraspaso)}`}  scroll={false} prefetch={false}  className={styles.linkCancelar} onClick={cancelarActualizacion} >Cancelar Pedido</Link>
+             <Link href={`/pedidos/confirmarPedido/${encodeURIComponent(codigoInternoTraspaso)}`}  scroll={false} prefetch={false}  className={styles.linkCancelar}  >Cancelar Pedido</Link>
   
           </li>
 

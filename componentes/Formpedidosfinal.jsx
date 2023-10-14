@@ -57,20 +57,28 @@ export default function FormPedidos() {
 
   useEffect(() => {
 
-    extraerIdCliente(url)
+ extraerIdCliente(url)
+
+
     axios
       .get(`http://localhost:8082/apiPedidosMps/v1/pedidos/orden/${cliente}`)
       .then((response2) => {
         const dataFromApi = response2.data;
         setDataInicial(dataFromApi)
+   console.log(dataFromApi)
+   seleccionarPedido(dataFromApi)
 
-     
-            })
-
+       })
+  
       .catch((error) => {
         console.error(error);
 
       });
+      actualizacionDatos(data)
+    
+
+    
+ 
   }, [cliente,clienteId]); // Este efecto se ejecuta una vez al cargar el componente para obtener la lista de marcas
 
 
@@ -150,10 +158,10 @@ export default function FormPedidos() {
   };
 
 
-  const seleccionarPedido = () => {
-    setData(dataInicial)
-   actualizacionDatos(data)
-      setDataTable(data)
+  const seleccionarPedido = (dataFech) => {
+    setData(dataFech)
+   actualizacionDatos(dataFech)
+      setDataTable(dataFech)
    
 
 
