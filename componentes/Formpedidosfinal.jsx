@@ -26,6 +26,8 @@ export default function FormPedidos() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [cliente, setCliente] = useState();
+  const [clienteId, setClienteId] = useState();
+
   const [error, setError] = useState(false);
 
 
@@ -62,13 +64,14 @@ export default function FormPedidos() {
         const dataFromApi = response2.data;
         setDataInicial(dataFromApi)
 
+     
             })
 
       .catch((error) => {
         console.error(error);
 
       });
-  }, [cliente]); // Este efecto se ejecuta una vez al cargar el componente para obtener la lista de marcas
+  }, [cliente,clienteId]); // Este efecto se ejecuta una vez al cargar el componente para obtener la lista de marcas
 
 
 
@@ -85,6 +88,7 @@ export default function FormPedidos() {
     let formaDePago = "";
     let estado = "";
     let observaciones = "";
+    let id=0;
     console.log(dataFromApi)
     // Calcular la suma del valor total y el IVA
     dataFromApi.forEach((producto) => {
@@ -99,6 +103,7 @@ export default function FormPedidos() {
       formaDePago = producto.formaDePago,
         estado = producto.estado,
         observaciones = producto.observaciones
+        id= producto.dni
     });
 
     const datosCliente = {
@@ -114,9 +119,11 @@ export default function FormPedidos() {
       observaciones: '', 
 
     }
+    
 
     setFormData(datosCliente);
-
+ 
+    setClienteId(id);
   }
 
 
@@ -147,6 +154,9 @@ export default function FormPedidos() {
     setData(dataInicial)
    actualizacionDatos(data)
       setDataTable(data)
+   
+
+
   };
 
 
@@ -193,11 +203,7 @@ export default function FormPedidos() {
       return parseFloat(formattedNumber.replace(/[^0-9,.-]/g, '').replace(',', '.'));
     }
 
-
-
     const eliminarDelCarrito = (producto) => {
-
-
       Swal.fire({
         icon: 'question',
         title: '¿Estás seguro?',
@@ -214,9 +220,6 @@ export default function FormPedidos() {
         //  console.log(data)
            await axios.delete(`http://localhost:8082/apiPedidosMps/v1/pedidos/{id}?id=${id}`);
     
-
-
-     
             // Actualiza el carrito y la lista de cantidades después de eliminar el producto
            const nuevoProductos = dataTable.filter((item) => item.id !== producto.id);
            const idEliminar = dataTable.filter((item) => item.id == producto.id);
@@ -227,9 +230,6 @@ export default function FormPedidos() {
             setDataInicial([])
            }
 
-
-
-    
             Swal.fire({
               icon: 'success',
               title: 'Producto eliminado del carrito',
@@ -247,12 +247,8 @@ export default function FormPedidos() {
      
       setError(false); // Reinicia el estado de error
 
-
-
-
       const url = pathname;
        
-  
       //enviamos pedido
   
       let apiUrl = `http://localhost:8082/apiPedidosMps/v1/pedidos/`;
@@ -268,7 +264,6 @@ export default function FormPedidos() {
         ...datosEnvioModificado,
       };
 
- 
 
 
 if(formData.formaPago!="null"){
@@ -278,8 +273,6 @@ if(formData.formaPago!="null"){
      
 
       const pedidoInicial = { codigoInterno: cliente, datosUpdate: cambiosAenviar , estado: "Confirmado",  evento:"prueba" }
-
-
       const response = await axios.patch(apiUrl, pedidoInicial);
 
 
@@ -332,7 +325,6 @@ if(formData.formaPago!="null"){
 
 
 }
-
 
 
 
@@ -627,8 +619,6 @@ if(formData.formaPago!="null"){
             />
           </div>
         
-
-
         
           <div className="input-group">
             <span className="input-group-text"> Observaciones  </span>
@@ -651,23 +641,20 @@ if(formData.formaPago!="null"){
 
         
         <button     className="btn w100- mt-3 mb-14 btn-primary" type="button" onClick={() => seleccionarPedido()}>
-          
-          
            Seleccionar Pedido
-           
-           </button>
-      
+        </button> 
+
+        <li>
+        <Link href={`/pedidos/actualizarPedido/${encodeURIComponent(clienteId)}/${encodeURIComponent(cliente)}`} scroll={false} prefetch={false} > Agregar Productos </Link>
+        </li> 
+
       
         <button     className="btn w100- mt-3 mb-14 btn-primary" type="Button" onClick={() => confirmarPedido()} >
-          
-          
-          
         Confirmar Pedido
-          
           </button>
       
           <li >
-            <Link href="/pedidos/confirmarPedido" className={styles.linkCancelarPedido} >Cancelar Pedido</Link>
+            <Link href="/pedidos/actualizarPedido" className={styles.linkCancelarPedido} >Cancelar Pedido</Link>
           </li>
         </ul>
 
@@ -741,11 +728,7 @@ if(formData.formaPago!="null"){
                   </button>
                 )}
               </td>
-               
-               
-
-
-
+            
               </tr>
 
             ))}

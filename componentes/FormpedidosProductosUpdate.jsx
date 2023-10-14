@@ -47,12 +47,13 @@ export default function FormPedidosProductos() {
   const [actualizarProductos, setActualizarProductos] = useState(false);
 
 
-
-
-
   useEffect(() => {
     // Hacer la solicitud para obtener la lista de marcas
 
+
+    var codigo = extraerIdCodigoInternoCancelar(pathname)
+    setCodigoInternoTraspaso(codigo);
+    console.log(codigo)
     axios
       .get('http://192.168.1.38:8082/apiPedidosMps/v1/productos/marcas/')
       .then((response2) => {
@@ -62,6 +63,7 @@ export default function FormPedidosProductos() {
         setMarcas(dataFromApi);
         var extracionCliente=extraerIdCliente(pathname)
         setClientePed(extracionCliente)
+
       })
 
 
@@ -70,10 +72,6 @@ export default function FormPedidosProductos() {
         Swal.fire('Error', 'Sin marcas para seleccionar en Base de datos.', 'error');
       });
   }, []); // Este efecto se ejecuta una vez al cargar el componente para obtener la lista de marcas
-
-
-
-
 
 
   const handleCantidadChange = (e, productoId) => {
@@ -92,8 +90,6 @@ export default function FormPedidosProductos() {
     setFormData({ ...formData, [name]: value });
 
     setControlInput(true);
-
-
 
   };
 
@@ -134,8 +130,6 @@ export default function FormPedidosProductos() {
   const agregarAlCarrito = (producto) => {
 
     if (controlInput && cantidades.cantidad > 0 && precioUnitario.preciocompra>0) {
-
-
       setCarrito([...carrito, producto]);
       setCarritoEnvio([...carritoEnvio, producto]);
    
@@ -143,7 +137,9 @@ export default function FormPedidosProductos() {
 
 const cantidadesInput={ 
   id:cantidades.id,
- cantidad: cantidades.cantidad}
+ cantidad: cantidades.cantidad
+
+}
 
 
  const precioUnitarioInput={
@@ -187,7 +183,6 @@ const valorTotal=cantidadPedidoActuales+valor;
 
   const eliminarDelCarrito = (producto) => {
 
-
     Swal.fire({
       icon: 'question',
       title: '¿Estás seguro?',
@@ -200,12 +195,9 @@ const valorTotal=cantidadPedidoActuales+valor;
         const nuevoCarrito = carrito.filter((item) => item.id !== producto.id);
         const nuevasCantidades = totalCantidades.filter((item) => item.id !== producto.id);
 
-
-
         setTotalCantidades(nuevasCantidades);
         setCarrito(nuevoCarrito);
     
-
         Swal.fire({
           icon: 'success',
           title: 'Producto eliminado del carrito',
@@ -224,16 +216,7 @@ const valorTotal=cantidadPedidoActuales+valor;
   };
 
 
-  function generarCodigoAleatorio(longitud) {
-    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let codigo = '';
-    for (let i = 0; i < longitud; i++) {
-      const indiceAleatorio = Math.floor(Math.random() * caracteres.length);
-      codigo += caracteres.charAt(indiceAleatorio);
-    }
-    return codigo;
-  }
-
+ 
 
   const handleSubmitGet = async (e) => {
 
@@ -290,12 +273,12 @@ const valorTotal=cantidadPedidoActuales+valor;
     setCurrentPage(1);
   };
 
-  const handleSubmitPost = async (e) => {
+  const handleSubmitPut = async (e) => {
 
     e.preventDefault();
     setIsLoading(true); // Establece isLoading en true durante la carga
     setError(false); // Reinicia el estado de error
-    const codigoUnico = uuidv4();
+
 
 
     const url = pathname;
@@ -314,7 +297,7 @@ const valorTotal=cantidadPedidoActuales+valor;
 
     //enviamos pedido
 
-    let apiUrl = `http://localhost:8082/apiPedidosMps/v1/pedidos/`;
+    let apiUrl = `http://localhost:8082/apiPedidosMps/v1/pedidos/addProduct/`;
 
 
     let numRetries = 0;
@@ -328,15 +311,16 @@ const valorTotal=cantidadPedidoActuales+valor;
       try {
        
         const cliente = await extraerIdCliente(url);
+        const codigoInterno = await extraerIdCodigoInterno(url);
+        const clienteString=`${cliente}` ;
+        const codigoInternoString=`${codigoInterno}`;
 
-        const codigoAleatorio = generarCodigoAleatorio(4);
-        codigoInterno = `${cliente}${codigoAleatorio}`
+     
 
         setCodigoInternoTraspaso(codigoInterno);
-        const pedidoInicial = { idCliente: cliente, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno: codigoInterno }
-  
+        const pedidoInicial = { idCliente: clienteString, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno: codigoInternoString }
 
-        const response = await axios.post(apiUrl, pedidoInicial);
+        const response = await axios.patch(apiUrl, pedidoInicial);
          dataInicial = response.data.message;
 
         Swal.fire({
@@ -440,22 +424,87 @@ const valorTotal=cantidadPedidoActuales+valor;
     height={50}></Image>
 
 
+       
+const cancelarActualizacion= async () =>{
+
+  try{
+
+    const codigoInterno = await extraerIdCodigoInterno(url);
+
+    const codigoInternoString=`${codigoInterno}`;
+
+
+    setCodigoInternoTraspaso(codigoInternoString);
+
+    console.log(codigoInternoString)
+
+  }catch (error) {
+    console.error(error);
+ 
+}
+}
+
+
+
     const extraerIdCliente = (url) => {
       return new Promise((resolve, reject) => {
-        const numeroMatch = url.match(/\/(\d+)$/);
+        const numeroMatch = url.match(/\/(\d+)[a-zA-Z]*$/);
         if (numeroMatch) {
           try {
             const numero = parseInt(numeroMatch[1]);
+            const ultimoSegmento = url.split('/').pop();
             resolve(numero);
-      
           } catch (error) {
             reject(error);
           }
         } else {
-          reject(new Error('No se encontró un número de cliente en la URL.'));
+          reject(new Error('No se encontró un id de cliente en la  URL.'));
         }
       });
-    }
+    };
+
+
+
+
+    const extraerIdCodigoInterno = (url) => {
+      return new Promise((resolve, reject) => {
+        const numeroMatch = url.match(/\/(\d+)[a-zA-Z]*$/);
+        if (numeroMatch) {
+          try {
+            const numero = parseInt(numeroMatch[1]);
+            const ultimoSegmento = url.split('/').pop();
+            resolve(ultimoSegmento);
+          } catch (error) {
+            reject(error);
+          }
+        } else {
+          reject(new Error('No se encontró un número interno  en la URL.'));
+        }
+      });
+    };
+   
+
+    const extraerIdCodigoInternoCancelar = (url) => {
+      const numeroMatch = url.match(/\/(\d+)[a-zA-Z]*$/);
+    
+      if (numeroMatch) {
+        try {
+          const ultimoSegmento = url.split('/').pop();
+          return ultimoSegmento;
+        } catch (error) {
+          throw error;
+        }
+      } else {
+        throw new Error('No se encontró un número interno en la URL.');
+      }
+    };
+    
+
+    
+    
+    
+    
+
 
 
 
@@ -472,10 +521,11 @@ const valorTotal=cantidadPedidoActuales+valor;
  
         <h1 className='mb-3 '> Solicitud de Pedido  </h1>
 
-
+  
         <p> {imagenCarrito} = {totalProductosEnCarrito}</p>
       </div>
-      <h2 className='mb-3 '> Cliente: {clientePed}  </h2>
+      <h3 className='mb-3 '> Agregar nuevos productos  </h3>
+      <h4 className='mb-3 '> Cliente: {clientePed}  </h4>
       <h2 className='mb-3' > Seleccionar Articulos :    </h2>
 
       <form onSubmit={handleSubmitGet}>
@@ -517,26 +567,21 @@ const valorTotal=cantidadPedidoActuales+valor;
             Buscar
           </button>
           </div>
+          
+          
           <div >
-          {!actualizarProductos?  ( <button
-          className="btn w40- mt-4 mb-3 btn-primary"
-          type="submit"
-          //disabled={isLoading} // Deshabilita el botón durante la carga
-          onClick={handleSubmitPost}
-        >
-          Guardar Pedido
-        </button>) :(
+         
 
         <button className="btn w40- mt-4 mb-3 btn-primary"
         type="submit"
         //disabled={isLoading} // Deshabilita el botón durante la carga
-        onClick={handleSubmitPost}
+        onClick={handleSubmitPut}
       >
         Actualizar  Pedido
       </button>
       
     
-    )}
+    
 
 </div>
         
@@ -556,7 +601,8 @@ const valorTotal=cantidadPedidoActuales+valor;
 
 
           <li >
-            <Link href="/pedidos/confirmarPedido" className={styles.linkCancelar} >Cancelar Pedido</Link>
+             <Link href={`/pedidos/confirmarPedido/${encodeURIComponent(codigoInternoTraspaso)}`}  scroll={false} prefetch={false}  className={styles.linkCancelar} onClick={cancelarActualizacion} >Cancelar Pedido</Link>
+  
           </li>
 
         </ul>
