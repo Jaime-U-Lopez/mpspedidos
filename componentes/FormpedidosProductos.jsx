@@ -26,7 +26,8 @@ export default function FormPedidosProductos() {
   });
   const [codigoInternoTraspaso,setCodigoInternoTraspaso]=useState();
 
-  const itemsPerPage = 10;
+  const [itemsPerPage,setItemsPerPage]=useState(0);
+  
   const [currentPage, setCurrentPage] = useState(1);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -237,6 +238,9 @@ const valorTotal=cantidadPedidoActuales+valor;
 
   const handleSubmitGet = async (e) => {
 
+
+    var v=marcas[0]
+    console.log(v)
     e.preventDefault();
     setIsLoading(true); // Establece isLoading en true durante la carga
     setError(false); // Reinicia el estado de error
@@ -261,7 +265,7 @@ const valorTotal=cantidadPedidoActuales+valor;
       const response = await axios.get(apiUrl);
       const dataInicial = response.data;
       setData(dataInicial);
-
+      setItemsPerPage(10)
 
 
       Swal.fire({
@@ -486,6 +490,7 @@ const valorTotal=cantidadPedidoActuales+valor;
             name="marca"
             className="form-select form-select-lg"
             aria-label=".form-select-lg example"
+     
           >
             <option value="no" >Seleccione la marca</option>
             {marcas.map((marca) => (
@@ -543,10 +548,8 @@ const valorTotal=cantidadPedidoActuales+valor;
 
 <ul>
 {controEnvio? (
-       
        <li>
     <Link href={`/pedidos/confirmarPedido/${encodeURIComponent(codigoInternoTraspaso)}`} scroll={false} prefetch={false} >Continuar Pedido</Link>
-   
          </li> 
       ):( 
         <li>
@@ -556,12 +559,17 @@ const valorTotal=cantidadPedidoActuales+valor;
 
 
           <li >
-            <Link href="/pedidos/confirmarPedido" className={styles.linkCancelar} >Cancelar Pedido</Link>
+            <Link href="/" className={styles.linkCancelar} >Cancelar Pedido</Link>
           </li>
 
-        </ul>
+ </ul>
 
       </form>
+
+
+
+      
+   
       <p>Productos Encontrados : {totalProductosActualesTable} de   {totalProductos}   </p>
       <div className={styles.btnAtrasAdelante}>
 
@@ -575,8 +583,7 @@ const valorTotal=cantidadPedidoActuales+valor;
         </div>
       </div>
 
-
-
+      {data.length > 0 && formData.numerodeparte !== '' && formData.marca !== '' ? (
       <table className={`${styles.TablePedidos} table-responsive table  table-hover  table-bordered border-primary     `}>
         <thead>
           <tr className='text-center'>
@@ -686,10 +693,12 @@ const valorTotal=cantidadPedidoActuales+valor;
       </table>
 
 
+      ): (
+  <p>Por favor, seleccione una marca y un número de parte antes de buscar productos.</p>
+        )}
 
 
-
-    </div>
+</div>
 
 
   );
