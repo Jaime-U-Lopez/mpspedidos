@@ -29,7 +29,7 @@ export default function FormPedidos() {
   const [clienteId, setClienteId] = useState();
 
   const [error, setError] = useState(false);
-
+  const [confirmados, setConfirmados] = useState(false);
 
   var totalProductos = data.length;
   var totalProductosEnCarrito = 0;
@@ -282,10 +282,12 @@ if(formData.formaPago!="null"){
 
       const pedidoInicial = { codigoInterno: cliente, datosUpdate: cambiosAenviar , estado: "Confirmado",  evento:"prueba" }
       const response = await axios.patch(apiUrl, pedidoInicial);
-
+      setConfirmados(true)
 
       Swal.fire({
+        icon: 'sucess',
         title: 'Cargando exitosamente...',
+        text: `Productos confirmados correctamente!`,
         allowOutsideClick: false,
         onBeforeOpen: () => {
           Swal.showLoading();
@@ -295,7 +297,7 @@ if(formData.formaPago!="null"){
         setIsLoading(false);
         Swal.close();
 
-      }, 500);
+      }, 1500);
   
      // setControEnvio(true);
     } catch (error) {
@@ -648,22 +650,42 @@ if(formData.formaPago!="null"){
 
 
         
-        <button     className="btn w100- mt-3 mb-14 btn-primary" type="button" onClick={() => seleccionarPedido()}>
-           Seleccionar Pedido
-        </button> 
+      
 
         <li>
-        <Link href={`/pedidos/actualizarPedido/${encodeURIComponent(clienteId)}/${encodeURIComponent(cliente)}`} scroll={false} prefetch={false} > Agregar Productos </Link>
+        <div style={{ pointerEvents: confirmados || formData.estado === "Confirmado" ? "none" : "auto" }}>
+            <Link
+              href={`/pedidos/actualizarPedido/${encodeURIComponent(clienteId)}/${encodeURIComponent(cliente)}`}
+              scroll={false}
+              prefetch={false}
+            >
+              Agregar Productos
+            </Link>
+        </div>
         </li> 
 
       
-        <button     className="btn w100- mt-3 mb-14 btn-primary" type="Button" onClick={() => confirmarPedido()} >
+        <button     className="btn w100- mt-3 mb-14 btn-primary" type="Button" onClick={() => confirmarPedido()} 
+        
+        disabled={confirmados || formData.estado=="Confirmado"? true :false  } 
+        >
         Confirmar Pedido
           </button>
       
+
           <li >
-            <Link href="/pedidos/actualizarPedido" className={styles.linkCancelarPedido} >Cancelar Pedido</Link>
-          </li>
+      
+      {confirmados || formData.estado=="Confirmado"?
+        <Link href="/pedidos/buscarCliente"
+        className={styles.linkCancelarPedido} >Realizar Nuevo Pedido </Link>
+       :
+       <Link href="/pedidos/buscarCliente"
+       className={styles.linkCancelarPedido} >Cancelar Pedido</Link>
+     
+
+     
+      }
+            </li>
         </ul>
 
       </form>
@@ -725,13 +747,19 @@ if(formData.formaPago!="null"){
                 {data.includes(item) ? (
                   <button
                     className={styles.StyleIconosForm}
-                    onClick={() => eliminarDelCarrito(item)}>
+                    onClick={() => eliminarDelCarrito(item)}
+               
+
+                    disabled={confirmados || formData.estado=="Confirmado"? true :false  } 
+             
+                    >
                     {imagenBasuraDelete}
+               
                   </button>
                 ) : (
                   <button
                     className={styles.StyleIconosForm}
-                    onClick={() => agregarAlCarrito(item)}>
+                   >
                
                   </button>
                 )}
