@@ -17,35 +17,28 @@ const [currentPage, setCurrentPage] = useState(1);
 const startIndex = (currentPage - 1) * itemsPerPage;
 const endIndex = startIndex + itemsPerPage;
 const dataToShow = data.slice(startIndex, endIndex);
-
+const[filtroEstado, setFiltroEstado]=useState()
  
+useEffect(() => {
+  consultarData();
+}, []);
 
 
-  const consultarData = async () => {
-
+const consultarData = async () => {
   try {
-    // Realiza tareas asincrónicas, como una solicitud a una API
-    const response = await axios.get(`http://localhost:8082/apiPedidosMps/v1/pedidos/`);
+    const response = await axios.get('http://localhost:8082/apiPedidosMps/v1/pedidos/');
     const dataFromApi = response.data;
-
-    // Actualiza el estado con los datos recibidos
+  
     setData(dataFromApi);
-
+    setDataInicial(dataFromApi);
   } catch (error) {
     console.error(error);
   }
-
-}
+};
 
 
 
 console.log(data)
-
-
-
-
-
-
 
 const goToPage = (page) => {
   setCurrentPage(page);
@@ -53,20 +46,28 @@ const goToPage = (page) => {
 
 
 const filterData = (originalData, filtro) => {
-  // Realiza la lógica de filtrado aquí
-  return originalData.filter(item => {
-    // Compara el número de orden en cada elemento con el filtro
-    return item.estado.includes(filtroNumeroOrden);
-  });
+  if (filtro === '1') {
+    // Filtra por "Pendiente Aprobación"
+    return originalData.filter(item => item.estado === 'Pendiente Aprobación');
+  } else if (filtro === '2') {
+    // Filtra por "Aprobado"
+    return originalData.filter(item => item.estado === 'Aprobado');
+  } else if (filtro === '3') {
+    // Filtra por "Cancelado"
+    return originalData.filter(item => item.estado === 'Cancelado');
+  }
+  // En caso de "Seleccione el Estado" o valor no válido, muestra todos los datos
+  return originalData;
 };
 
 
-const handleFiltroChange = (event) => {
-  const filtroEstado = event.target.value;
-  const datosFiltrados = filterData(data, filtroEstado);
+const handleFiltroChange = event => {
+  const filtro = event.target.value;
+  setFiltroEstado(filtro);
+  const datosFiltrados = filterData(dataInicial, filtro);
   setData(datosFiltrados);
+  console.log(da)
 };
-
 
 
 
@@ -143,8 +144,7 @@ height={50}></Image>
           />
         </div>
 
-        
-        
+      
 
 
         <div className="input-group">
@@ -166,17 +166,16 @@ height={50}></Image>
             aria-label=".form-select-lg example"
             
             value={filtroEstado}
-  onChange={(e) => {
-    const valorFiltro = e.target.value;
-    const datosFiltrados = filterData(dataInicial, valorFiltro);
-    setData(datosFiltrados) }}
-            
+            onChange={(e) => {
+              const valorFiltro = e.target.value;
+              const datosFiltrados = filterData(dataInicial, valorFiltro);
+              setData(datosFiltrados) }}
             >
    
    <option value="1">Seleccione el Estado</option>
-   <option value="2">Pendiente Aprobación </option>
-   <option value="3">Aprobado</option>
-   <option value="4">Cancelado</option>
+   <option value="Confirmado">Pendiente Aprobación </option>
+   <option value="CONFIRMADO">Aprobado</option>
+   <option value="CANCELADO">Cancelado</option>
   </select>
      
         </div>
@@ -187,7 +186,7 @@ height={50}></Image>
           className="btn w-50 mt-4 mb-3 btn-primary"
           type="button"
    
-          onClick={aplicarFiltro}
+onClick={consultarData}
         >
           Buscar
         </button>
@@ -225,8 +224,8 @@ height={50}></Image>
         <td>{item.numeroPedido}</td>
         <td>{item.dni}</td>
         <td>{item.nombreComercial}</td>
-        <td>{item.valorTotalPedido}</td>
-        <td>{item.iva}</td>
+        <td>{item.valorTotal}</td>
+        <td>{item.totalIva}</td>
         <td>{item.netoApagar}</td>
         <td>{item.formaDePago}</td>
         <td>{item.estado}</td>
