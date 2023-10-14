@@ -51,7 +51,7 @@ export default function FormPedidosProductos() {
     // Hacer la solicitud para obtener la lista de marcas
 
     extraerIdCodigoInternoCancelar(pathname)
-
+    extraerIdCodigoInternoId(pathname)
     axios
       .get('http://192.168.1.38:8082/apiPedidosMps/v1/productos/marcas/')
       .then((response2) => {
@@ -59,7 +59,6 @@ export default function FormPedidosProductos() {
 
         const dataFromApi = response2.data;
         setMarcas(dataFromApi);
-
 
 
       })
@@ -290,8 +289,7 @@ const valorTotal=cantidadPedidoActuales+valor;
     }));
 
     
- 
-    console.log(ListaProductosMapeados)
+
 
     //enviamos pedido
 
@@ -429,7 +427,19 @@ const valorTotal=cantidadPedidoActuales+valor;
       const segments = url.split('/'); // Divide la URL en segmentos utilizando "/"
       const ultimoSegmento = segments[segments.length - 1]; // Obtén el último segmento
       setCodigoInternoTraspaso(ultimoSegmento);
+
+
       return ultimoSegmento;
+    }
+
+    const extraerIdCodigoInternoId = (url) => {
+
+      const segments = url.split('/'); // Divide la URL en segmentos utilizando "/"
+      const antepenultimo = segments[segments.length - 2]; // Obtén el último segmento
+      setClientePed(antepenultimo);
+
+      
+      return antepenultimo;
     }
 
 
