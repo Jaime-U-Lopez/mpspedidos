@@ -22,7 +22,7 @@ export default function FormPedidos() {
 
 
       <h1 className='mb-3 '> Administración WebSite  </h1>
-      <h2 className='mb-3' > Creacion de usuarios :    </h2>
+      <h2 className='mb-3' > Administración de usuarios :    </h2>
 
       <form>
 
@@ -31,9 +31,9 @@ export default function FormPedidos() {
 
           <input
             className="form-control "
-            type="number"
+            type="text"
             placeholder="Ingresa el nombre de usuario"
-            name="todoNombre"
+            name="nombre"
           
           />
         </div>
@@ -45,7 +45,7 @@ export default function FormPedidos() {
             className="form-control "
             type="password"
             placeholder="Ingresa el Password"
-            name="nombreComercial"
+            name="password"
 
           />
         </div>
@@ -57,14 +57,12 @@ export default function FormPedidos() {
    
    <option value="1">Seleccione el Rol</option>
    <option value="2">Administrador </option>
-   <option value="3">Invitado</option>
+   <option value="3">Cartera</option>
    <option value="4">Comercial</option>
-   <option value="5">Aprobador Cartera</option>
+   <option value="4">Ventas</option>
+
   </select>
         </div>
-
-
-
         <div >
         <button
           className="btn w-50 mt-4 mb-3 btn-primary"
@@ -83,7 +81,6 @@ export default function FormPedidos() {
         </button>
         </div>
       
-
       </form>
       <p>Usuarios Creados  : </p>
       <table className={`${styles.TablePedidos} table-responsive table  table-hover  table-bordered border-primary     `} >

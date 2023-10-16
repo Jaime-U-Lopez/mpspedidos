@@ -1,6 +1,7 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
 import 'bootstrap/dist/css/bootstrap.css'
+import { UserProvider } from '@/componentes/UserContext'
 
 
 
@@ -14,9 +15,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
-     
+      <UserProvider>
       <body className={inter.class}>{children}</body>
-
+      </UserProvider>
     
 
     </html>

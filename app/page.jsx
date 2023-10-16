@@ -10,7 +10,7 @@ import ActiveLink from '@/componentes/ActiveLink'
 import ProductForm from '@/componentes/formulario'
 import Formulario from '@/componentes/formulariopruebas'
 import {useState, useEffect} from 'react';
-
+import FormLogin from '@/componentes/FormLogin';
 import axios from 'axios';
 
 
@@ -36,8 +36,6 @@ export default function Home({cliente}) {
     
       <div className={styles.ventaderecha}>
      
-
-
       </div>
         
         </div>

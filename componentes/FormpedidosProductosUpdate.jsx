@@ -40,7 +40,7 @@ export default function FormPedidosProductos() {
   const [totalCantidades, setTotalCantidades] = useState([]); // Estado para almacenar el total de cantidades
   const [controlInput, setControlInput] = useState(false)
   const [cantidadPedidoActuales, setCantidadPedidoActuales] = useState(0);
-  const [controEnvio, setControEnvio] = useState(false)
+  const [controEnvio, setControEnvio] = useState(true)
   const [clientePed, setClientePed] = useState()
 
  
@@ -270,12 +270,14 @@ const valorTotal=cantidadPedidoActuales+valor;
     setCurrentPage(1);
   };
 
+
+
   const handleSubmitPut = async (e) => {
 
     e.preventDefault();
     setIsLoading(true); // Establece isLoading en true durante la carga
     setError(false); // Reinicia el estado de error
-
+    const codigoUnico = uuidv4();
 
 
     const url = pathname;
@@ -289,11 +291,11 @@ const valorTotal=cantidadPedidoActuales+valor;
     }));
 
     
-
+ 
 
     //enviamos pedido
 
-    let apiUrl = `http://localhost:8082/apiPedidosMps/v1/pedidos/addProduct/`;
+    let apiUrl = `http://localhost:8082/apiPedidosMps/v1/pedidos/`;
 
 
     let numRetries = 0;
@@ -307,18 +309,17 @@ const valorTotal=cantidadPedidoActuales+valor;
       try {
        
         const cliente = await extraerIdCliente(url);
-        const codigoInterno = await extraerIdCodigoInterno(url);
-        const clienteString=`${cliente}` ;
-        const codigoInternoString=`${codigoInterno}`;
+        const cod =  extraerIdCodigoInternoCancelar(pathname)
+        const codigoInterno2 = `${cod}`
+        console.log(codigoInterno2)
 
-     
-
-        setCodigoInternoTraspaso(codigoInterno);
-        const pedidoInicial = { idCliente: clienteString, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno: codigoInternoString }
+        setCodigoInternoTraspaso(codigoInterno2);
+        const pedidoInicial = { idCliente: cliente, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno: codigoInternoTraspaso }
+        console.log(pedidoInicial)
 
         const response = await axios.patch(apiUrl, pedidoInicial);
          dataInicial = response.data.message;
-
+console.log(dataInicial)
         Swal.fire({
           title: 'Cargando exitosamente...',
           allowOutsideClick: false,
@@ -362,8 +363,6 @@ const valorTotal=cantidadPedidoActuales+valor;
     }
   };
 
-
- 
 
 
   function handleClickAtras() {

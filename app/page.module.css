@@ -393,6 +393,55 @@ list-style-type: none;
 }
 
 
+.loginGeneral{
+
+display: flex;
+flex-direction: column;
+}
+
+
+.login{
+
+  margin-top: 5px;
+  width: 500px;
+  cursor: pointer; /* Cambia el cursor al estilo de selección */
+  font-weight: bold;
+  font-family: var(--font-mono);
+  font-size: 20px;
+}
+
+
+.login h1{
+
+  text-align: center;
+
+}
+
+
+.loginTitle{
+
+  width: auto;
+}
+
+.loginTitle h2{
+  margin-top: 50px;
+  margin-bottom: 40px;
+color: black;
+  width: auto;
+}
+
+
+
+
+
+
+.login label{
+  color: black;
+
+
+}
+
+
 .btnAtrasAdelante{
 
   display: flex;

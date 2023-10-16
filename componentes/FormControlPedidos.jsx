@@ -350,8 +350,7 @@ height={50}></Image>
 
 </div>
     
-      
-
+    
 
      <table className={`${styles.TablePedidos} table-responsive table table-hover table-bordered border-primary`}>
   <thead>

@@ -1,17 +1,33 @@
+
+"use client"
+import { useUser } from "./UserContext";
+
 import Image from 'next/image'
 import styles from 'app/page.module.css'
 import Link from 'next/link'
-
+import {useContext} from 'react'
 import { images } from '@/next.config'
 
 
 export default function NavbarBotones() {
+
+
+  const { state } = useUser();
+
+  const usernameMPS = 'usernameMPS';
+  const datoUser = localStorage.getItem(usernameMPS);
+
+
+const cerrarSeccion = ()=>{
+  const usernameMPS = 'usernameMPS';
+  localStorage.removeItem(usernameMPS);
+}
+
+
   return (  
 
-
-<nav  className={`${styles.navBar} navbar navbar-expand-lg navbar-light  `}>
+  <nav  className={`${styles.navBar} navbar navbar-expand-lg navbar-light `}>
   
-
 
   <div className="container-fluid w-100">
   <Image 
@@ -29,7 +45,9 @@ export default function NavbarBotones() {
  
     <div className="col-auto">
     <label  className="visually-hidden">usuario</label>
-    <input type="text" className="form-control " id="user" placeholder="Usuario"  disabled/>
+    <input type="text" className="form-control "
+    value={datoUser}
+    id="user" placeholder="Usuario"  disabled/>
     </div>
 
    <form className="d-flex">

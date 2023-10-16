@@ -4,18 +4,19 @@ import FormLogin from '@/componentes/FormLogin'
 import NavbarBotones from '@/componentes/NavbarBotones'
 import Navbar from '@/componentes/Navbar'
 import Flooter from '@/componentes/Flooter'
+import { UserProvider } from '@/componentes/UserContext'
 
-
-export default function Home() {
+export default function Home({ Component, pageProps }) {
   return (
     
     <main className={styles.main}>
     
  
-
      
       <div className={styles.ventaderecha}>
-      <FormLogin />
+      <UserProvider>
+      <FormLogin  {...pageProps} />
+      </UserProvider>
   
       </div>
       
