@@ -97,7 +97,9 @@ export default function FormPedidos() {
     let estado = "";
     let observaciones = "";
     let id=0;
-    console.log(dataFromApi)
+let fechaCreacion=""
+
+ 
     // Calcular la suma del valor total y el IVA
     dataFromApi.forEach((producto) => {
 
@@ -112,6 +114,7 @@ export default function FormPedidos() {
         estado = producto.estado,
         observaciones = producto.observaciones
         id= producto.dni
+        fechaCreacion=producto.fechaCreacion
     });
 
     const datosCliente = {
@@ -125,7 +128,7 @@ export default function FormPedidos() {
       estado: String(estado),
       formaPago: String(formaDePago),
       observaciones: '', 
-
+      fechaCreacion:'',
     }
     
 
@@ -336,7 +339,14 @@ if(formData.formaPago!="null"){
 
 }
 
+function getCurrentDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0'); // Agrega ceros iniciales para el mes
+  const day = String(today.getDate()).padStart(2, '0'); // Agrega ceros iniciales para el día
 
+  return `${year}-${month}-${day}`;
+}
 
 
 
@@ -629,6 +639,25 @@ if(formData.formaPago!="null"){
               disabled
           
             value={confirmados || formData.estado=="Confirmado"? "Confirmado" :formData.estado } 
+
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="input-group">
+            <span className="input-group-text"> Fecha   </span>
+
+            <input
+              className="form-control "
+              type="date"
+              placeholder="Fecha "
+              name="fechaCreacion"
+      
+          disabled
+            value={
+              
+              getCurrentDate()
+            
+            } 
 
               onChange={handleInputChange}
             />

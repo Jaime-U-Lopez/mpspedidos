@@ -5,7 +5,7 @@ import stylesForm from 'app/form.module.css'
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import Swal from 'sweetalert2';
 
 export default function FormPedidos() {
 
@@ -18,7 +18,10 @@ const startIndex = (currentPage - 1) * itemsPerPage;
 const endIndex = startIndex + itemsPerPage;
 const dataToShow = data.slice(startIndex, endIndex);
 const[filtroEstado, setFiltroEstado]=useState()
- 
+const [numeroPedido, setNumeroPedido] = useState();
+const [resultadoBusqueda,  setResultadoBusqueda]=useState(null);
+
+
 useEffect(() => {
   consultarData();
 }, []);
@@ -38,7 +41,7 @@ const consultarData = async () => {
 
 
 
-console.log(data)
+//console.log(data)
 
 const goToPage = (page) => {
   setCurrentPage(page);
@@ -46,19 +49,36 @@ const goToPage = (page) => {
 
 
 const filterData = (originalData, filtro) => {
+  
   if (filtro === '1') {
-    // Filtra por "Pendiente Aprobación"
-    return originalData.filter(item => item.estado === 'Pendiente Aprobación');
+
+    return originalData.filter(item => item.estado === 'Confirmado');
   } else if (filtro === '2') {
-    // Filtra por "Aprobado"
-    return originalData.filter(item => item.estado === 'Aprobado');
+  
+    return originalData.filter(item => item.estado === 'sinConfirmacion');
   } else if (filtro === '3') {
-    // Filtra por "Cancelado"
-    return originalData.filter(item => item.estado === 'Cancelado');
-  }
-  // En caso de "Seleccione el Estado" o valor no válido, muestra todos los datos
-  return originalData;
-};
+
+    return originalData.filter(item => item.estado === 'aprobado');
+  }else if (filtro === '4') {
+  
+    return originalData.filter(item => item.estado === 'cancelado');
+
+}
+return originalData;
+}
+
+
+const buscarPorNumeroPedido = (dato) => {
+  console.log(dato)
+  const pedidoEncontrado = data.find(item => item.nit === dato);
+  console.log(pedidoEncontrado)
+ 
+}
+
+
+
+
+
 
 
 const handleFiltroChange = event => {
@@ -66,9 +86,117 @@ const handleFiltroChange = event => {
   setFiltroEstado(filtro);
   const datosFiltrados = filterData(dataInicial, filtro);
   setData(datosFiltrados);
-  console.log(da)
+ 
 };
 
+
+const aprobarPedido =async (pedido) => {
+
+  Swal.fire({
+    icon: 'success',
+    title: 'Estas aprobando',
+    text: `Pedido :  ${pedido.numeroPedido} `,
+    showCancelButton: true,
+    confirmButtonText: 'Sí, Aprobar ',
+    cancelButtonText: 'No, cancelar',
+  }).then(async(result) => {
+    if( pedido.estado!="sinConfirmacion"){
+    if (result.isConfirmed) {
+
+      var cod= pedido.codigoInterno;
+      const url= `http://localhost:8082/apiPedidosMps/v1/pedidos/email/`
+      const pedidoInicial = { codigoInterno: cod,  estado: "aprobado",   correoAsesor: "or4846@hotmail.com" }
+      const response = await axios.post(url,pedidoInicial);
+    const id  = pedido.id;
+    consultarData()
+
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Pedido aprobado exitosamente',
+          text: `Ha sido aprobado el  Pedido :  ${pedido.numeroPedido} `,
+          showConfirmButton: false,
+          timer: 2000,
+        });
+  
+    }
+
+  }  Swal.fire({
+    icon: 'error',
+    title: 'El estado del pedido no esta habilitado',
+    
+    showConfirmButton: false,
+    timer: 2000,
+  });
+
+  });
+
+
+
+};
+
+const cancelarPedido = async (pedido) => {
+
+  Swal.fire({
+    icon: 'warning',
+    title: '¿Seguro de Denegar el Pedido?',
+    text: `Pedido : ${pedido.numeroPedido} `,
+    showCancelButton: true,
+    confirmButtonText: 'Sí, Denegar',
+    cancelButtonText: 'No, cancelar',
+
+  }).then(async(result) => {
+   
+    if( pedido.estado!="sinConfirmacion"){
+
+      if (result.isConfirmed) {
+  
+        var cod= pedido.codigoInterno;
+  
+        console.log(cod)
+        const url= `http://localhost:8082/apiPedidosMps/v1/pedidos/email/`
+  
+        const pedidoInicial = { codigoInterno: cod,  estado: "cancelado",   correoAsesor: "or4846@hotmail.com" }
+        const response = await axios.post(url,pedidoInicial);
+  console.log(pedidoInicial);
+  consultarData()
+   
+  
+  
+         const nuevoProductos = dataInicial.filter((item) => item.id == pedido.id);
+        // const idEliminar = dataTable.filter((item) => item.id == producto.id);
+  
+        console.log(nuevoProductos);
+  
+  
+          Swal.fire({
+            icon: 'success',
+            title: 'Pedido Cancelado con Exito',
+            text: `Producto cancelado.`,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+    
+      }
+
+    }  Swal.fire({
+      icon: 'error',
+      title: 'El estado del pedido no esta habilitado',
+      
+      showConfirmButton: false,
+      timer: 2000,
+    });
+
+ 
+  
+  })
+
+};
+
+
+
+const pedidosTotales =data.length
+var totalProductosActualesTable = dataToShow.length;
 
 
   var imagen=  <Image 
@@ -127,10 +255,20 @@ height={50}></Image>
             className="form-control "
             type="number"
             placeholder="Ingresar el Nit o CC"
-            name="todoNombre"
-          
+
+            value={filtroEstado}
+            onChange={(e) => {
+              const valorFiltro = e.target.value;
+              buscarPorNumeroPedido(valorFiltro);
+        
+            
+            }}
+            
+
+        
           />
         </div>
+  
 
         <div className="input-group">
           <span className="input-group-text">Razon Social</span>
@@ -172,21 +310,21 @@ height={50}></Image>
               setData(datosFiltrados) }}
             >
    
-   <option value="1">Seleccione el Estado</option>
-   <option value="Confirmado">Pendiente Aprobación </option>
-   <option value="CONFIRMADO">Aprobado</option>
-   <option value="CANCELADO">Cancelado</option>
+   <option value="0">Seleccione el Estado</option>
+   <option value="1">Pendiente Aprobación </option>
+   <option value="2">Sin Confirmación </option>
+   <option value="3">Aprobado</option>
+   <option value="4">Cancelado</option>
   </select>
      
         </div>
-        
 
         <div >
         <button
           className="btn w-50 mt-4 mb-3 btn-primary"
           type="button"
    
-onClick={consultarData}
+        onClick={buscarPorNumeroPedido}
         >
           Buscar
         </button>
@@ -197,9 +335,23 @@ onClick={consultarData}
      
 
       </form>
-      <p>Pedidos Encontrados : 10 de 10  </p>
-      {imageIzquierda}
-     {imagenDerecha}
+      <p>Pedidos Encontrados : {totalProductosActualesTable} de {pedidosTotales}  </p>
+   
+      <div className={styles.btnAtrasAdelante}>
+<div onClick={() => goToPage(currentPage - 1)}
+          disabled={currentPage === 1}>
+          {imageIzquierda}
+        </div>
+        <div onClick={() => goToPage(currentPage + 1)}
+          disabled={endIndex >= data.length}>
+          {imagenDerecha}
+        </div>
+
+
+</div>
+    
+      
+
 
      <table className={`${styles.TablePedidos} table-responsive table table-hover table-bordered border-primary`}>
   <thead>
@@ -213,12 +365,13 @@ onClick={consultarData}
       <th scope="col">Neto a Pagar</th>
       <th scope="col">Forma de pago</th>
       <th scope="col">Estado</th>
-      <th scope="col">Denegar</th>
+    
       <th scope="col">Aprobar</th>
+      <th scope="col">Denegar</th>
     </tr>
   </thead>
   <tbody>
-    {data.map((item, index) => (
+    {dataToShow.map((item, index) => (
       <tr key={index}>
         <th scope="row">{index + 1}</th>
         <td>{item.numeroPedido}</td>
@@ -229,8 +382,17 @@ onClick={consultarData}
         <td>{item.netoApagar}</td>
         <td>{item.formaDePago}</td>
         <td>{item.estado}</td>
-        <td className=' justify-content-center align-items-center'>{denegar}</td>
-        <td className='d-flex justify-content-center align-items-center'>{imagen}</td>
+      
+        <td className='d-flex justify-content-center align-items-center'
+
+      onClick={() => aprobarPedido(item)}>
+
+      {imagen}</td>
+      <td className=' justify-content-center align-items-center'
+
+      onClick={() => cancelarPedido(item)}>
+        {denegar}</td>
+        <button type="submit" style={{ display: 'none' }}></button>
       </tr>
     ))}
   </tbody>
