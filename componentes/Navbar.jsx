@@ -19,9 +19,17 @@ export default function NavbarBotones() {
 
 
 const cerrarSeccion = ()=>{
+  
   const usernameMPS = 'usernameMPS';
   localStorage.removeItem(usernameMPS);
+ 
+
+  
+
+
 }
+
+
 
 
   return (  
@@ -51,13 +59,14 @@ const cerrarSeccion = ()=>{
     </div>
 
    <form className="d-flex">
-
-    <button type="submit" className="btn btn-danger"> CERRAR SESION </button>
   
-        
+      <Link href="/login" onClick={cerrarSeccion}  prefetch={false}
+      
+      className={styles.btn}
+      >  Cerrar sesión</Link>
       </form>
     
-    
+
     </div>
   </div>
 </nav>

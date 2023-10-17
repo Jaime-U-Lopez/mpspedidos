@@ -6,15 +6,26 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 
-export default function FormPedidos({formulario}) {
+export default function FormAdmonEvento({ onEventCreate }) {
 
 
-  var imagen=  <Image 
+  const [eventName, setEventName] = useState('');
 
-  src="/img/icons8-basura-llena-100.png"
-  alt="Picture of the author"
-  width={80/2}
-  height={50}></Image>
+  const handleEventNameChange = (e) => {
+    setEventName(e.target.value);
+  };
+
+  const handleCreateEvent = () => {
+     onEventCreate(eventName);
+     
+    setEventName('');
+  };
+
+
+
+
+
+
   return (
 
 
@@ -22,106 +33,44 @@ export default function FormPedidos({formulario}) {
 
 
       <h1 className='mb-3 '> Administración Evento  </h1>
-      <h2 className='mb-3' > Creacion de usuarios :    </h2>
+
 
       <form>
 
         <div className="input-group">
-          <span className="input-group-text">Nombre usuario</span>
+          <span className="input-group-text">Nombre Evento</span>
 
           <input
             className="form-control "
-            type="number"
-            placeholder="Ingresa el nombre de usuario"
-            name="todoNombre"
+            type="text"
+            placeholder="Ingresa el nombre de Evento"
+            name="evento"
+
+      
+ 
+          value={eventName}
+          onChange={handleEventNameChange}
+ 
           
           />
         </div>
 
-        <div className="input-group">
-          <span className="input-group-text">Password</span>
-
-          <input
-            className="form-control "
-            type="password"
-            placeholder="Ingresa el Password"
-            name="nombreComercial"
-
-          />
-        </div>
-
-        <div className="input-group">
-          <span className="input-group-text">Rol</span>
-
-          <select defaultValue="Seleccione el Estado"   className="form-select form-select-lg " aria-label=".form-select-lg example">
-   
-   <option value="1">Seleccione el Rol</option>
-   <option value="2">Administrador </option>
-   <option value="3">Invitado</option>
-   <option value="4">Comercial</option>
-   <option value="5">Aprobador Cartera</option>
-  </select>
-        </div>
-
+        
 
 
         <div >
         <button
           className="btn w-50 mt-4 mb-3 btn-primary"
-          type="submit"
-        >
-          Crear
-        </button>
-        </div>
-      
-        <div >
-        <button
-          className="btn w-50 mt-2 mb-3 btn-danger"
           type="button"
-        >
-          Resetear Password
+         onClick={handleCreateEvent}>
+
+        
+          Crear Evento
         </button>
         </div>
-      
-
+            
       </form>
-      <p>Usuarios Creados  : </p>
-      <table className={`${styles.TablePedidos} table-responsive table  table-hover  table-bordered border-primary     `} >
-
-        <thead>
-    
-          <tr  className='table-primary' >
-            <th scope="col">N°</th>
-            <th scope="col">Nombre usuario</th>
-            <th scope="col">Rol </th>
-            <th scope="col" >Eliminar</th>  
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-          
-            <td className='d-flex justify-content-center align-items-center'> {imagen} </td>
-       
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-              <td className='d-flex justify-content-center align-items-center'> {imagen} </td>
-       
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>@twitter</td>
-            <td>@twitter</td>
-              <td className='d-flex justify-content-center align-items-center'> {imagen} </td>
-          </tr>
-        </tbody>
-      </table>
-
+      
     </div>
   );
 };

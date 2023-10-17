@@ -15,6 +15,7 @@ import numeral from 'numeral';
 export default function FormPedidos() {
 
 
+
   const pathname = usePathname();
   const url = pathname;
   const [selectedRow, setSelectedRow] = useState(null);
@@ -30,6 +31,9 @@ export default function FormPedidos() {
 
   const [error, setError] = useState(false);
   const [confirmados, setConfirmados] = useState(false);
+  const [evento, setEvento] = useState();
+  
+
 
   var totalProductos = data.length;
   var totalProductosEnCarrito = 0;
@@ -58,15 +62,15 @@ export default function FormPedidos() {
   useEffect(() => {
 
  extraerIdCliente(url)
-
+ getEvento()
 
     axios
       .get(`http://localhost:8082/apiPedidosMps/v1/pedidos/orden/${cliente}`)
       .then((response2) => {
         const dataFromApi = response2.data;
         setDataInicial(dataFromApi)
-   console.log(dataFromApi)
-   seleccionarPedido(dataFromApi)
+
+       seleccionarPedido(dataFromApi)
 
        })
   
@@ -80,6 +84,27 @@ export default function FormPedidos() {
     
  
   }, [cliente,clienteId]); // Este efecto se ejecuta una vez al cargar el componente para obtener la lista de marcas
+
+
+
+const getEvento=()=>{
+
+
+  axios
+  .get(`http://localhost:8082/apiPedidosMps/v1/eventos/1`)
+  .then((response2) => {
+    const dataFromApi = response2.data;
+    setEvento(dataFromApi)
+
+
+   })
+
+  .catch((error) => {
+    console.error(error);
+
+  });
+
+}
 
 
 
@@ -141,7 +166,7 @@ let fechaCreacion=""
   const totalCantidad = data.reduce((total, producto) => total + producto.cantidad, 0);
   const valorTotal = data.reduce((total, producto) => total + producto.valorTotalPorPro, 0);
   const ivaTotal = data.reduce((total, producto) => total + producto.iva, 0);
-  const netoAPagar = valorTotal - ivaTotal;
+  const netoAPagar = valorTotal + ivaTotal;
 
 
   // Manejar cambios en los campos de entrada
@@ -268,6 +293,7 @@ let fechaCreacion=""
 
       const datofijos={valorTotalPedido:valorTotal   , netoApagar: netoAPagar   ,  ivaTotalPed : ivaTotal   }
 
+      console.log(datofijos)
       const datosEnvioModificado= formData
 
       const cambiosAenviar = {
@@ -351,6 +377,14 @@ function getCurrentDate() {
 
 
 
+const localeColombia = 'es-CO';
+const options = {
+  maximumFractionDigits: 2,
+  
+
+};
+
+const formato = new Intl.NumberFormat(localeColombia, options);
 
 
 
@@ -358,6 +392,8 @@ function getCurrentDate() {
 
 
 
+
+console.log(evento)
 
 
 
@@ -405,7 +441,7 @@ function getCurrentDate() {
               placeholder="Nombre Evento"
               name="todoNombre"
               disabled
-              value={data.length > 0 ? data[0].dni : ''} 
+              value={evento ? evento.nombreEvento : ''} 
             />
 
 
@@ -441,6 +477,7 @@ function getCurrentDate() {
               id="nombreComercial"
               name="nombreComercial"
               placeholder="Nombre Razon social"
+              disabled
               value={formData ? formData.nombreComercial : ''}
               onChange={handleInputChange}
             />
@@ -573,7 +610,8 @@ function getCurrentDate() {
               placeholder="Valor  Total "
               name="todoNombre"
               disabled
-              value={valorTotal}
+              
+              value={formato.format(valorTotal) }
             />
           </div>
 
@@ -587,7 +625,9 @@ function getCurrentDate() {
               placeholder="Valor Iva Total "
               name="todoNombre"
               disabled
-              value={ivaTotal }
+                   
+              value={formato.format(ivaTotal) }
+         
             />
           </div>
 
@@ -764,11 +804,11 @@ function getCurrentDate() {
 
                 <td>   {formatNumberWithCurrency(item.valorUnitario)} </td>
                 <td>{formatNumberWithCurrency( item.valorNetoPorProd)}</td>
-                <td>   { item.preciominimocop} </td>
+                <td>   {  item.preciominimocop} </td>
                 <td>   {item.preciominimousd} </td>
                 <td>   {formatNumberWithCurrency(item.iva) } </td>
                
-                <td     >
+                <td >
 
 
                 {data.includes(item) ? (

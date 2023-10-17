@@ -15,12 +15,11 @@ const [data, setData]=useState([]);
 const itemsPerPage = 10;
 const [currentPage, setCurrentPage] = useState(1);
 const startIndex = (currentPage - 1) * itemsPerPage;
-const endIndex = startIndex + itemsPerPage;
+const endIndex = Math.min(startIndex + itemsPerPage, data.length);
 const dataToShow = data.slice(startIndex, endIndex);
 const[filtroEstado, setFiltroEstado]=useState()
 const [numeroPedido, setNumeroPedido] = useState();
 const [resultadoBusqueda,  setResultadoBusqueda]=useState(null);
-
 
 useEffect(() => {
   consultarData();

@@ -19,11 +19,9 @@ export default function NavbarBotones() {
         <Link href="/pedidos/buscarCliente">Realizar Pedido</Link>
       </li>
       <li>
-        <Link href="/controlPedidos">Crear Usuario</Link>
+      <Link href="/controlPedidos">Control Pedidos</Link>
       </li>
-      <li>
-        <Link href="/admonWebSite">Administracion</Link>
-      </li>
+  
   
     </ul>
  </div>

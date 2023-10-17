@@ -203,9 +203,6 @@ const valorTotal=cantidadPedidoActuales+valor;
       if (result.isConfirmed) {
         const nuevoCarrito = carrito.filter((item) => item.id !== producto.id);
         const nuevasCantidades = totalCantidades.filter((item) => item.id !== producto.id);
-
-
-
         setTotalCantidades(nuevasCantidades);
         setCarrito(nuevoCarrito);
     

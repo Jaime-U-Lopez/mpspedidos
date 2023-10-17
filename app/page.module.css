@@ -549,6 +549,66 @@ border-color: #fed700 !important;
 }
 
 
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #d9534f; /* Color de fondo para el botón "danger" */
+  color: #fff; /* Color del texto */
+  border: none;
+  border-radius: 4px;
+  text-decoration: none; /* Eliminar el subrayado del enlace */
+}
+
+.btn.danger {
+  background-color: #d9534f; /* Cambiar el color de fondo para el botón "danger" */
+}
+
+.btn:hover {
+  background-color: #c9302c; /* Cambiar el color de fondo en el hover */
+}
+
+
+.btnAdmon {
+  display: flex;
+  flex-direction: row; /* Establece la dirección como fila (en línea) */
+  align-items: center;
+  font-size: 25px; /* Tamaño de fuente de 17px */
+  width: auto;
+  margin: 1% 0; /* Añadir espacio superior e inferior para separar los botones */
+  z-index: 2;
+  font-family: var(--font-mono);
+  justify-content: center;
+}
+
+/* Establecer colores para botones diferentes */
+.btnAdmon button {
+  margin-right: 10px; /* Espacio entre botones */
+}
+
+.btnAdmon .button1 {
+  background-color: #FF5733; /* Color para el primer botón */
+}
+
+.btnAdmon .button2 {
+  background-color: #3498DB; /* Color para el segundo botón */
+}
+
+
+.btnAdmon button {
+  margin-right: 10px;
+  width: 150px; /* Ancho del botón */
+  height: 40px; /* Alto del botón */
+}
+
+
+.admonWeb{
+text-align: center;
+color: black
+
+}
+
+
 @media screen and (max-width: 768px) {
 
 

@@ -4,7 +4,8 @@ import FormControlPedidos from '@/componentes/FormControlPedidos'
 import NavbarBotones from '@/componentes/NavbarBotones'
 import Navbar from '@/componentes/Navbar'
 import Flooter from '@/componentes/Flooter'
-//copia
+import ConsultaPedidosPorValor from '@/componentes/ConsultaPedidosPorValor'
+
 
 
 export default function Home() {
@@ -26,6 +27,8 @@ export default function Home() {
   
       </div>
       
+
+      <ConsultaPedidosPorValor></ConsultaPedidosPorValor>
         
         </div>
         
