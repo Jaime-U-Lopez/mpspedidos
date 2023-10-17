@@ -15,17 +15,14 @@ export default function NavbarBotones() {
   const { state } = useUser();
 
   const usernameMPS = 'usernameMPS';
-  const datoUser = localStorage.getItem(usernameMPS);
+  let datoUser=  localStorage.getItem(usernameMPS);
 
 
 const cerrarSeccion = ()=>{
-  
+
   const usernameMPS = 'usernameMPS';
   localStorage.removeItem(usernameMPS);
  
-
-  
-
 
 }
 

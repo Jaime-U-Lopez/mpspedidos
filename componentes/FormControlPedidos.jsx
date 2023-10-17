@@ -76,10 +76,6 @@ const buscarPorNumeroPedido = (dato) => {
 
 
 
-
-
-
-
 const handleFiltroChange = event => {
   const filtro = event.target.value;
   setFiltroEstado(filtro);
@@ -104,8 +100,9 @@ const aprobarPedido =async (pedido) => {
 
       var cod= pedido.codigoInterno;
       const url= `http://localhost:8082/apiPedidosMps/v1/pedidos/email/`
-      const pedidoInicial = { codigoInterno: cod,  estado: "aprobado",   correoAsesor: "or4846@hotmail.com" }
+      const pedidoInicial = { codigoInterno: cod,  estado: "aprobado",   correoAsesor: pedido.correoAsesor }
       const response = await axios.post(url,pedidoInicial);
+      console.log(response)
     const id  = pedido.id;
     consultarData()
 

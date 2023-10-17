@@ -32,7 +32,9 @@ export default function FormPedidos() {
   const [error, setError] = useState(false);
   const [confirmados, setConfirmados] = useState(false);
   const [evento, setEvento] = useState();
-  
+  const [datoUser, setDatoUser] = useState();
+
+  let datoUserInitial=  localStorage.getItem(usernameMPS);
 
 
   var totalProductos = data.length;
@@ -62,29 +64,41 @@ export default function FormPedidos() {
   useEffect(() => {
 
  extraerIdCliente(url)
- getEvento()
-
-    axios
-      .get(`http://localhost:8082/apiPedidosMps/v1/pedidos/orden/${cliente}`)
-      .then((response2) => {
-        const dataFromApi = response2.data;
-        setDataInicial(dataFromApi)
-
-       seleccionarPedido(dataFromApi)
-
-       })
-  
-      .catch((error) => {
-        console.error(error);
-
-      });
-      actualizacionDatos(data)
+ mostraCliente()
     
-
+   
+     
     
  
   }, [cliente,clienteId]); // Este efecto se ejecuta una vez al cargar el componente para obtener la lista de marcas
 
+
+
+const mostraCliente=()=>{
+
+  axios
+  .get(`http://localhost:8082/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`)
+  .then((response2) => {
+    const dataFromApi = response2.data;
+    setDataInicial(dataFromApi)
+console.log(dataInicial)
+console.log(cliente)
+
+   seleccionarPedido(dataFromApi)
+
+   })
+
+  .catch((error) => {
+    console.error(error);
+
+  });
+
+  actualizacionDatos(data)
+  getEvento()
+  let datoUserInitial=  localStorage.getItem(usernameMPS);
+  setDatoUser(datoUserInitial)
+ 
+}
 
 
 const getEvento=()=>{
@@ -103,6 +117,9 @@ const getEvento=()=>{
     console.error(error);
 
   });
+
+
+
 
 }
 
@@ -309,7 +326,7 @@ if(formData.formaPago!="null"){
     try {
      
 
-      const pedidoInicial = { codigoInterno: cliente, datosUpdate: cambiosAenviar , estado: "Confirmado",  evento:"prueba" }
+      const pedidoInicial = { codigoInterno: cliente, datosUpdate: cambiosAenviar , estado: "Confirmado",  evento:evento, correoAsesor: datoUser }
       const response = await axios.patch(apiUrl, pedidoInicial);
       setConfirmados(true)
 
@@ -626,7 +643,7 @@ console.log(evento)
               name="todoNombre"
               disabled
                    
-              value={formato.format(ivaTotal) }
+              value={ivaTotal}
          
             />
           </div>
