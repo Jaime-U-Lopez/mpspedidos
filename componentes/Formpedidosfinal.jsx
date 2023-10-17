@@ -81,8 +81,7 @@ const mostraCliente=()=>{
   .then((response2) => {
     const dataFromApi = response2.data;
     setDataInicial(dataFromApi)
-console.log(dataInicial)
-console.log(cliente)
+
 
    seleccionarPedido(dataFromApi)
 
@@ -199,7 +198,7 @@ let fechaCreacion=""
   const handleSubmit = (event) => {
     event.preventDefault();
     // Aquí puedes hacer algo con los datos actualizados, como enviarlos a una API.
-    console.log('Datos actualizados:', formData);
+  
   };
 
 
@@ -270,7 +269,7 @@ let fechaCreacion=""
          
             // Realiza la solicitud DELETE con Axios
             const id  = producto.id;
-        //  console.log(data)
+  
            await axios.delete(`http://localhost:8082/apiPedidosMps/v1/pedidos/{id}?id=${id}`);
     
             // Actualiza el carrito y la lista de cantidades después de eliminar el producto
@@ -310,7 +309,6 @@ let fechaCreacion=""
 
       const datofijos={valorTotalPedido:valorTotal   , netoApagar: netoAPagar   ,  ivaTotalPed : ivaTotal   }
 
-      console.log(datofijos)
       const datosEnvioModificado= formData
 
       const cambiosAenviar = {
@@ -409,8 +407,6 @@ const formato = new Intl.NumberFormat(localeColombia, options);
 
 
 
-
-console.log(evento)
 
 
 

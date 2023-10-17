@@ -28,8 +28,7 @@ export default function Home() {
       </div>
       
 
-      <ConsultaPedidosPorValor></ConsultaPedidosPorValor>
-        
+
         </div>
         
     

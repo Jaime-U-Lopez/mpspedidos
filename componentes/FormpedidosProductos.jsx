@@ -240,7 +240,7 @@ const valorTotal=cantidadPedidoActuales+valor;
 
 
     var v=marcas[0]
-    console.log(v)
+
     e.preventDefault();
     setIsLoading(true); // Establece isLoading en true durante la carga
     setError(false); // Reinicia el estado de error
@@ -314,7 +314,7 @@ const valorTotal=cantidadPedidoActuales+valor;
 
     
  
-    console.log(ListaProductosMapeados)
+
 
     //enviamos pedido
 

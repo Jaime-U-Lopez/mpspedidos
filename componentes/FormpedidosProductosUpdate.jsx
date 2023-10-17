@@ -311,15 +311,15 @@ const valorTotal=cantidadPedidoActuales+valor;
         const cliente = await extraerIdCliente(url);
         const cod =  extraerIdCodigoInternoCancelar(pathname)
         const codigoInterno2 = `${cod}`
-        console.log(codigoInterno2)
+   
 
         setCodigoInternoTraspaso(codigoInterno2);
         const pedidoInicial = { idCliente: cliente, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno: codigoInternoTraspaso }
-        console.log(pedidoInicial)
+  
 
         const response = await axios.patch(apiUrl, pedidoInicial);
          dataInicial = response.data.message;
-console.log(dataInicial)
+
         Swal.fire({
           title: 'Cargando exitosamente...',
           allowOutsideClick: false,

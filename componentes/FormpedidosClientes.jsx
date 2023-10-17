@@ -62,7 +62,7 @@ export default function FormPedidos() {
     try {
       const response = await axios.get(apiUrl);
       //const response = await axios.get(`http://localhost:8082/apiPedidosMps/v1/clientes/nombre/?nombre=${formData.nombre}`);
-      console.log(formData.nombre);
+  
 
 
       Swal.fire({

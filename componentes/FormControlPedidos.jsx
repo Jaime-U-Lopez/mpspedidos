@@ -40,7 +40,6 @@ const consultarData = async () => {
 
 
 
-//console.log(data)
 
 const goToPage = (page) => {
   setCurrentPage(page);
@@ -68,9 +67,9 @@ return originalData;
 
 
 const buscarPorNumeroPedido = (dato) => {
-  console.log(dato)
+
   const pedidoEncontrado = data.find(item => item.nit === dato);
-  console.log(pedidoEncontrado)
+
  
 }
 
@@ -102,7 +101,7 @@ const aprobarPedido =async (pedido) => {
       const url= `http://localhost:8082/apiPedidosMps/v1/pedidos/email/`
       const pedidoInicial = { codigoInterno: cod,  estado: "aprobado",   correoAsesor: pedido.correoAsesor }
       const response = await axios.post(url,pedidoInicial);
-      console.log(response)
+    
     const id  = pedido.id;
     consultarData()
 
@@ -149,12 +148,12 @@ const cancelarPedido = async (pedido) => {
   
         var cod= pedido.codigoInterno;
   
-        console.log(cod)
+    
         const url= `http://localhost:8082/apiPedidosMps/v1/pedidos/email/`
   
         const pedidoInicial = { codigoInterno: cod,  estado: "cancelado",   correoAsesor: "or4846@hotmail.com" }
         const response = await axios.post(url,pedidoInicial);
-  console.log(pedidoInicial);
+
   consultarData()
    
   
@@ -162,7 +161,6 @@ const cancelarPedido = async (pedido) => {
          const nuevoProductos = dataInicial.filter((item) => item.id == pedido.id);
         // const idEliminar = dataTable.filter((item) => item.id == producto.id);
   
-        console.log(nuevoProductos);
   
   
           Swal.fire({
