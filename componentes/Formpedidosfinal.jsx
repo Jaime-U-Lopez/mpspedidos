@@ -77,7 +77,7 @@ export default function FormPedidos() {
 const mostraCliente=()=>{
 
   axios
-  .get(`http://localhost:8082/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`)
+  .get(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`)
   .then((response2) => {
     const dataFromApi = response2.data;
     setDataInicial(dataFromApi)
@@ -104,7 +104,7 @@ const getEvento=()=>{
 
 
   axios
-  .get(`http://localhost:8082/apiPedidosMps/v1/eventos/1`)
+  .get(`http://192.190.42.51:8083/apiPedidosMps/v1/eventos/1`)
   .then((response2) => {
     const dataFromApi = response2.data;
     setEvento(dataFromApi)
@@ -270,7 +270,7 @@ let fechaCreacion=""
             // Realiza la solicitud DELETE con Axios
             const id  = producto.id;
   
-           await axios.delete(`http://localhost:8082/apiPedidosMps/v1/pedidos/{id}?id=${id}`);
+           await axios.delete(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/{id}?id=${id}`);
     
             // Actualiza el carrito y la lista de cantidades después de eliminar el producto
            const nuevoProductos = dataTable.filter((item) => item.id !== producto.id);
@@ -303,7 +303,7 @@ let fechaCreacion=""
        
       //enviamos pedido
   
-      let apiUrl = `http://localhost:8082/apiPedidosMps/v1/pedidos/`;
+      let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
 
 
 

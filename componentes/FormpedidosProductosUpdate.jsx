@@ -295,7 +295,7 @@ const valorTotal=cantidadPedidoActuales+valor;
 
     //enviamos pedido
 
-    let apiUrl = `http://localhost:8082/apiPedidosMps/v1/pedidos/addProduct/`;
+    let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/addProduct/`;
 
 
     let numRetries = 0;
@@ -440,8 +440,6 @@ const valorTotal=cantidadPedidoActuales+valor;
       
       return antepenultimo;
     }
-
-
 
 
 

@@ -15,7 +15,7 @@ export default function UserManagementTable() {
 
 const getUsuarios=()=>{
 
-    axios.get(`http://localhost:8082/apiPedidosMps/v1/usuarios/`)
+    axios.get(`http://localhost:8083/apiPedidosMps/v1/usuarios/`)
     .then((response) => {
       // Actualiza el estado con los datos de los usuarios
       setUsers(response.data);
@@ -38,7 +38,7 @@ const getUsuarios=()=>{
  const id= userId.id
  console.log(id)
     // Realiza una solicitud DELETE para eliminar el usuario por su ID
-    axios.delete(`http://localhost:8082/apiPedidosMps/v1/usuarios/{id}?id=${id}`)
+    axios.delete(`http://localhost:8083/apiPedidosMps/v1/usuarios/{id}?id=${id}`)
       .then(() => {
         // Actualiza la lista de usuarios después de eliminar
         setUsers(users.filter((user) => user.id !== userId.id));

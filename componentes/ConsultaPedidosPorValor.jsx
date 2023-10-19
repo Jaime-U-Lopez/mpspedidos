@@ -15,7 +15,7 @@ export default function ConsultaPedidosPorValor() {
     try {
 
 
-      const response = await axios.get(`http://localhost:8082/apiPedidosMps/v1/pedidos/consulta/valor/{valor}?valor=${valor}`);
+      const response = await axios.get(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/consulta/valor/{valor}?valor=${valor}`);
       setResultados(response.data);
     } catch (error) {
       console.error('Error al consultar pedidos por valor:', error);

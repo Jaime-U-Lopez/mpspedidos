@@ -54,7 +54,7 @@ export default function FormPedidos() {
     event.preventDefault();
     if (validateForm()) {
     try {
-      const response = await axios.post('http://localhost:8082/apiPedidosMps/v1/usuarios/', formData);
+      const response = await axios.post('http://192.190.42.51:8083/apiPedidosMps/v1/usuarios/', formData);
       
 
 

@@ -9,11 +9,13 @@ const nextConfig = {
           },
         ];
       },
-  distDir: 'build',
+
 */
 
 
   // Otras configuraciones...
+  //distDir: 'build',
+  //distDir: 'build',
 
 }
 

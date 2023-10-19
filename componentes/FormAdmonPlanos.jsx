@@ -5,82 +5,111 @@ import stylesForm from 'app/form.module.css'
 import Link from 'next/link';
 import { useState } from 'react';
 import DownloadExcelButton from './DownloadExcelButton';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import { errorToJSON } from 'next/dist/server/render';
+export default function FormAdmonPlanos({ formulario }) {
 
-export default function FormAdmonPlanos({formulario}) {
 
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFileProductos, setSelectedFileProductos] = useState(null);
+  const [selectedFileClientes, setSelectedFileClientes] = useState(null);
+  const [selectedFileUsuarios, setSelectedFileUsuarios] = useState(null);
 
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+  const handleFileChange = (event, fileType) => {
+    const file = event.target.files[0];
+    console.log(file)
+    switch (fileType) {
+      case 'productos':
+        setSelectedFileProductos(file);
+        break;
+      case 'clientes':
+        setSelectedFileClientes(file);
+        break;
+      case 'usuarios':
+        setSelectedFileUsuarios(file);
+        break;
+      default:
+        break;
+    }
   };
 
-  const handleFileUpload = async () => {
+  const handleFileUpload = async (url, mensajeExito, selectedFile) => {
     if (selectedFile) {
-      const formData = new FormData();
-      formData.append('excelFile', selectedFile);
-
       try {
-        const response = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData,
+        const formData = new FormData();
+        formData.append('archivo', selectedFile);
+        console.log(formData)
+        
+        const response = await axios.post(url, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
         });
-
-        if (response.ok) {
-          // El archivo se ha cargado exitosamente.
-          console.log('El archivo se ha cargado exitosamente.');
+        console.log(response)
+        if (response.status === 201|| response.status === 200) {
+          Swal.fire('¡Éxito!', mensajeExito, 'success');
         } else {
-          console.error('Error al cargar el archivo.');
+          Swal.fire('Error', 'Error al cargar el archivo. ' + error.message, 'error');
         }
       } catch (error) {
-        console.error('Error al cargar el archivo:', error);
+        Swal.fire('Error', 'Error al cargar el archivo: ' + error.message, 'error');
       }
     } else {
-      console.error('Ningún archivo seleccionado.');
+      Swal.fire('Advertencia', 'Ningún archivo seleccionado.', 'warning');
     }
   };
 
   return (
+    <div className={` ${styles.FormPedidos} `}>
+      <h1 className="mb-3">Administración Evento</h1>
 
+      <div>
+        <label htmlFor="">Cargue archivo productos: </label>
+        <input type="file" onChange={(e) => handleFileChange(e, 'productos')} />
+        <button
+          onClick={() =>
+            handleFileUpload(
+              'http://192.190.42.51:8083/apiPedidosMps/v1/productos/cargar',
+              'Carga de productos exitosa',
+              selectedFileProductos
+            )
+          }
+        >
+          Cargar Archivo
+        </button>
+      </div>
 
+      <div>
+        <label htmlFor="">Cargue archivo Clientes: </label>
+        <input type="file" onChange={(e) => handleFileChange(e, 'clientes')} />
+        <button
+          onClick={() =>
+            handleFileUpload(
+              'http://192.190.42.51:8083/apiPedidosMps/v1/clientes/plano',
+              'Carga de clientes exitosa',
+              selectedFileClientes
+            )
+          }
+        >
+          Cargar Archivo
+        </button>
+      </div>
 
-
-
-<div className={` ${styles.FormPedidos} `}    >
-
-      <h1 className='mb-3 '> Administración Evento  </h1>
-
-
-   <div>
-   <label htmlFor="">Cargue archivo productos: </label>
-  
-  <input type="file" onChange={handleFileChange} />
-  <button onClick={handleFileUpload}>Cargar Archivo</button>
-
-
-   </div>
-    
-   <div>
-   <label htmlFor="">Cargue archivo Clientes: </label>
-  
-  <input type="file" onChange={handleFileChange} />
-  <button onClick={handleFileUpload}>Cargar Archivo</button>
-
-   </div>
-
-   <div>
-   <label htmlFor="">Cargue archivo Usuarios : </label>
-  
-  <input type="file" onChange={handleFileChange} />
-  <button onClick={handleFileUpload}>Cargar Archivo</button>
-
-
-
-   </div>
-
-
-<DownloadExcelButton/>
-
-
+      <div>
+        <label htmlFor="">Cargue archivo Usuarios: </label>
+        <input type="file" onChange={(e) => handleFileChange(e, 'usuarios')} />
+        <button
+          onClick={() =>
+            handleFileUpload(
+              'http://192.190.42.51:8083/apiPedidosMps/v1/usuarios/cargar',
+              'Carga de usuarios exitosa',
+              selectedFileUsuarios
+            )
+          }
+        >
+          Cargar Archivo
+        </button>
+      </div>
     </div>
   );
-};
+}

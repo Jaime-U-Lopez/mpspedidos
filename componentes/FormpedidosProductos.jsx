@@ -58,7 +58,7 @@ export default function FormPedidosProductos() {
     // Hacer la solicitud para obtener la lista de marcas
 
     axios
-      .get('http://192.168.1.38:8082/apiPedidosMps/v1/productos/marcas/')
+      .get('http://192.190.42.51:8083/apiPedidosMps/v1/productos/marcas/')
       .then((response2) => {
         // Actualizar el estado con la lista de marcas recibida de la API
 
@@ -246,7 +246,7 @@ const valorTotal=cantidadPedidoActuales+valor;
     setError(false); // Reinicia el estado de error
 
 
-    let apiUrl = "http://192.168.1.38:8082/apiPedidosMps/v1/productos/";
+    let apiUrl = "http://192.190.42.51:8083/apiPedidosMps/v1/productos/";
 
     if (formData.marca !== "no" && formData.numerodeparte == '0' || formData.numerodeparte == '' || formData.numerodeparte == null) {
       apiUrl += `marcas/${formData.marca}`;
@@ -318,7 +318,7 @@ const valorTotal=cantidadPedidoActuales+valor;
 
     //enviamos pedido
 
-    let apiUrl = `http://localhost:8082/apiPedidosMps/v1/pedidos/`;
+    let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
 
 
     let numRetries = 0;

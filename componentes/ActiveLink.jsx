@@ -37,12 +37,6 @@ useEffect(() => {
 }, [pathname, searchParams])
 
 
-
-
-
-
-
-
 const url = pathname;
 
 // Utiliza una expresión regular para extraer el número al final de la URL
@@ -59,13 +53,11 @@ if (numeroMatch) {
 }
 
 
-
   return (
 
     <div>
 
    
-
 
     </div>
    
