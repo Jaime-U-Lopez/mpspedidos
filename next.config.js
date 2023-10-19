@@ -9,12 +9,12 @@ const nextConfig = {
           },
         ];
       },
-  distDir: 'build',
+ 
 */
 
 
   // Otras configuraciones...
-
+  distDir: 'build',
 }
 
 module.exports = nextConfig
