@@ -28,7 +28,7 @@ useEffect(() => {
 
 const consultarData = async () => {
   try {
-    const response = await axios.get('http://localhost:8082/apiPedidosMps/v1/pedidos/');
+    const response = await axios.get('http://192.190.42.51:8082/apiPedidosMps/v1/pedidos/');
     const dataFromApi = response.data;
   
     setData(dataFromApi);
@@ -98,7 +98,7 @@ const aprobarPedido =async (pedido) => {
     if (result.isConfirmed) {
 
       var cod= pedido.codigoInterno;
-      const url= `http://localhost:8082/apiPedidosMps/v1/pedidos/email/`
+      const url= `http://192.190.42.51:8082/apiPedidosMps/v1/pedidos/email/`
       const pedidoInicial = { codigoInterno: cod,  estado: "aprobado",   correoAsesor: pedido.correoAsesor }
       const response = await axios.post(url,pedidoInicial);
     
@@ -149,7 +149,7 @@ const cancelarPedido = async (pedido) => {
         var cod= pedido.codigoInterno;
   
     
-        const url= `http://localhost:8082/apiPedidosMps/v1/pedidos/email/`
+        const url= `http://192.190.42.51:8082/apiPedidosMps/v1/pedidos/email/`
   
         const pedidoInicial = { codigoInterno: cod,  estado: "cancelado",   correoAsesor: "or4846@hotmail.com" }
         const response = await axios.post(url,pedidoInicial);

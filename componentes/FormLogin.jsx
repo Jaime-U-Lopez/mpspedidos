@@ -54,10 +54,11 @@ export default function FormLogin() {
 
 
 
-       let apiUrl = `http://localhost:8082/apiPedidosMps/v1/usuarios/validarUser`;
+       let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/usuarios/validarUser`;
 
       const usuarioSt= `${usuario}`;
 
+      
 
        localStorage.setItem('usernameMPS', usuarioSt);
          try {
@@ -127,7 +128,7 @@ export default function FormLogin() {
 
   <form id="login-form" 
   className={` ${styles.login} `}
-  method="POST" action="http://localhost:8082/apiPedidosMps/v1/usuarios/validarUser">
+  method="POST" action="http://192.190.42.51:8083/apiPedidosMps/v1/usuarios/validarUser">
     <div className="">
       <label htmlFor="usuario" className="form-label">
         Usuario <span className="text-danger">*</span>

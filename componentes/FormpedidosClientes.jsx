@@ -49,7 +49,7 @@ export default function FormPedidos() {
     setError(false); // Reinicia el estado de error
 
 
-    let apiUrl = `http://localhost:8082/apiPedidosMps/v1/clientes/`;
+    let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/clientes/`;
 
     if (formData.nit >= 0 && formData.nombre == '') {
       apiUrl += `nit/?nit=${formData.nit}`;
@@ -61,9 +61,7 @@ export default function FormPedidos() {
 
     try {
       const response = await axios.get(apiUrl);
-      //const response = await axios.get(`http://localhost:8082/apiPedidosMps/v1/clientes/nombre/?nombre=${formData.nombre}`);
-  
-
+     
 
       Swal.fire({
         title: 'Cargando...',
