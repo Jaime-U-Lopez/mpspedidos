@@ -15,7 +15,6 @@ import numeral from 'numeral';
 export default function FormPedidos() {
 
 
-
   const pathname = usePathname();
   const url = pathname;
   const [selectedRow, setSelectedRow] = useState(null);
@@ -33,17 +32,17 @@ export default function FormPedidos() {
   const [confirmados, setConfirmados] = useState(false);
   const [evento, setEvento] = useState();
   const [datoUser, setDatoUser] = useState();
+  const [netoAPagar, setNetoAPagar] = useState();
+  const [valorTotal, setValorTotal] = useState();
+  const [totalCantidad, setTotalCantidad] = useState();
 
-
-
-
+  const [ivaTotal, setIvaTotal] = useState();
 
   var totalProductos = data.length;
   var totalProductosEnCarrito = 0;
   const [productoData, setProductoData] = useState({}
 
   );
-
 
   const extraerIdCliente = (url) => {
     const numeroMatch = url.match(/\/([^/]+)$/);
@@ -66,7 +65,7 @@ export default function FormPedidos() {
 
  extraerIdCliente(url)
  mostraCliente()
-    
+
    
  if (!datoUser) {
   localStorage.setItem('usernameMPS', 'defaultValue');
@@ -77,7 +76,7 @@ export default function FormPedidos() {
 }
 var dato= localStorage.getItem('usernameMPS');
 setDatoUser(dato)
-
+totales(data)
      
     
  
@@ -193,11 +192,25 @@ let fechaCreacion=""
   }
 
 
+const totales = (data)=>{
+
+  const ivaTotal = data.reduce((total, producto) => total + producto.iva, 0);
   const totalCantidad = data.reduce((total, producto) => total + producto.cantidad, 0);
   const valorTotal = data.reduce((total, producto) => total + producto.valorTotalPorPro, 0);
-  const ivaTotal = data.reduce((total, producto) => total + producto.iva, 0);
-  const netoAPagar = valorTotal + ivaTotal;
 
+ 
+
+ const netoAPagar = valorTotal + ivaTotal;
+
+
+ setIvaTotal(ivaTotal);
+ setTotalCantidad(totalCantidad);
+ setValorTotal(valorTotal);
+setNetoAPagar(netoAPagar);
+
+}
+console.log(valorTotal)
+ 
 
   // Manejar cambios en los campos de entrada
   const handleInputChange = (event) => {
@@ -220,8 +233,7 @@ let fechaCreacion=""
     setData(dataFech)
    actualizacionDatos(dataFech)
       setDataTable(dataFech)
-   
-
+  
 
   };
 
@@ -283,7 +295,7 @@ let fechaCreacion=""
          
             // Realiza la solicitud DELETE con Axios
             const id  = producto.id;
-  
+  console.log("Hola")
            await axios.delete(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/{id}?id=${id}`);
     
             // Actualiza el carrito y la lista de cantidades después de eliminar el producto
@@ -414,12 +426,6 @@ const options = {
 };
 
 const formato = new Intl.NumberFormat(localeColombia, options);
-
-
-
-
-
-
 
 
 
@@ -633,12 +639,12 @@ const formato = new Intl.NumberFormat(localeColombia, options);
             <span className="input-group-text"> Valor Total   </span>
             <input
               className="form-control "
-              type="number"
+              type="text"
               placeholder="Valor  Total "
               name="todoNombre"
               disabled
               
-              value={formato.format(valorTotal) }
+            value={formatNumberWithCurrency(valorTotal) }
             />
           </div>
 
@@ -648,12 +654,12 @@ const formato = new Intl.NumberFormat(localeColombia, options);
             <span className="input-group-text"> Iva total   </span>
             <input
               className="form-control "
-              type="number"
+              type="text"
               placeholder="Valor Iva Total "
               name="todoNombre"
               disabled
                    
-              value={ivaTotal}
+              value={formatNumberWithCurrency(ivaTotal)}
          
             />
           </div>

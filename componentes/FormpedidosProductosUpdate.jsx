@@ -311,18 +311,19 @@ export default function FormPedidosProductos() {
     if(ListaProductosMapeados.length>=1){
 
       let dataInicial="";
-console.log(clientePed)
+console.log(clientePed.value)
 
 
-      
+
     
 try {
        
-        console.log("hola5")
-        setCodigoInternoTraspaso(codigoInterno2);
-        const pedidoInicial = { idCliente: clientePed, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno: codigoInternoTraspaso }
-  
 
+        setCodigoInternoTraspaso(codigoInterno2);
+
+        const pedidoInicial = { idCliente: clientePed.value, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno: codigoInternoTraspaso }
+  
+        console.log(pedidoInicial)
         const response = await axios.patch(apiUrl, pedidoInicial);
          dataInicial = response.data.message;
 
