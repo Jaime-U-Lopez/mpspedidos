@@ -99,8 +99,6 @@ console.log(data)
 
     setControlInput(true);
 
-
-
   };
 
 
@@ -139,45 +137,44 @@ console.log(data)
 
   const agregarAlCarrito = (producto) => {
 
-    if (controlInput && cantidades.cantidad > 0 && precioUnitario.preciocompra>0) {
 
 
+    if (cantidades[producto.id] > 0 && precioUnitario[producto.id] !== undefined && precioUnitario[producto.id] >= 0) {
+      
       setCarrito([...carrito, producto]);
       setCarritoEnvio([...carritoEnvio, producto]);
-   
 
-
-const cantidadesInput={ 
-  id:cantidades.id,
- cantidad: cantidades.cantidad}
-
-
- const precioUnitarioInput={
-  id:precioUnitario.id,
-  valorUnitario:precioUnitario.preciocompra,
- }
-
-
-
- const productoSeleccionado = Object.assign({},  cantidadesInput,precioUnitarioInput);
- setTotalCantidades([...totalCantidades, productoSeleccionado]);
-
-const valor = cantidades.cantidad;
-const valorTotal=cantidadPedidoActuales+valor;
-
- setCantidadPedidoActuales(valorTotal)
-
-      Swal.fire({
-        icon: 'success',
-        title: 'Producto agregado al carrito',
-        text: `${formData.numerodeparteTable} ha sido agregado a tu carrito.`,
-        showConfirmButton: false,
-        timer: 2000,
-      });
-
-      setControlInput(false)
-
-
+      const cantidadesInput={ 
+        id:cantidades.id,
+       cantidad: cantidades.cantidad}
+      
+      
+       const precioUnitarioInput={
+        id:precioUnitario.id,
+        valorUnitario:precioUnitario.preciocompra,
+       }
+      
+      
+      
+       const productoSeleccionado = Object.assign({},  cantidadesInput,precioUnitarioInput);
+       setTotalCantidades([...totalCantidades, productoSeleccionado]);
+      
+      const valor = cantidades.cantidad;
+      const valorTotal=cantidadPedidoActuales+valor;
+      
+       setCantidadPedidoActuales(valorTotal)
+      
+            Swal.fire({
+              icon: 'success',
+              title: 'Producto agregado al carrito',
+              text: `${formData.numerodeparteTable} ha sido agregado a tu carrito.`,
+              showConfirmButton: false,
+              timer: 2000,
+            });
+      
+            setControlInput(false)
+    
+  
 
     } else {
       // Muestra un mensaje de error si la cantidad es menor o igual a cero
@@ -585,7 +582,7 @@ const valorTotal=cantidadPedidoActuales+valor;
         </div>
       </div>
 
-      {data.length > 0 && formData.numerodeparte !== '' && formData.marca !== '' ? (
+      {data.length > 0 && formData.numerodeparte !== '' || formData.marca !== 'no' ? (
       <table className={`${styles.TablePedidos} table-responsive table  table-hover  table-bordered border-primary     `}>
         <thead>
           <tr className='text-center'>
