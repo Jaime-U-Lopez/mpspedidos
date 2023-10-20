@@ -642,8 +642,8 @@ try {
                 )}
 
               </td>
-              <td> {producto.preciominimocop   }</td>
-              <td>{producto.preciominimousd }</td>
+              <td className={ styles.alineacionValoresDere}  > {producto.preciominimocop   }</td>
+              <td className={ styles.alineacionValoresDere} >{producto.preciominimousd }</td>
 
 
 

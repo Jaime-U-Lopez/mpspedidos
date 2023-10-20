@@ -295,7 +295,7 @@ console.log(valorTotal)
          
             // Realiza la solicitud DELETE con Axios
             const id  = producto.id;
-  console.log("Hola")
+ 
            await axios.delete(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/{id}?id=${id}`);
     
             // Actualiza el carrito y la lista de cantidades después de eliminar el producto
@@ -417,15 +417,6 @@ function getCurrentDate() {
 
 
 
-
-const localeColombia = 'es-CO';
-const options = {
-  maximumFractionDigits: 2,
-  
-
-};
-
-const formato = new Intl.NumberFormat(localeColombia, options);
 
 
 
@@ -837,11 +828,11 @@ const formato = new Intl.NumberFormat(localeColombia, options);
                 <td>{item.marca}</td>
                 <td>{item.cantidad}</td>
 
-                <td>   {formatNumberWithCurrency(item.valorUnitario)} </td>
-                <td>{formatNumberWithCurrency( item.valorNetoPorProd)}</td>
-                <td>   {  item.preciominimocop} </td>
-                <td>   {item.preciominimousd} </td>
-                <td>   {formatNumberWithCurrency(item.iva) } </td>
+                <td className={ styles.alineacionValoresDere} >   {formatNumberWithCurrency(item.valorUnitario)} </td>
+                <td className={ styles.alineacionValoresDere} >{formatNumberWithCurrency( item.valorNetoPorProd)}</td>
+                <td className={ styles.alineacionValoresDere} >   {  item.preciominimocop} </td>
+                <td className={ styles.alineacionValoresDere} >   {item.preciominimousd} </td>
+                <td className={ styles.alineacionValoresDere} >   {formatNumberWithCurrency(item.iva) } </td>
                
                 <td >
 

@@ -51,8 +51,6 @@ export default function FormPedidosProductos() {
   const [actualizarProductos, setActualizarProductos] = useState(false);
 
 
-console.log(data)
-
 
   useEffect(() => {
     // Hacer la solicitud para obtener la lista de marcas
@@ -460,6 +458,21 @@ console.log(data)
       });
     }
 
+    function formatNumber(number) {
+      if (typeof number !== 'number') {
+        // Si el valor no es un número, intenta convertirlo a un número.
+        number = parseFloat(number);
+      }
+    
+      const formattedNumber = new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(number);
+      
+      return formattedNumber;
+    }
 
 
 
@@ -637,6 +650,7 @@ console.log(data)
                     type="number"
                     name='precioUnitarioInp'
                     placeholder="Ingresa el precio"
+                    
                     className={styles.inputCantidad}
                     value={precioUnitario[producto.id] || ''}
                     onChange={(e) => handlePrecioChange(e, producto.id)}
@@ -645,8 +659,8 @@ console.log(data)
                 )}
 
               </td>
-              <td> {producto.preciominimocop   }</td>
-              <td>{producto.preciominimousd }</td>
+              <td className={ styles.alineacionValoresDere}  > {formatNumber(producto.preciominimocop)}</td>
+              <td className={ styles.alineacionValoresDere}  >{formatNumber(producto.preciominimousd )}</td>
 
 
 

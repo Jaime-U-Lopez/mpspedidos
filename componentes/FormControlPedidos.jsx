@@ -144,6 +144,7 @@ const aprobarPedido =async (pedido) => {
 }
 const cancelarPedido = async (pedido) => {
 
+  if( pedido.estado!="sinConfirmacion" && pedido.estado !="aprobado" ){
   Swal.fire({
     icon: 'warning',
     title: '¿Seguro de Denegar el Pedido?',
@@ -154,26 +155,16 @@ const cancelarPedido = async (pedido) => {
 
   }).then(async(result) => {
    
-    if( pedido.estado!="sinConfirmacion"){
-
       if (result.isConfirmed) {
-  
         var cod= pedido.codigoInterno;
   
-    
         const url= `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/email/`
-  
+
         const pedidoInicial = { codigoInterno: cod,  estado: "cancelado",   correoAsesor: "or4846@hotmail.com" }
         const response = await axios.post(url,pedidoInicial);
-
-  consultarData()
-   
-  
-  
+        consultarData()
          const nuevoProductos = dataInicial.filter((item) => item.id == pedido.id);
         // const idEliminar = dataTable.filter((item) => item.id == producto.id);
-  
-  
   
           Swal.fire({
             icon: 'success',
@@ -185,21 +176,19 @@ const cancelarPedido = async (pedido) => {
     
       }
 
-    }  Swal.fire({
-      icon: 'error',
-      title: 'El estado del pedido no esta habilitado',
-      
-      showConfirmButton: false,
-      timer: 2000,
-    });
-
- 
   
   })
 
-};
+}else {
+  Swal.fire({
+    icon: 'error',
+    title: 'El estado del pedido no esta habilitado o no se puede cambiar',
+    showConfirmButton: false,
+    timer: 2000,
+  });
+}
 
-
+}
 
 const pedidosTotales =data.length
 var totalProductosActualesTable = dataToShow.length;
@@ -235,6 +224,7 @@ height={50}></Image>
 
 
 function formatNumber(number) {
+
   const formattedNumber = new Intl.NumberFormat('es-CO', {
     style: 'currency',
     currency: 'COP',
@@ -307,9 +297,7 @@ function formatNumber(number) {
           />
         </div>
 
-      
-
-
+    
         <div className="input-group">
           <span className="input-group-text">Fecha orden  </span>
 
@@ -401,9 +389,9 @@ function formatNumber(number) {
         <td>{item.numeroPedido}</td>
         <td>{item.dni}</td>
         <td>{item.nombreComercial}</td>
-        <td className="align-right" >{formatNumber(item.valorTotal)}</td>
-        <td className="align-right" >{formatNumber(item.totalIva)}</td>
-        <td className="align-right" >{formatNumber(item.netoApagar)}</td>
+        <td className={ styles.alineacionValoresDere} >{formatNumber(item.valorTotal)}</td>
+        <td className={ styles.alineacionValoresDere}  >{formatNumber(item.totalIva)}</td>
+        <td className={ styles.alineacionValoresDere} >{formatNumber(item.netoApagar)}</td>
         <td>{item.formaDePago}</td>
         <td>{item.estado}</td>
       

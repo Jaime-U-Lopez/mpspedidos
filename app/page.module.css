@@ -604,6 +604,12 @@ color: black
 
 }
 
+.alineacionValoresDere {
+  text-align: right;
+}
+
+
+
 
 @media screen and (max-width: 768px) {
 
@@ -619,6 +625,11 @@ color: black
   margin-right: 8px;
   font-size: 2px;
 }
+
+
+
+
+
 
 }
 
