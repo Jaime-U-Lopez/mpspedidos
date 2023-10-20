@@ -1,20 +1,14 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-   /* async redirects() {
-        return [
-          {
-            source: '/',
-            destination: '/pedidos', // Ruta de la página de inicio de sesión
-            permanent: true, // Cambia esto a true si deseas una redirección permanente (301)
-          },
-        ];
+
+
+module.exports = {
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/login', // Redirige la raíz a la página de inicio de sesión
+        permanent: false, // Cambia esto según tus necesidades
       },
-  distDir: 'build',
-*/
-
-
-  // Otras configuraciones...
-
-}
-
-module.exports = nextConfig
+    ];
+  },
+};

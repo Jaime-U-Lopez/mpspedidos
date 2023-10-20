@@ -318,7 +318,6 @@ console.log(clientePed.value)
     
 try {
        
-
         setCodigoInternoTraspaso(codigoInterno2);
 
         const pedidoInicial = { idCliente: clientePed.value, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno: codigoInternoTraspaso }
@@ -452,7 +451,7 @@ try {
 
     const extraerIdCliente = (url) => {
       return new Promise((resolve, reject) => {
-        const numeroMatch = url.match(/\/(\d+)[a-zA-Z]*$/);
+        const numeroMatch = url.match(/\/(\d+)/);
         if (numeroMatch) {
           try {
             const numero = parseInt(numeroMatch[1]);
@@ -462,6 +461,7 @@ try {
             reject(error);
           }
         } else {
+          reject(new Error("No se encontró ningún número en la URL"));
         
         }
       });
@@ -485,7 +485,16 @@ try {
     };
    
 
-
+    function formatNumberWithCurrency(number) {
+      const formattedNumber = new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(number);
+      
+      return formattedNumber;
+    }
 
 
 

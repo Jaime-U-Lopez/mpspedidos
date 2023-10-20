@@ -12,7 +12,7 @@ export default function NavbarBotones() {
 
 
  <li>
-      <Link href="/">Home</Link>
+      <Link href="/home">Home</Link>
       </li> 
       
       <li>

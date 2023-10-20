@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { UserProvider, useUser } from './UserContext';
-
+import Link from 'next/link';
 
 export default function FormLogin() {
 
@@ -53,7 +53,6 @@ export default function FormLogin() {
       e.preventDefault();
 
 
-
        let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/usuarios/validarUser`;
 
       const usuarioSt= `${usuario}`;
@@ -64,7 +63,7 @@ export default function FormLogin() {
          try {
            const validacion = { usuario: usuario, password: password }
            const response = await axios.post(apiUrl, validacion);
-           
+           console.log(response)
 
 
            Swal.fire({
@@ -77,7 +76,7 @@ export default function FormLogin() {
            setTimeout(() => {
          
              Swal.close();
-             window.location.href = '/'; // Cambia '/'' por la ruta correcta de tu página de inicio
+             window.location.href = '/home'; 
 
            }, 500);
           
@@ -108,6 +107,20 @@ export default function FormLogin() {
      };
 
 
+
+     const PaginaProtegida = ({ usuarioAutenticado }) => {
+       return (
+         <div>
+           {usuarioAutenticado ? (
+             <h1>¡Bienvenido a la página protegida!</h1>
+           ) : (
+             <p>Debes iniciar sesión para acceder a esta página.</p>
+           )}
+         </div>
+       );
+     };
+     
+     
 
   return (
 
@@ -184,20 +197,20 @@ export default function FormLogin() {
     >
       Ingresar
     </button>
+
+    <ul>
+
+     
+<li>
+  <Link href="/">Realizar Pedido</Link>
+</li>
+</ul>
+
   </form>
 
 
-  <div>
-      <h1>Welcome, {state.username}!</h1>
-      <input
-        type="text"
-        placeholder="Enter your username"
-        value={state.username}
-        onChange={handleUsernameChange}
-      />
-    </div>
 
-    <button onClick={handleSaveUsername}>Save Username</button>
+
 </div>
   
   );

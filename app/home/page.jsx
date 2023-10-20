@@ -1,7 +1,7 @@
 
 'use client';
 import Image from 'next/image'
-import styles from './page.module.css'
+import styles from 'app/page.module.css'
 import FormPedidosClientes from '@/componentes/FormpedidosClientes'
 import NavbarBotonesHome from '@/componentes/NavbarBotonesHome'
 import Navbar from '@/componentes/Navbar'

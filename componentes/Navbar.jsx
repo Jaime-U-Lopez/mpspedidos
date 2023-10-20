@@ -24,10 +24,10 @@ export default function NavbarBotones() {
 
 
     if (!datoUser) {
-      localStorage.setItem('usernameMPS', 'defaultValue');
+      localStorage.setItem('usernameMPS2', 'defaultValue');
 
       var datoUserDefaul = 'defaultValue';
-      setDatoUser(datoUserDefaul);
+      //setDatoUser(datoUserDefaul);
     
     }
     var dato= localStorage.getItem('usernameMPS');
