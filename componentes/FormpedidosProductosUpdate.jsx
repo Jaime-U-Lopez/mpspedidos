@@ -10,6 +10,9 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { v4 as uuidv4 } from 'uuid';
 import numeral from 'numeral';
+
+
+
 export default function FormPedidosProductos() {
 
   const pathname = usePathname()
@@ -276,18 +279,14 @@ export default function FormPedidosProductos() {
 
 
 
-  const handleSubmitPut = async (e) => {
+  const handleSubmitPut = async () => {
 
-    e.preventDefault();
-    setIsLoading(true); // Establece isLoading en true durante la carga
-    setError(false); // Reinicia el estado de error
-
-
+  
+    setIsLoading(true); // 
+    setError(false); //
 
     const url = pathname;
      
-
-
     const ListaProductosMapeados = totalCantidades.map((item) => ({
       id: item.id,
       cantidad: item.cantidad,
@@ -311,8 +310,6 @@ export default function FormPedidosProductos() {
     if(ListaProductosMapeados.length>=1){
 
       let dataInicial="";
-console.log(clientePed.value)
-
 
 
     
@@ -322,22 +319,11 @@ try {
 
         const pedidoInicial = { idCliente: clientePed.value, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno: codigoInternoTraspaso }
   
-        console.log(pedidoInicial)
+
         const response = await axios.patch(apiUrl, pedidoInicial);
          dataInicial = response.data.message;
 
-        Swal.fire({
-          title: 'Cargando exitosamente...',
-          allowOutsideClick: false,
-          onBeforeOpen: () => {
-            Swal.showLoading();
-          },
-        });
-        setTimeout(() => {
-          setIsLoading(false);
-          Swal.close();
-
-        }, 500);
+       
         setActualizarProductos(true)
         setControEnvio(true);
       } catch (error) {
@@ -371,21 +357,10 @@ try {
 
 
 
-  function handleClickAtras() {
-    Swal.fire({
-      icon: 'question',
-      title: '¿Estás seguro?',
-      text: `¿Quieres cancelar la orden del pedido ?`,
-      showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'No, cancelar',
-    }).then((result) => {
-      if (result.isConfirmed) {
+  function continuarPedido() {
+    handleSubmitPut()
 
-        <Link href="/pedidos/buscarCliente" prefetch={false}>{imageIzquierda}</Link>
-
-      }
-    });
+    
   }
 
   var totalProductos = data.length;
@@ -562,13 +537,7 @@ try {
           <div >
          
 
-        <button className="btn w40- mt-4 mb-3 btn-primary"
-        type="submit"
-        //disabled={isLoading} // Deshabilita el botón durante la carga
-        onClick={handleSubmitPut}
-      >
-        Actualizar  Pedido
-      </button>
+       
       
     
     
@@ -580,12 +549,13 @@ try {
 {controEnvio? (
        
        <li>
-    <Link href={`/pedidos/confirmarPedido/${encodeURIComponent(codigoInternoTraspaso)}`} scroll={false} prefetch={false} >Continuar Pedido</Link>
-   
+    <Link 
+       onClick={continuarPedido}
+    href={`/pedidos/confirmarPedido/${encodeURIComponent(codigoInternoTraspaso)}`} scroll={false} prefetch={false}       >Continuar Pedido</Link>
+  
          </li> 
       ):( 
         <li>
-     
             </li> 
       )}
 

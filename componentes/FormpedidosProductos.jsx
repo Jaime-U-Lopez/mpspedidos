@@ -548,7 +548,10 @@ console.log(data)
 <ul>
 {controEnvio? (
        <li>
-    <Link href={`/pedidos/confirmarPedido/${encodeURIComponent(codigoInternoTraspaso)}`} scroll={false} prefetch={false} >Continuar Pedido</Link>
+    <Link
+
+    
+    href={`/pedidos/confirmarPedido/${encodeURIComponent(codigoInternoTraspaso)}`} scroll={false} prefetch={false} >Continuar Pedido</Link>
          </li> 
       ):( 
         <li>

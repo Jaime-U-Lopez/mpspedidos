@@ -86,7 +86,10 @@ const handleFiltroChange = event => {
 
 const aprobarPedido =async (pedido) => {
 
-  Swal.fire({
+
+  if( pedido.estado!="sinConfirmacion" &&pedido.estado!="cancelado" ){
+
+ Swal.fire({
     icon: 'success',
     title: 'Estas aprobando',
     text: `Pedido :  ${pedido.numeroPedido} `,
@@ -94,11 +97,11 @@ const aprobarPedido =async (pedido) => {
     confirmButtonText: 'Sí, Aprobar ',
     cancelButtonText: 'No, cancelar',
   }).then(async(result) => {
-    if( pedido.estado!="sinConfirmacion"){
+   
     if (result.isConfirmed) {
 
       var cod= pedido.codigoInterno;
-      const url= `http://192.190.42.51:8082/apiPedidosMps/v1/pedidos/email/`
+      const url= `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/email/`
       const pedidoInicial = { codigoInterno: cod,  estado: "aprobado",   correoAsesor: pedido.correoAsesor }
       const response = await axios.post(url,pedidoInicial);
     
@@ -116,20 +119,29 @@ const aprobarPedido =async (pedido) => {
   
     }
 
-  }  Swal.fire({
+  }
+
+  );
+  
+
+
+ 
+
+
+}else {
+
+  Swal.fire({
     icon: 'error',
-    title: 'El estado del pedido no esta habilitado',
-    
+    title: 'El estado del pedido no esta habilitado o no se puede cambiar',
     showConfirmButton: false,
     timer: 2000,
   });
-
-  });
-
+}
 
 
-};
 
+
+}
 const cancelarPedido = async (pedido) => {
 
   Swal.fire({
@@ -149,7 +161,7 @@ const cancelarPedido = async (pedido) => {
         var cod= pedido.codigoInterno;
   
     
-        const url= `http://192.190.42.51:8082/apiPedidosMps/v1/pedidos/email/`
+        const url= `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/email/`
   
         const pedidoInicial = { codigoInterno: cod,  estado: "cancelado",   correoAsesor: "or4846@hotmail.com" }
         const response = await axios.post(url,pedidoInicial);
@@ -218,6 +230,25 @@ src="/img/icons8-flecha-derecha-64.png"
 alt="Picture of the author"
 width={80/2}
 height={50}></Image>
+
+
+
+
+function formatNumber(number) {
+  const formattedNumber = new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(number);
+  
+  return formattedNumber;
+}
+
+//--------------------------------------------->
+
+
+
   return (
 
 
@@ -370,9 +401,9 @@ height={50}></Image>
         <td>{item.numeroPedido}</td>
         <td>{item.dni}</td>
         <td>{item.nombreComercial}</td>
-        <td>{item.valorTotal}</td>
-        <td>{item.totalIva}</td>
-        <td>{item.netoApagar}</td>
+        <td className="align-right" >{formatNumber(item.valorTotal)}</td>
+        <td className="align-right" >{formatNumber(item.totalIva)}</td>
+        <td className="align-right" >{formatNumber(item.netoApagar)}</td>
         <td>{item.formaDePago}</td>
         <td>{item.estado}</td>
       

@@ -8,11 +8,11 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { usePathname } from 'next/navigation'
 import Swal from 'sweetalert2';
-
+import Layout from './Layout';
 import numeral from 'numeral';
 
 
-export default function FormPedidos() {
+function FormPedidos({info}) {
 
 
   const pathname = usePathname();
@@ -91,7 +91,7 @@ const mostraCliente=()=>{
   .then((response2) => {
     const dataFromApi = response2.data;
     setDataInicial(dataFromApi)
-
+    console.log(dataFromApi)
 
    seleccionarPedido(dataFromApi)
 
@@ -434,7 +434,9 @@ const formato = new Intl.NumberFormat(localeColombia, options);
 
 
   return (
+    <Layout>  
 
+  
 
     <div className={` ${styles.FormPedidos} `}    >
 
@@ -876,5 +878,28 @@ const formato = new Intl.NumberFormat(localeColombia, options);
 
 
     </div>
+
+        
+    </Layout>
   );
+
+
 };
+export async function getStaticProps() {
+
+  try {
+    const response = await fetch(`http://192.190.42.51:8083/apiPedidosMps/v1/productos/marcas/`)
+    const info = await res.json();
+    return {
+      props: {
+        info,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+  }
+
+
+}
+
+export default FormPedidos;
