@@ -53,7 +53,7 @@ export default function FormPedidosProductos() {
     extraerIdCodigoInternoCancelar(pathname)
     extraerIdCodigoInternoId(pathname)
     axios
-      .get('http://192.168.1.38:8082/apiPedidosMps/v1/productos/marcas/')
+      .get('http://192.190.42.51:8083/apiPedidosMps/v1/productos/marcas/')
       .then((response2) => {
         // Actualizar el estado con la lista de marcas recibida de la API
 
@@ -61,7 +61,10 @@ export default function FormPedidosProductos() {
         setMarcas(dataFromApi);
 
 
+        var extracionCliente=extraerIdCliente(pathname)
+        setClientePed(extracionCliente)
       })
+
 
 
       .catch((error) => {
@@ -126,33 +129,35 @@ export default function FormPedidosProductos() {
 
   const agregarAlCarrito = (producto) => {
 
-    if (controlInput && cantidades.cantidad > 0 && precioUnitario.preciocompra>0) {
+
+   if (cantidades[producto.id] > 0 && precioUnitario[producto.id] !== undefined && precioUnitario[producto.id] >= 0) {
+   
       setCarrito([...carrito, producto]);
       setCarritoEnvio([...carritoEnvio, producto]);
    
 
 
-const cantidadesInput={ 
-  id:cantidades.id,
- cantidad: cantidades.cantidad
+      const cantidadesInput={ 
+        id:cantidades.id,
+      cantidad: cantidades.cantidad
 
-}
-
-
- const precioUnitarioInput={
-  id:precioUnitario.id,
-  valorUnitario:precioUnitario.preciocompra,
- }
+      }
 
 
+      const precioUnitarioInput={
+        id:precioUnitario.id,
+        valorUnitario:precioUnitario.preciocompra,
+      }
 
- const productoSeleccionado = Object.assign({},  cantidadesInput,precioUnitarioInput);
- setTotalCantidades([...totalCantidades, productoSeleccionado]);
 
-const valor = cantidades.cantidad;
-const valorTotal=cantidadPedidoActuales+valor;
 
- setCantidadPedidoActuales(valorTotal)
+        const productoSeleccionado = Object.assign({},  cantidadesInput,precioUnitarioInput);
+        setTotalCantidades([...totalCantidades, productoSeleccionado]);
+
+        const valor = cantidades.cantidad;
+        const valorTotal=cantidadPedidoActuales+valor;
+
+        setCantidadPedidoActuales(valorTotal)
 
       Swal.fire({
         icon: 'success',
@@ -163,7 +168,6 @@ const valorTotal=cantidadPedidoActuales+valor;
       });
 
       setControlInput(false)
-
 
 
     } else {
@@ -222,7 +226,7 @@ const valorTotal=cantidadPedidoActuales+valor;
     setError(false); // Reinicia el estado de error
 
 
-    let apiUrl = "http://192.168.1.38:8082/apiPedidosMps/v1/productos/";
+    let apiUrl = "http://192.190.42.51:8083/apiPedidosMps/v1/productos/";
 
     if (formData.marca !== "no" && formData.numerodeparte == '0' || formData.numerodeparte == '' || formData.numerodeparte == null) {
       apiUrl += `marcas/${formData.marca}`;
@@ -277,7 +281,7 @@ const valorTotal=cantidadPedidoActuales+valor;
     e.preventDefault();
     setIsLoading(true); // Establece isLoading en true durante la carga
     setError(false); // Reinicia el estado de error
-    const codigoUnico = uuidv4();
+
 
 
     const url = pathname;
@@ -291,8 +295,6 @@ const valorTotal=cantidadPedidoActuales+valor;
     }));
 
     
- 
-
     //enviamos pedido
 
     let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/addProduct/`;
@@ -301,20 +303,24 @@ const valorTotal=cantidadPedidoActuales+valor;
     let numRetries = 0;
     let success = true;
 
+ 
+    const cod =  extraerIdCodigoInternoCancelar(pathname)
+    const codigoInterno2 = `${cod}`
+
+
     if(ListaProductosMapeados.length>=1){
 
       let dataInicial="";
+console.log(clientePed)
+
 
       
-      try {
+    
+try {
        
-        const cliente = await extraerIdCliente(url);
-        const cod =  extraerIdCodigoInternoCancelar(pathname)
-        const codigoInterno2 = `${cod}`
-   
-
+        console.log("hola5")
         setCodigoInternoTraspaso(codigoInterno2);
-        const pedidoInicial = { idCliente: cliente, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno: codigoInternoTraspaso }
+        const pedidoInicial = { idCliente: clientePed, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno: codigoInternoTraspaso }
   
 
         const response = await axios.patch(apiUrl, pedidoInicial);
@@ -478,12 +484,6 @@ const valorTotal=cantidadPedidoActuales+valor;
     };
    
 
-
-
-    
-    
-    
-    
 
 
 

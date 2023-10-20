@@ -35,10 +35,6 @@ export default function FormPedidos() {
   const [datoUser, setDatoUser] = useState();
 
 
-  if (typeof window !== 'undefined' && window.localStorage) {
-    let datoUserInitial=  localStorage.getItem(usernameMPS);
-  }
-
 
 
 
@@ -72,6 +68,16 @@ export default function FormPedidos() {
  mostraCliente()
     
    
+ if (!datoUser) {
+  localStorage.setItem('usernameMPS', 'defaultValue');
+
+  var datoUserDefaul = 'defaultValue';
+  setDatoUser(datoUserDefaul);
+
+}
+var dato= localStorage.getItem('usernameMPS');
+setDatoUser(dato)
+
      
     
  
@@ -102,12 +108,8 @@ const mostraCliente=()=>{
 
 
 
-  if (typeof window !== 'undefined' && window.localStorage) {
 
-    let datoUserInitial=  localStorage.getItem(usernameMPS);
-  }
 
-  setDatoUser(datoUserInitial)
  
 }
 
@@ -674,7 +676,7 @@ const formato = new Intl.NumberFormat(localeColombia, options);
 
         <div className="input-group">
           <span className="input-group-text"> Forma de pago     </span>
-          <select defaultValue="Seleccione el tipo"
+          <select defaultValue="1"
      
           name="formaPago"
             onChange={handleInputChange}
