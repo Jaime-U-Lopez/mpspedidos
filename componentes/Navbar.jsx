@@ -5,8 +5,9 @@ import { useUser } from "./UserContext";
 import Image from 'next/image'
 import styles from 'app/page.module.css'
 import Link from 'next/link'
-import {useContext} from 'react'
+import {useContext, useState} from 'react'
 import { images } from '@/next.config'
+import { useEffect } from "react";
 
 
 export default function NavbarBotones() {
@@ -14,20 +15,34 @@ export default function NavbarBotones() {
 
   const { state } = useUser();
 
+  const [datoUser, setDatoUser] = useState();
+
+
   const usernameMPS = 'usernameMPS';
-  let datoUser=  localStorage.getItem(usernameMPS);
+
+  useEffect(() => {
+
+
+    if (!datoUser) {
+      localStorage.setItem('usernameMPS', 'defaultValue');
+
+      var datoUserDefaul = 'defaultValue';
+      setDatoUser(datoUserDefaul);
+    
+    }
+    var dato= localStorage.getItem('usernameMPS');
+setDatoUser(dato)
+
+  
+  }, []);
 
 
 const cerrarSeccion = ()=>{
 
   const usernameMPS = 'usernameMPS';
   localStorage.removeItem(usernameMPS);
- 
 
 }
-
-
-
 
   return (  
 

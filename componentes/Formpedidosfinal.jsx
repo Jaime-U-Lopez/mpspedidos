@@ -99,7 +99,14 @@ const mostraCliente=()=>{
 
   actualizacionDatos(data)
   getEvento()
-  let datoUserInitial=  localStorage.getItem(usernameMPS);
+
+
+
+  if (typeof window !== 'undefined' && window.localStorage) {
+
+    let datoUserInitial=  localStorage.getItem(usernameMPS);
+  }
+
   setDatoUser(datoUserInitial)
  
 }

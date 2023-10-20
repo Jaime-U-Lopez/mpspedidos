@@ -51,7 +51,7 @@ export default function FormPedidosProductos() {
   const [actualizarProductos, setActualizarProductos] = useState(false);
 
 
-
+console.log(data)
 
 
   useEffect(() => {
@@ -63,7 +63,9 @@ export default function FormPedidosProductos() {
         // Actualizar el estado con la lista de marcas recibida de la API
 
         const dataFromApi = response2.data;
+
         setMarcas(dataFromApi);
+
         var extracionCliente=extraerIdCliente(pathname)
         setClientePed(extracionCliente)
       })
@@ -589,7 +591,7 @@ const valorTotal=cantidadPedidoActuales+valor;
           <tr className='text-center'>
             <th scope="col">N°</th>
             <th scope="col">N° de parte </th>
-     
+            <th scope="col">Tipo Negocio</th>
             <th scope="col" >Descripción </th>
             <th scope="col" >Color </th>
             <th scope="col" >Marca </th>
@@ -610,7 +612,7 @@ const valorTotal=cantidadPedidoActuales+valor;
             <tr className='text-center' key={producto.id}>
               <th scope="row">{index + 1}</th>
               <td name="numerodeparteTable">{producto.numerodeparte}</td>
-
+              <td name="tiponegocio">{producto.tipoDeNegocio}</td>
               <td className={styles.descripcionProducto}>{producto.descripcion}</td>
               <td>{producto.color}</td>
               <td>{producto.marca}</td>
