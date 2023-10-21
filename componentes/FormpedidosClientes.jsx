@@ -23,12 +23,21 @@ export default function FormPedidos() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false); // Estado para rastrear errores
   const [selectedRow, setSelectedRow] = useState(null);
-  const itemsPerPage = 10; // Cantidad de elementos por página
-  const [currentPage, setCurrentPage] = useState(1);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const dataToShow = data.slice(startIndex, endIndex);
+  const itemsPerPage = 5; // Cantidad de elementos por página
+  const [pageSize] = useState(10);
+const [page, setPage] = useState(1);
+const startIndex = (page - 1) * pageSize;
+const endIndex = startIndex + pageSize;
+const dataToShow = data.slice(startIndex, endIndex);
+
+
+
+
   const [cliente, setCliente] = useState(0);
+  
+
+  const clientesEncontrados= data.length;
+  const clientesActuales= dataToShow.length;
 
   const goToPage = (page) => {
     setCurrentPage(page);
@@ -107,6 +116,20 @@ export default function FormPedidos() {
     });
   }
 
+
+  var imageIzquierda = <Image
+    src="/img/icons8-flecha-izquierda.png"
+    alt="Picture of the author"
+    width={80 / 2}
+    height={50}></Image>
+  var imagenDerecha = <Image
+    src="/img/icons8-flecha-derecha-64.png"
+    alt="Picture of the author"
+    width={80 / 2}
+    height={50}></Image>
+
+
+
   return (
 
 
@@ -174,6 +197,23 @@ export default function FormPedidos() {
       </form>
 
 
+      <p>Clientes Encontrados : {clientesActuales} de   {clientesEncontrados}   </p>
+      <div className={styles.btnAtrasAdelante}>
+
+      <button       
+          onClick={() => setPage(page - 1)} disabled={page === 1}
+          >
+          {imageIzquierda}
+        </button>
+        <button
+        
+        onClick={() => setPage(page + 1)} disabled={endIndex >= data.length}
+        
+        >
+          {imagenDerecha}
+        </button>
+
+      </div>
 
       <table className={`${styles.TablePedidos} table-responsive table  table-hover  table-bordered border-primary     `} >
 
@@ -196,7 +236,7 @@ export default function FormPedidos() {
                   onClick={() => setSelectedRow(item)}
                   className={selectedRow === item ? ("selectedrow",'text-center') : 'text-center'}
                 >
-                  <th scope="row">{index + 1}</th>
+                <th scope="row">{startIndex + index + 1}</th>
                   <td name="idCliente">{item.nit}</td>
                   <td>{item.nombre}</td>
                   <td>{item.correoElectronico}</td>

@@ -37,6 +37,14 @@ function FormPedidos({info}) {
   const [totalCantidad, setTotalCantidad] = useState();
 
   const [ivaTotal, setIvaTotal] = useState();
+  const itemsPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const dataToShow = dataTable.slice(startIndex, endIndex);
+
+
+
 
   var totalProductos = data.length;
   var totalProductosEnCarrito = 0;
@@ -422,6 +430,9 @@ function getCurrentDate() {
   return `${year}-${month}-${day}`;
 }
 
+const goToPage = (page) => {
+  setCurrentPage(page);
+};
 
 
 
@@ -791,9 +802,24 @@ function getCurrentDate() {
       </form>
 
 
-      <p> Detalle de Productos seleccionados : {totalProductos} de   {totalProductos}   </p>
-      {imageIzquierda}
-      {imagenDerecha}
+      <p> Detalle de productos en pedido : {totalProductos} de   {totalProductos}   </p>
+      
+
+      <div className={styles.btnAtrasAdelante}>
+
+        <button onClick={() => goToPage(currentPage - 1)}
+          disabled={currentPage === 1}>
+          {imageIzquierda}
+        </button>
+        <button onClick={() => goToPage(currentPage + 1)}
+          disabled={endIndex >= data.length}>
+          {imagenDerecha}
+        </button>
+        </div>
+
+
+
+
       <table className={`${styles.TablePedidos} table-responsive table  table-hover  table-bordered border-primary     `} >
 
         <thead>
@@ -821,13 +847,13 @@ function getCurrentDate() {
           <tbody>
 
 
-            {dataTable.map((item, index) => (
+            {dataToShow.map((item, index) => (
               <tr key={item.id}
 
                 onClick={() => setSelectedRow(item)}
                 className={selectedRow === item ? "selectedrow" : ''}
               >
-                <th scope="row">{index + 1}</th>
+          <th scope="row">{startIndex + index + 1}</th>
                 <td>{item.numerodeparte}</td>
                 <td>{item.tipoDeNegocio}</td>
 

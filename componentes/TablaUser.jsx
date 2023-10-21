@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import styles from 'app/page.module.css'
 
-export default function UserManagementTable() {
+export default function TablaUser() {
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
   const [pageSize] = useState(10);

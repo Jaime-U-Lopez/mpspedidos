@@ -31,9 +31,13 @@ export default function FormPedidosProductos() {
 
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const dataToShow = data.slice(startIndex, endIndex);
+  const [pageSize] = useState(10);
+const [page, setPage] = useState(1);
+const startIndex = (page - 1) * pageSize;
+const endIndex = startIndex + pageSize;
+const dataToShow = data.slice(startIndex, endIndex);
+
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const [carrito, setCarrito] = useState([]);
@@ -543,11 +547,6 @@ try {
           <div >
          
 
-       
-      
-    
-    
-
 </div>
         
 
@@ -578,14 +577,23 @@ try {
       <p>Productos Encontrados : {totalProductosActualesTable} de   {totalProductos}   </p>
       <div className={styles.btnAtrasAdelante}>
 
-        <div onClick={() => goToPage(currentPage - 1)}
-          disabled={currentPage === 1}>
+       
+      <button     
+          
+          onClick={() => setPage(page - 1)} disabled={page === 1}
+          >
           {imageIzquierda}
-        </div>
-        <div onClick={() => goToPage(currentPage + 1)}
-          disabled={endIndex >= data.length}>
+        </button>
+        <button
+        
+        onClick={() => setPage(page + 1)} disabled={endIndex >= data.length}
+        
+        >
           {imagenDerecha}
-        </div>
+        </button>
+
+
+
       </div>
 
 
@@ -614,7 +622,7 @@ try {
         <tbody>
           {dataToShow.map((producto, index) => (
             <tr className='text-center' key={producto.id}>
-              <th scope="row">{index + 1}</th>
+                <th scope="row">{startIndex + index + 1}</th>
               <td name="numerodeparteTable">{producto.numerodeparte}</td>
 
               <td className={styles.descripcionProducto}>{producto.descripcion}</td>

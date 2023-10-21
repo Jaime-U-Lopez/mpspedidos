@@ -7,7 +7,7 @@ import { useState } from 'react';
 import Swal from 'sweetalert2';
 
 import axios from 'axios';
-import UserManagementTable from './TablaUser';
+import TablaUser from './TablaUser';
 
 
 export default function FormAdmonUser() {
@@ -148,7 +148,7 @@ export default function FormAdmonUser() {
       </form>
       <p>Usuarios Creados:</p>
 
-      <UserManagementTable/>
+      <TablaUser/>
 
 
     </div>

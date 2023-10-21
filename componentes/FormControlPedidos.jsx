@@ -30,7 +30,8 @@ useEffect(() => {
 
 const consultarData = async () => {
   try {
-    const response = await axios.get('http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/');
+   // const response = await axios.get('http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/');
+    const response = await axios.get('http://localhost:8083/apiPedidosMps/v1/pedidos/');
     const dataFromApi = response.data;
   
     setData(dataFromApi);
@@ -102,33 +103,47 @@ const aprobarPedido =async (pedido) => {
    
     if (result.isConfirmed) {
 
+      try {
+       
+
       var cod= pedido.codigoInterno;
-      const url= `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/email/`
+      // const url= `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/email/`
+       const url= `http://localhost:8083/apiPedidosMps/v1/pedidos/email/`
+      
       const pedidoInicial = { codigoInterno: cod,  estado: "aprobado",   correoAsesor: pedido.correoAsesor }
-      const response = await axios.post(url,pedidoInicial);
-    
-    const id  = pedido.id;
-    consultarData()
+       const response = await axios.post(url,pedidoInicial);
+     
+     const id  = pedido.id;
+     consultarData()
+         Swal.fire({
+           icon: 'success',
+           title: 'Pedido aprobado exitosamente',
+           text: `Ha sido aprobado el  Pedido :  ${pedido.numeroPedido} `,
+           showConfirmButton: false,
+           timer: 2000,
+         });
+   
+     
+       
+      } catch (error) {
+        console.error(error);
 
+        if (error.response) {
+           const responseData = error.response.data.message;
+      
+          console.log("Mensaje de error:", responseData); 
+          console.log("Código de estado:", error.response.status); 
+          setError(true); 
+          Swal.fire('Error', 'No se pudo aprobar la  orden , error: ' + responseData, 'error');
+        } else {
+          console.log("Error sin respuesta del servidor:", error.message);
+          setError(true); 
+          Swal.fire('Error', 'No se pudo aprobar la  orden , error: ' + error.message, 'error');
+        }
+      } 
 
-        Swal.fire({
-          icon: 'success',
-          title: 'Pedido aprobado exitosamente',
-          text: `Ha sido aprobado el  Pedido :  ${pedido.numeroPedido} `,
-          showConfirmButton: false,
-          timer: 2000,
-        });
+    }});
   
-    }
-
-  }
-
-  );
-  
-
-
- 
-
 
 }else {
 
@@ -160,7 +175,8 @@ const cancelarPedido = async (pedido) => {
       if (result.isConfirmed) {
         var cod= pedido.codigoInterno;
   
-        const url= `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/email/`
+       // const url= `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/email/`
+        const url= `http://localhost:8083/apiPedidosMps/v1/pedidos/email/`
 
         const pedidoInicial = { codigoInterno: cod,  estado: "cancelado",   correoAsesor: "or4846@hotmail.com" }
         const response = await axios.post(url,pedidoInicial);
@@ -280,8 +296,7 @@ function formatNumber(number) {
         
             
             }}
-            
-
+          
         
           />
         </div>
@@ -324,13 +339,12 @@ function formatNumber(number) {
               const datosFiltrados = filterData(dataInicial, valorFiltro);
               setData(datosFiltrados) }}
             >
-   
-   <option value="0">Seleccione el Estado</option>
-   <option value="1">Pendiente Aprobación </option>
-   <option value="2">Sin Confirmación </option>
-   <option value="3">Aprobado</option>
-   <option value="4">Cancelado</option>
-  </select>
+            <option value="0">Seleccione el Estado</option>
+            <option value="1">Pendiente Aprobación </option>
+            <option value="2">Sin Confirmación </option>
+            <option value="3">Aprobado</option>
+            <option value="4">Cancelado</option>
+            </select>
      
         </div>
 
@@ -344,27 +358,30 @@ function formatNumber(number) {
           Buscar
         </button>
 
-        
         </div>
-     
-     
-
+    
       </form>
       <p>Pedidos Encontrados : {totalProductosActualesTable} de {pedidosTotales}  </p>
    
       <div className={styles.btnAtrasAdelante}>
-<div onClick={() => setPage(page + 1)} disabled={page === 1}
+
+
+          <button     
+          
+          onClick={() => setPage(page - 1)} disabled={page === 1}
           >
           {imageIzquierda}
-        </div>
-        <div
+        </button>
+        <button
         
         onClick={() => setPage(page + 1)} disabled={endIndex >= data.length}
         
         >
           {imagenDerecha}
-        </div>
+        </button>
 
+
+       
 
 </div>
     
@@ -390,7 +407,7 @@ function formatNumber(number) {
   <tbody>
     {dataToShow.map((item, index) => (
       <tr key={index}>
-        <th scope="row">{index + 1}</th>
+   <th scope="row">{startIndex + index + 1}</th>
         <td>{item.numeroPedido}</td>
         <td>{item.dni}</td>
         <td>{item.nombreComercial}</td>
