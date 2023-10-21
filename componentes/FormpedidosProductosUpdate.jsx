@@ -356,9 +356,6 @@ try {
       }
    
 
-    }else{
-
-      Swal.fire('Error', 'Debe seleccionar como minimo un producto.', 'error');
     }
   };
 
@@ -466,8 +463,12 @@ try {
       });
     };
    
-
-    function formatNumberWithCurrency(number) {
+    function formatNumber(number) {
+      if (typeof number !== 'number') {
+        // Si el valor no es un número, intenta convertirlo a un número.
+        number = parseFloat(number);
+      }
+    
       const formattedNumber = new Intl.NumberFormat('es-CO', {
         style: 'currency',
         currency: 'COP',
@@ -477,8 +478,6 @@ try {
       
       return formattedNumber;
     }
-
-
 
 
   //<<<<<<<<___________________________________>>>>>>>>>>>>>
@@ -650,10 +649,8 @@ try {
                 )}
 
               </td>
-              <td className={ styles.alineacionValoresDere}  > {producto.preciominimocop   }</td>
-              <td className={ styles.alineacionValoresDere} >{producto.preciominimousd }</td>
-
-
+              <td className={ styles.alineacionValoresDere}  > {formatNumber(producto.preciominimocop)   }</td>
+              <td className={ styles.alineacionValoresDere} >{formatNumber(producto.preciominimousd) }</td>
 
               <td>
                 {carrito.includes(producto) ? (
@@ -698,8 +695,6 @@ try {
           ))}
         </tbody>
       </table>
-
-
 
 
 

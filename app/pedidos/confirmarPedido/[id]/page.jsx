@@ -15,71 +15,6 @@ export default function ConfirmarPedidos() {
 
 
 
-  let iva = 0;
- 
-  let evento = "Evento de ejemplo";
-  let idCliente = 123; // ID del cliente
-
-  let personaContacto = "";
-  let direccion = "";
-  let celular = "";
-  let telefonoFijo = "";
-  let email = "";
-  let formaDePago = "";
-  let estado = "";
-  let observaciones = "";
-
-
-
-
-
-
-  var eventop= String(evento)
-const datosCliente={
-
-nombre: personaContacto,
-Direccion: direccion,
-edad: celular,
-TelefonoFijo: telefonoFijo,
-email: email,
-FormaDePago: formaDePago,
-Estado: estado,
-Observaciones: observaciones
-}
-console.log(eventop);
-
-
-
-
-  const [data5, setData5] = useState([
-
-    {
-      nombre: 'Perez',
-      apellido: 'Perez',
-      edad: 30,
-      email: 'juan@example.com',
-    }]
-  );
-
-  const [dataObjet, setDataObjet] = useState();
-if(data5 ){
- var datosinput= data5[0]
- var nombreComercial=data5.map(item => item.personaContacto);
- var obj={ nombre:nombreComercial}
-
-  console.log(data5);
-
-}
-
-
-  const data2 = {
-    nombre: eventop,
-    apellido: 'Perez',
-    edad: 30,
-    email: 'juan@example.com',
-  };
-
-console.log(dataObjet);
   useEffect(() => {
 
  
@@ -89,7 +24,7 @@ console.log(dataObjet);
         
 
         const dataFromApi = response2.data;
-       setData(dataFromApi)
+   
       
         
 
@@ -107,24 +42,6 @@ console.log(dataObjet);
     
 
 
-  // Calcular la suma del valor total y el IVA
-  data5.forEach((producto) => {
-    
-    // Suponiendo que el IVA es el 15% del precio (puedes ajustarlo según tus necesidades)
-  
-
-    personaContacto= producto.personaContacto,
-    direccion= producto.direccion,
-    celular= producto.celular
-    telefonoFijo= producto.telefonoFijo,
-    email= producto.email;
-  
-    formaDePago= producto.formaDePago,
-    estado= producto.estado,
-    observaciones= producto.observaciones
-
-
-  });
 
 
 

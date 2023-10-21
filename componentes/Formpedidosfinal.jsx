@@ -51,7 +51,7 @@ function FormPedidos({info}) {
       try {
         const parametro = numeroMatch[4]
         setCliente(parametro);
-        console.log(parametro)
+
       } catch (error) {
         console.error(error);
         setError(true); // Establece el estado de error en true
@@ -79,7 +79,7 @@ function FormPedidos({info}) {
 }
 var dato= localStorage.getItem('usernameMPS');
 setDatoUser(dato)
-totales(data)
+
      
     
  
@@ -95,10 +95,10 @@ const mostraCliente=()=>{
   .then((response2) => {
     const dataFromApi = response2.data;
     setDataInicial(dataFromApi)
-    console.log(dataFromApi)
+
 
    seleccionarPedido(dataFromApi)
-
+   totales(dataFromApi)
    })
 
   .catch((error) => {
@@ -120,7 +120,9 @@ const mostraCliente=()=>{
 const getEvento=()=>{
 
   axios
-  .get(`http://192.190.42.51:8083/apiPedidosMps/v1/eventos/1`)
+  //.get(`http://192.190.42.51:8083/apiPedidosMps/v1/eventos/1`)
+  .get(`http://localhost:8083/apiPedidosMps/v1/eventos/1`)
+  
   .then((response2) => {
     const dataFromApi = response2.data;
     setEvento(dataFromApi)
@@ -154,7 +156,7 @@ const getEvento=()=>{
     let estado = "";
     let observaciones = "";
     let id=0;
-let fechaCreacion=""
+    let fechaCreacion=""
 
  
     // Calcular la suma del valor total y el IVA
@@ -171,7 +173,7 @@ let fechaCreacion=""
         estado = producto.estado,
         observaciones = producto.observaciones
         id= producto.dni
-        fechaCreacion=producto.fechaCreacion
+        fechaCreacion=getCurrentDate()
     });
 
     const datosCliente = {
@@ -184,8 +186,8 @@ let fechaCreacion=""
       observaciones: String(observaciones),
       estado: String(estado),
       formaPago: String(formaDePago),
-      observaciones: '', 
-      fechaCreacion:'',
+      observaciones: observaciones, 
+      fechaCreacion:fechaCreacion,
     }
     
 
@@ -212,7 +214,7 @@ const totales = (data)=>{
 setNetoAPagar(netoAPagar);
 
 }
-console.log(valorTotal)
+
  
 
   // Manejar cambios en los campos de entrada
@@ -236,8 +238,6 @@ console.log(valorTotal)
     setData(dataFech)
    actualizacionDatos(dataFech)
       setDataTable(dataFech)
-  
-
   };
 
 
@@ -285,6 +285,7 @@ console.log(valorTotal)
     }
 
     const eliminarDelCarrito = (producto) => {
+
       Swal.fire({
         icon: 'question',
         title: '¿Estás seguro?',
@@ -299,14 +300,15 @@ console.log(valorTotal)
             // Realiza la solicitud DELETE con Axios
             const id  = producto.id;
  
-           await axios.delete(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/{id}?id=${id}`);
+          // await axios.delete(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/{id}?id=${id}`);
+           await axios.delete(`http://localhost:8083/apiPedidosMps/v1/pedidos/{id}?id=${id}`);
     
             // Actualiza el carrito y la lista de cantidades después de eliminar el producto
            const nuevoProductos = dataTable.filter((item) => item.id !== producto.id);
-           const idEliminar = dataTable.filter((item) => item.id == producto.id);
+           const nuevoProductosdata = data.filter((item) => item.id !== producto.id);
            setDataTable(nuevoProductos)
-           setData(nuevoProductos)
-         
+           totales(nuevoProductos)
+       
            if(nuevoProductos.length==0){
             setDataInicial([])
            }
@@ -332,8 +334,8 @@ console.log(valorTotal)
        
       //enviamos pedido
   
-      let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
-
+     // let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
+      let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/`;
 
 
       const datofijos={valorTotalPedido:valorTotal   , netoApagar: netoAPagar   ,  ivaTotalPed : ivaTotal   }
@@ -352,9 +354,11 @@ if(formData.formaPago!="null"){
   if(dataTable.length>0) {
     try {
      
-
-      const pedidoInicial = { codigoInterno: cliente, datosUpdate: cambiosAenviar , estado: "Confirmado",  evento:evento, correoAsesor: datoUser }
+      const pedidoInicial = { codigoInterno: cliente, datosUpdate: cambiosAenviar , estado: "Confirmado",  evento:evento.nombreEvento, correoAsesor: datoUser }
+     console.log(pedidoInicial);
       const response = await axios.patch(apiUrl, pedidoInicial);
+
+
       setConfirmados(true)
 
       Swal.fire({
