@@ -89,8 +89,8 @@ export default function FormPedidosProductos() {
   const conteoPedidos =()=>{
 
     axios
-      //.get('http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/conteo/')
-      .get('http://localhost:8083/apiPedidosMps/v1/pedidos/conteo/')
+      .get('http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/conteo/')
+      //.get('http://localhost:8083/apiPedidosMps/v1/pedidos/conteo/')
       .then((response2) => {
         // Actualizar el estado con la lista de marcas recibida de la API
 
@@ -336,8 +336,8 @@ export default function FormPedidosProductos() {
 
     //enviamos pedido
 
-   // let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
-    let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/`;
+   let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
+   // let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/`;
 
 
     let numRetries = 0;

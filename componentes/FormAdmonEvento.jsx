@@ -23,9 +23,6 @@ export default function FormAdmonEvento({ onEventCreate }) {
 
 
 
-
-
-
   return (
 
 
@@ -55,9 +52,7 @@ export default function FormAdmonEvento({ onEventCreate }) {
           />
         </div>
 
-        
-
-
+      
         <div >
         <button
           className="btn w-50 mt-4 mb-3 btn-primary"
