@@ -13,11 +13,9 @@ export default function ConfirmarPedidos() {
 
 
 
-
-
   useEffect(() => {
 
- 
+
     axios
       .get(`http://localhost:8082/apiPedidosMps/v1/pedidos/orden/1020755461PrSD`)
       .then((response2) => {

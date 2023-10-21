@@ -45,6 +45,8 @@ export default function FormPedidosProductos() {
   const [controlInput, setControlInput] = useState(false)
   const [cantidadPedidoActuales, setCantidadPedidoActuales] = useState(0);
   const [controEnvio, setControEnvio] = useState(true)
+
+
   const [clientePed, setClientePed] = useState()
   const [clienteId, setClienteId] = useState()
 
@@ -52,18 +54,7 @@ export default function FormPedidosProductos() {
   const [actualizarProductos, setActualizarProductos] = useState(false);
 
 
-  const conteoPedidoss = () => {
-    axios
-      .get('http://localhost:8083/apiPedidosMps/v1/pedidos/conteo/')
-      .then((response) => {
-        const conteo = response.data;
-  
-        setContadorOrdenes(conteo+1);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
+
 
 
 
@@ -72,7 +63,7 @@ export default function FormPedidosProductos() {
     //setContadorOrdenes(1)
 
     //conteoPedidos()
-    conteoPedidoss()
+
     extraerIdClienteSinPromesa(pathname)
     axios
       .get('http://192.190.42.51:8083/apiPedidosMps/v1/productos/marcas/')
@@ -102,9 +93,8 @@ export default function FormPedidosProductos() {
         // Actualizar el estado con la lista de marcas recibida de la API
 
         const conteo = response2.data;
-        var conteoIncremento =conteo+1;
-        console.log(conteoIncremento)
-        setContadorOrdenes(conteoIncremento)
+    console.log(conteo)
+        setContadorOrdenes(conteo+1)
       })
 
       .catch((error) => {
@@ -329,13 +319,11 @@ export default function FormPedidosProductos() {
 
   const handleSubmitPost = async () => {
 
+    setIsLoading(true); 
+    setError(false); 
 
-    setIsLoading(true); // Establece isLoading en true durante la carga
-    setError(false); // Reinicia el estado de error
     const codigoUnico = uuidv4();
-    //generarCodigoUnicoNumerico()
-    //const codigoUnico = contadorOrdenes;
-
+ 
     const url = pathname;
     
     const ListaProductosMapeados = totalCantidades.map((item) => ({
@@ -362,23 +350,15 @@ export default function FormPedidosProductos() {
        
         const cliente = await extraerIdCliente(url);
 
- 
         setClientePed(cliente)
 
-console.log(clienteId)
-      
-      
+        console.log(clienteId)
         const pedidoInicial = { idCliente: cliente, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno: contadorOrdenes }
 
-       
         console.log(pedidoInicial)
-
 
         const response = await axios.post(apiUrl, pedidoInicial);
          dataInicial = response.data.message;
-
-
-
 
 
         setActualizarProductos(true)
@@ -599,7 +579,11 @@ console.log(clienteId)
          </li> 
       ):( 
         <li>
-     
+      <Link
+      onClick={continuarPedido}
+    
+    href={`/pedidos/buscarProductos/${encodeURIComponent(clienteId)}`} scroll={false} prefetch={false}>Continuar Pedido</Link>
+
             </li> 
       )}
 
