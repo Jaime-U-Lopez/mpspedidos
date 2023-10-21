@@ -4,7 +4,7 @@ import FormControlPedidos from '@/componentes/FormControlPedidos'
 import NavbarBotones from '@/componentes/NavbarBotones'
 import Navbar from '@/componentes/Navbar'
 import Flooter from '@/componentes/Flooter'
-
+import FormAdmonUser from '@/componentes/FormAdmonUser'
 
 
 export default function Home() {
@@ -27,7 +27,7 @@ export default function Home() {
 
       </div>
       
-
+      <FormAdmonUser/>
 
         </div>
         

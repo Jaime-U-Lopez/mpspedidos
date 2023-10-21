@@ -4,7 +4,7 @@ import FormpedidosProductosUpdate from '@/componentes/FormpedidosProductosUpdate
 import NavbarBotones from '@/componentes/NavbarBotones'
 import Navbar from '@/componentes/Navbar'
 import Flooter from '@/componentes/Flooter'
-import ActiveLink from '@/componentes/ActiveLink'
+
 
 
 export default function Home() {
@@ -21,7 +21,7 @@ export default function Home() {
     
       </div>
         
-      <ActiveLink></ActiveLink>
+
       <div className={styles.ventaderecha}>
       <FormpedidosProductosUpdate />
  

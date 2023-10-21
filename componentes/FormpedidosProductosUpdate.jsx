@@ -50,6 +50,12 @@ export default function FormPedidosProductos() {
   const [actualizarProductos, setActualizarProductos] = useState(false);
 
 
+
+
+
+
+
+
   useEffect(() => {
     // Hacer la solicitud para obtener la lista de marcas
 
@@ -74,7 +80,7 @@ export default function FormPedidosProductos() {
         console.error(error);
         Swal.fire('Error', 'Sin marcas para seleccionar en Base de datos.', 'error');
       });
-  }, [codigoInternoTraspaso, pathname]); // Este efecto se ejecuta una vez al cargar el componente para obtener la lista de marcas
+  }, [codigoInternoTraspaso, pathname]); 
 
 
   const handleCantidadChange = (e, productoId) => {
@@ -124,7 +130,7 @@ export default function FormPedidosProductos() {
 
 
   const handleChange = (e) => {
-    // Actualiza el estado cuando se cambia el valor de un campo del formulario
+
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
 
@@ -296,7 +302,8 @@ export default function FormPedidosProductos() {
     
     //enviamos pedido
 
-    let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/addProduct/`;
+   // let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/addProduct/`;
+    let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/addProduct/`;
 
 
     let numRetries = 0;
@@ -330,13 +337,13 @@ try {
         console.error(error);
 
         if (error.response) {
-          // Si la respuesta del servidor está presente en el error, accede a ella.
+        
           const responseData = error.response.data.message;
       
-          console.log("Mensaje de error:", responseData); // Accede al mensaje de error específico
-          console.log("Código de estado:", error.response.status); // Accede al código de estado HTTP (en este caso, 400)
-          // Otras propiedades de la respuesta, como headers, statusText, etc., también están disponibles en error.response
-          setError(true); // Establece el estado de error en true
+          console.log("Mensaje de error:", responseData); 
+          console.log("Código de estado:", error.response.status); 
+         
+          setError(true); 
           Swal.fire('Error', 'No se pudo guardar el pedido, error: ' + responseData, 'error');
         } else {
           console.log("Error sin respuesta del servidor:", error.message);
@@ -551,7 +558,8 @@ try {
        <li>
     <Link 
        onClick={continuarPedido}
-    href={`/pedidos/confirmarPedido/${encodeURIComponent(codigoInternoTraspaso)}`} scroll={false} prefetch={false}       >Continuar Pedido</Link>
+    
+   href={`/pedidos/confirmarPedido/${encodeURIComponent(clientePed)}/${encodeURIComponent(codigoInternoTraspaso)}`} scroll={false} prefetch={false}>Continuar Pedido</Link>
   
          </li> 
       ):( 

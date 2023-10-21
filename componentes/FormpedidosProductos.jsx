@@ -44,39 +44,75 @@ export default function FormPedidosProductos() {
   const [totalCantidades, setTotalCantidades] = useState([]); // Estado para almacenar el total de cantidades
   const [controlInput, setControlInput] = useState(false)
   const [cantidadPedidoActuales, setCantidadPedidoActuales] = useState(0);
-  const [controEnvio, setControEnvio] = useState(false)
+  const [controEnvio, setControEnvio] = useState(true)
   const [clientePed, setClientePed] = useState()
+  const [clienteId, setClienteId] = useState()
 
- 
+  const [contadorOrdenes, setContadorOrdenes] = useState(null);
   const [actualizarProductos, setActualizarProductos] = useState(false);
+
+
+  const conteoPedidoss = () => {
+    axios
+      .get('http://localhost:8083/apiPedidosMps/v1/pedidos/conteo/')
+      .then((response) => {
+        const conteo = response.data;
+  
+        setContadorOrdenes(conteo+1);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
 
 
   useEffect(() => {
-    // Hacer la solicitud para obtener la lista de marcas
 
+    //setContadorOrdenes(1)
+
+    //conteoPedidos()
+    conteoPedidoss()
+    extraerIdClienteSinPromesa(pathname)
     axios
       .get('http://192.190.42.51:8083/apiPedidosMps/v1/productos/marcas/')
+      //.get('http://localhost:8083/apiPedidosMps/v1/productos/marcas/')
       .then((response2) => {
         // Actualizar el estado con la lista de marcas recibida de la API
 
         const dataFromApi = response2.data;
-
         setMarcas(dataFromApi);
-
         var extracionCliente=extraerIdCliente(pathname)
         setClientePed(extracionCliente)
       })
-
-
       .catch((error) => {
         console.error(error);
         Swal.fire('Error', 'Sin marcas para seleccionar en Base de datos.', 'error');
       });
-  }, []); // Este efecto se ejecuta una vez al cargar el componente para obtener la lista de marcas
+  }, [clienteId,clientePed]); // Este efecto se ejecuta una vez al cargar el componente para obtener la lista de marcas
 
 
 
+  const conteoPedidos =()=>{
+
+    axios
+      //.get('http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/conteo/')
+      .get('http://localhost:8083/apiPedidosMps/v1/pedidos/conteo/')
+      .then((response2) => {
+        // Actualizar el estado con la lista de marcas recibida de la API
+
+        const conteo = response2.data;
+        var conteoIncremento =conteo+1;
+        console.log(conteoIncremento)
+        setContadorOrdenes(conteoIncremento)
+      })
+
+      .catch((error) => {
+        console.error(error);
+       
+      });
+
+  }
 
 
 
@@ -237,7 +273,7 @@ export default function FormPedidosProductos() {
 
 
     var v=marcas[0]
-
+    conteoPedidos()
     e.preventDefault();
     setIsLoading(true); // Establece isLoading en true durante la carga
     setError(false); // Reinicia el estado de error
@@ -291,31 +327,27 @@ export default function FormPedidosProductos() {
     setCurrentPage(1);
   };
 
-  const handleSubmitPost = async (e) => {
+  const handleSubmitPost = async () => {
 
-    e.preventDefault();
+
     setIsLoading(true); // Establece isLoading en true durante la carga
     setError(false); // Reinicia el estado de error
     const codigoUnico = uuidv4();
-
+    //generarCodigoUnicoNumerico()
+    //const codigoUnico = contadorOrdenes;
 
     const url = pathname;
-     
-
-
+    
     const ListaProductosMapeados = totalCantidades.map((item) => ({
       id: item.id,
       cantidad: item.cantidad,
       valorUnitario:item.valorUnitario,
     }));
 
-    
- 
-
-
     //enviamos pedido
 
-    let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
+   // let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
+    let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/`;
 
 
     let numRetries = 0;
@@ -330,40 +362,35 @@ export default function FormPedidosProductos() {
        
         const cliente = await extraerIdCliente(url);
 
-        const codigoAleatorio = generarCodigoAleatorio(4);
-        codigoInterno = `${cliente}${codigoAleatorio}`
+ 
+        setClientePed(cliente)
 
-        setCodigoInternoTraspaso(codigoInterno);
-        const pedidoInicial = { idCliente: cliente, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno: codigoInterno }
-  
+console.log(clienteId)
+      
+      
+        const pedidoInicial = { idCliente: cliente, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno: contadorOrdenes }
+
+       
+        console.log(pedidoInicial)
+
 
         const response = await axios.post(apiUrl, pedidoInicial);
          dataInicial = response.data.message;
 
-        Swal.fire({
-          title: 'Cargando exitosamente...',
-          allowOutsideClick: false,
-          onBeforeOpen: () => {
-            Swal.showLoading();
-          },
-        });
-        setTimeout(() => {
-          setIsLoading(false);
-          Swal.close();
 
-        }, 500);
+
+
+
         setActualizarProductos(true)
         setControEnvio(true);
       } catch (error) {
         console.error(error);
 
         if (error.response) {
-          // Si la respuesta del servidor está presente en el error, accede a ella.
-          const responseData = error.response.data.message;
+           const responseData = error.response.data.message;
       
           console.log("Mensaje de error:", responseData); // Accede al mensaje de error específico
           console.log("Código de estado:", error.response.status); // Accede al código de estado HTTP (en este caso, 400)
-          // Otras propiedades de la respuesta, como headers, statusText, etc., también están disponibles en error.response
           setError(true); // Establece el estado de error en true
           Swal.fire('Error', 'No se pudo guardar el pedido, error: ' + responseData, 'error');
         } else {
@@ -385,6 +412,11 @@ export default function FormPedidosProductos() {
 
 
  
+  function continuarPedido() {
+    handleSubmitPost()
+
+    
+  }
 
 
   function handleClickAtras() {
@@ -457,6 +489,25 @@ export default function FormPedidosProductos() {
         }
       });
     }
+
+
+    const extraerIdClienteSinPromesa = (url) => {
+      const numeroMatch = url.match(/\/(\d+)$/);
+
+    
+      if (numeroMatch) {
+        try {
+          const numero = parseInt(numeroMatch[1]);
+          setClienteId(numero)
+          return numero;
+    
+        } catch (error) {
+          throw error;
+        }
+      } else {
+        throw new Error('No se encontró un número de cliente en la URL.');
+      }
+    };
 
     function formatNumber(number) {
       if (typeof number !== 'number') {
@@ -533,27 +584,7 @@ export default function FormPedidosProductos() {
           >
             Buscar
           </button>
-          </div>
-          <div >
-          {!actualizarProductos?  ( <button
-          className="btn w40- mt-4 mb-3 btn-primary"
-          type="submit"
-          //disabled={isLoading} // Deshabilita el botón durante la carga
-          onClick={handleSubmitPost}
-        >
-          Guardar Pedido
-        </button>) :(
-
-        <button className="btn w40- mt-4 mb-3 btn-primary"
-        type="submit"
-        //disabled={isLoading} // Deshabilita el botón durante la carga
-        onClick={handleSubmitPost}
-      >
-        Actualizar  Pedido
-      </button>
-      
-    
-    )}
+     
 
 </div>
         
@@ -562,16 +593,15 @@ export default function FormPedidosProductos() {
 {controEnvio? (
        <li>
     <Link
-
+      onClick={continuarPedido}
     
-    href={`/pedidos/confirmarPedido/${encodeURIComponent(codigoInternoTraspaso)}`} scroll={false} prefetch={false} >Continuar Pedido</Link>
+    href={`/pedidos/confirmarPedido/${encodeURIComponent(clienteId)}/${encodeURIComponent(contadorOrdenes)}`} scroll={false} prefetch={false}>Continuar Pedido</Link>
          </li> 
       ):( 
         <li>
      
             </li> 
       )}
-
 
           <li >
             <Link href="/" className={styles.linkCancelar} >Cancelar Pedido</Link>
@@ -652,7 +682,7 @@ export default function FormPedidosProductos() {
                     placeholder="Ingresa el precio"
                     
                     className={styles.inputCantidad}
-                    value={precioUnitario[producto.id] || ''}
+                    value={ precioUnitario[producto.id] || ''}
                     onChange={(e) => handlePrecioChange(e, producto.id)}
 
                   />

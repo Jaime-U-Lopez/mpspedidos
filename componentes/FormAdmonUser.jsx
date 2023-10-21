@@ -10,7 +10,7 @@ import axios from 'axios';
 import UserManagementTable from './TablaUser';
 
 
-export default function FormPedidos() {
+export default function FormAdmonUser() {
   const [formData, setFormData] = useState({
     nombre: '',
     usuario: '',

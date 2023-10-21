@@ -44,14 +44,14 @@ function FormPedidos({info}) {
 
   );
 
-  const extraerIdCliente = (url) => {
-    const numeroMatch = url.match(/\/([^/]+)$/);
+  const extraerCodigoInterno= (url) => {
+    const numeroMatch = url.split('/');
 
     if (numeroMatch) {
       try {
-        const parametro = numeroMatch[1].trim();
-
+        const parametro = numeroMatch[4]
         setCliente(parametro);
+        console.log(parametro)
       } catch (error) {
         console.error(error);
         setError(true); // Establece el estado de error en true
@@ -63,7 +63,10 @@ function FormPedidos({info}) {
 
   useEffect(() => {
 
- extraerIdCliente(url)
+
+  extraerCodigoInterno(url)
+
+
  mostraCliente()
 
    
@@ -87,7 +90,8 @@ totales(data)
 const mostraCliente=()=>{
 
   axios
-  .get(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`)
+  //.get(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`)
+  .get(`http://localhost:8083/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`)
   .then((response2) => {
     const dataFromApi = response2.data;
     setDataInicial(dataFromApi)
@@ -114,7 +118,6 @@ const mostraCliente=()=>{
 
 
 const getEvento=()=>{
-
 
   axios
   .get(`http://192.190.42.51:8083/apiPedidosMps/v1/eventos/1`)
@@ -453,7 +456,7 @@ function getCurrentDate() {
               placeholder="Numero orden"
               name="todoNombre"
               disabled
-              value={data.length > 0 ? data[0].numeroPedido : ''}
+              value={data.length > 0 ? data[0].codigoInterno : ''}
             />
           </div>
 

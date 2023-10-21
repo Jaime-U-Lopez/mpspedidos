@@ -14,8 +14,10 @@ const [dataInicial, setDataInicial]=useState([]);
 const [data, setData]=useState([]);
 const itemsPerPage = 10;
 const [currentPage, setCurrentPage] = useState(1);
-const startIndex = (currentPage - 1) * itemsPerPage;
-const endIndex = Math.min(startIndex + itemsPerPage, data.length);
+const [pageSize] = useState(10);
+const [page, setPage] = useState(1);
+const startIndex = (page - 1) * pageSize;
+const endIndex = startIndex + pageSize;
 const dataToShow = data.slice(startIndex, endIndex);
 const[filtroEstado, setFiltroEstado]=useState()
 const [numeroPedido, setNumeroPedido] = useState();
@@ -351,12 +353,15 @@ function formatNumber(number) {
       <p>Pedidos Encontrados : {totalProductosActualesTable} de {pedidosTotales}  </p>
    
       <div className={styles.btnAtrasAdelante}>
-<div onClick={() => goToPage(currentPage - 1)}
-          disabled={currentPage === 1}>
+<div onClick={() => setPage(page + 1)} disabled={page === 1}
+          >
           {imageIzquierda}
         </div>
-        <div onClick={() => goToPage(currentPage + 1)}
-          disabled={endIndex >= data.length}>
+        <div
+        
+        onClick={() => setPage(page + 1)} disabled={endIndex >= data.length}
+        
+        >
           {imagenDerecha}
         </div>
 

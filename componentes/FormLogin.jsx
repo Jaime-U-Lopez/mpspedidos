@@ -200,10 +200,7 @@ export default function FormLogin() {
 
     <ul>
 
-     
-<li>
-  <Link href="/">Realizar Pedido</Link>
-</li>
+ 
 </ul>
 
   </form>
