@@ -13,7 +13,7 @@ import { useEffect } from "react";
 export default function NavbarBotones() {
 
 
-  const { state } = useUser();
+
 
   const [datoUser, setDatoUser] = useState();
 
@@ -24,25 +24,49 @@ export default function NavbarBotones() {
 
 
     if (!datoUser) {
-      localStorage.setItem('usernameMPS2', 'defaultValue');
+      sessionStorage.setItem('usernameMPS2', 'defaultValue');
 
       var datoUserDefaul = 'defaultValue';
       //setDatoUser(datoUserDefaul);
     
     }
-    var dato= localStorage.getItem('usernameMPS');
-setDatoUser(dato)
+    var dato= sessionStorage.getItem('usernameMPS');
 
-  
+validacionRol()
+setDatoUser(dato)
   }, []);
 
 
 const cerrarSeccion = ()=>{
 
   const usernameMPS = 'usernameMPS';
-  localStorage.removeItem(usernameMPS);
+  sessionStorage.removeItem(usernameMPS);
 
 }
+
+
+const validacionRol = async () => {
+  var nombre = sessionStorage.getItem('usernameMPS');
+
+
+  try {
+    const response = await axios.get(`http://localhost:8083/apiPedidosMps/v1/usuarios/usuario/${nombre}`);
+    const info = response.data;
+
+
+    if(info.rol==="Cartera") {
+      setAutorizado(false)
+    }
+    var nombreUsu= info.nombreUsuario
+   
+    console.log(nombreUsu)
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+
 
   return (  
 

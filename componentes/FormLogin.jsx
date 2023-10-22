@@ -21,22 +21,21 @@ export default function FormLogin() {
    
     const { username } = state;
     localStorage.setItem('username', username); 
-
+  
   };
 
 
   const {setUser}  = useUser();
-  var imagen = <Image
-    src="/img/icon-addClient.png"
-    alt="Picture of the author"
-    width={80 / 2}
-    height={50}></Image>
+  
 
     const [usuario, setUsuario] = useState('');
     const [password, setPassword] = useState('');
     const [remember, setRemember] = useState(false);
   
     const handleUsuarioChange = (event) => {
+
+      const { username } = state;
+      localStorage.setItem('username', username); 
       setUsuario(event.target.value);
     };
   
@@ -52,19 +51,22 @@ export default function FormLogin() {
     const validacionLogin = async(e) => {
       e.preventDefault();
 
+      const { username } = state;
+      sessionStorage.setItem('username', username); 
+
+
+
 
        let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/usuarios/validarUser`;
 
       const usuarioSt= `${usuario}`;
 
-      
-
-       localStorage.setItem('usernameMPS', usuarioSt);
+     
          try {
            const validacion = { usuario: usuario, password: password }
            const response = await axios.post(apiUrl, validacion);
-           console.log(response)
-
+           sessionStorage.setItem('usernameMPS', usuarioSt);
+           sessionStorage.setItem('isLoggedIn', 'true');
 
            Swal.fire({
              title: 'Validación exitosa...',
@@ -80,18 +82,18 @@ export default function FormLogin() {
 
            }, 500);
           
-           setUser(validacion);
+           setUser(validacion.usuario);
 
          } catch (error) {
            console.error(error);
    
            if (error.response) {
-             // Si la respuesta del servidor está presente en el error, accede a ella.
+            
              const responseData = error.response.data.message;
          
-             console.log("Mensaje de error:", responseData); // Accede al mensaje de error específico
-             console.log("Código de estado:", error.response.status); // Accede al código de estado HTTP (en este caso, 400)
-             // Otras propiedades de la respuesta, como headers, statusText, etc., también están disponibles en error.response
+             console.log("Mensaje de error:", responseData); 
+             console.log("Código de estado:", error.response.status); 
+             
             
              Swal.fire('Error', 'Sin credenciales validas: ');
            } else {
@@ -108,22 +110,9 @@ export default function FormLogin() {
 
 
 
-     const PaginaProtegida = ({ usuarioAutenticado }) => {
-       return (
-         <div>
-           {usuarioAutenticado ? (
-             <h1>¡Bienvenido a la página protegida!</h1>
-           ) : (
-             <p>Debes iniciar sesión para acceder a esta página.</p>
-           )}
-         </div>
-       );
-     };
-     
      
 
   return (
-
 
 <div
   className={` ${styles.loginGeneral} d-flex justify-content-center align-items-center`}>
@@ -149,7 +138,8 @@ export default function FormLogin() {
       <input
         id="usuario"
         type="text"
-        className="form-control"
+        className={`${styles.loginGeneralinput} form-control text-black`}  style={{ color: 'black' }}
+
         name="usuario"
      
         required=""
@@ -193,6 +183,8 @@ export default function FormLogin() {
     
     type="button"
     onClick={validacionLogin}
+
+
     className="btn w40- mt-4 mb-3 btn-primary"
     >
       Ingresar
@@ -210,5 +202,8 @@ export default function FormLogin() {
 
 </div>
   
+
+
+
   );
 };

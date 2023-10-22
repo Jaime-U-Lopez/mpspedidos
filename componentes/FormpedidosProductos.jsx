@@ -8,8 +8,8 @@ import { router, usePathname, useSearchParams } from 'next/navigation'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { v4 as uuidv4,  } from 'uuid';
-import numeral from 'numeral';
+
+
 
 
 
@@ -62,9 +62,7 @@ export default function FormPedidosProductos({contadorPedidos}) {
   useEffect(() => {
 
    extraerIdClienteSinPromesa(pathname)
-   
-
-
+  
 
     axios
       .get('http://localhost:8083/apiPedidosMps/v1/productos/marcas/')
@@ -96,12 +94,6 @@ export default function FormPedidosProductos({contadorPedidos}) {
     }
     return codigo;
   }
-
-
-
-
-
-
 
 
 
@@ -278,9 +270,6 @@ export default function FormPedidosProductos({contadorPedidos}) {
     const codigoInternote = `${clienteId}${codigoAleatorio}`;
     setCodigoInterno(codigoInternote);
 
-console.log(codigoInterno)
-
-
 
     try {
       const response = await axios.get(apiUrl);
@@ -349,14 +338,13 @@ console.log(codigoInterno)
 
       var codigo=codigoInternot;
       setCodigoInternoTraspaso(codigo);
-      console.log(codigoInternoTraspaso)
-      console.log(codigo)
+   
 
       const codigoAleatorio = generarCodigoAleatorio(4);
       const codigoInternote = `${clienteId}${codigoAleatorio}`;
       setCodigoInterno(codigoInternote);
   
-        console.log(codigoInterno)
+     
 
         try {
 

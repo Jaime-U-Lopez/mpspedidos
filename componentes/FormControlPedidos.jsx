@@ -7,7 +7,13 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-export default function FormPedidos() {
+import { useUser } from './UserContext';
+import { locale } from 'numeral';
+
+
+
+export default function FormPedidos( {autorizacion}) {
+
 
 
 const [dataInicial, setDataInicial]=useState([]);
@@ -22,9 +28,36 @@ const dataToShow = data.slice(startIndex, endIndex);
 const[filtroEstado, setFiltroEstado]=useState()
 const [numeroPedido, setNumeroPedido] = useState();
 const [resultadoBusqueda,  setResultadoBusqueda]=useState(null);
+const [autorizado,setAutorizado]=useState(true)
+
+const [formData, setFormData] = useState({
+
+  dni: '',
+  nombreComercial: '',
+  numeroPedido: '',
+  fecha: '',
+
+});
+
+const handleChange = (e) => {
+
+  const { name, value } = e.target;
+  setFormData({ ...formData, [name]: value });
+
+};
+
+const { state, dispatch } = useUser();
+
+
+const { username } = state;
+
+
+
+
 
 useEffect(() => {
   consultarData();
+  validacionRol();
 }, []);
 
 
@@ -41,6 +74,25 @@ const consultarData = async () => {
   }
 };
 
+
+const validacionRol = async () => {
+  var nombre = sessionStorage.getItem('usernameMPS');
+
+  try {
+    const response = await axios.get(`http://localhost:8083/apiPedidosMps/v1/usuarios/usuario/${nombre}`);
+    const info = response.data;
+
+
+    if(info.rol==="Cartera") {
+      setAutorizado(false)
+    }
+
+
+
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 
 
@@ -69,11 +121,60 @@ return originalData;
 }
 
 
-const buscarPorNumeroPedido = (dato) => {
 
-  const pedidoEncontrado = data.find(item => item.nit === dato);
+const filterDatas = () => {
 
- 
+
+  if (formData.numeroPedido.trim() != '') {
+  
+  const buscar = parseInt(formData.numeroPedido);
+  const dt= dataInicial.filter((item) => item.numeroPedido === buscar);
+  setData(dt) 
+
+};
+
+if (formData.dni.trim() != '') {
+
+  const buscar = parseInt(formData.dni);
+  const dt= dataInicial.filter((item) => item.dni === buscar);
+  setData(dt) 
+
+};
+
+if (formData.nombreComercial.trim() != '') {
+  
+  const buscar = formData.nombreComercial.toLowerCase()
+
+  const dt= dataInicial.filter((item) => item.nombreComercial.toLowerCase().includes(buscar));
+
+  setData(dt) 
+
+};
+
+
+if (formData.fecha.trim() != '') {
+  
+  const buscar = formData.fecha
+  console.log(buscar)
+  const dt= dataInicial.filter((item) => item.fechaCreación===buscar);
+  console.log(dt)
+  setData(dt) 
+
+};
+
+if (formData.fecha.trim() === ''
+&& formData.nombreComercial.trim() === ''
+&& formData.dni.trim() === ''
+&& formData.numeroPedido.trim() === ''
+) {
+
+
+  setData(dataInicial) 
+
+}
+
+
+
 }
 
 
@@ -281,6 +382,8 @@ function formatNumber(number) {
   return (
 
 
+ 
+
     <div className={` ${styles.FormPedidos} `}    >
 
 
@@ -298,8 +401,8 @@ function formatNumber(number) {
             className="form-control "
             type="number"
             placeholder="Numero de orden "
-            name="todoNombre"
-            onChange={handleFiltroChange}
+            name="numeroPedido"
+            onChange={handleChange}
           />
         </div>
         <div className="input-group">
@@ -309,16 +412,9 @@ function formatNumber(number) {
             className="form-control "
             type="number"
             placeholder="Ingresar el Nit o CC"
-
-            value={filtroEstado}
-            onChange={(e) => {
-              const valorFiltro = e.target.value;
-              buscarPorNumeroPedido(valorFiltro);
-        
-            
-            }}
+            name='dni'
+            onChange={handleChange}
           
-        
           />
         </div>
   
@@ -331,7 +427,7 @@ function formatNumber(number) {
             type="text"
             placeholder="Nombre comercial "
             name="nombreComercial"
-
+            onChange={handleChange}
           />
         </div>
 
@@ -340,11 +436,11 @@ function formatNumber(number) {
           <span className="input-group-text">Fecha orden  </span>
 
           <input
-            className="form-control "
+            className="form-control rounded-lg shadow bg-primary text-white"
             type="date"
             placeholder="Ingresar el Nit o CC"
-            name="todoNombre"
-          
+            name="fecha"
+            onChange={handleChange}
           />
         </div>
         <div className="input-group">
@@ -374,7 +470,7 @@ function formatNumber(number) {
           className="btn w-50 mt-4 mb-3 btn-primary"
           type="button"
    
-        onClick={buscarPorNumeroPedido}
+        onClick={filterDatas}
         >
           Buscar
         </button>
@@ -445,20 +541,35 @@ function formatNumber(number) {
           <Link    
           href={`/pedidos/confirmarPedido/${encodeURIComponent(item.dni)}/${encodeURIComponent(item.codigoInterno)}`} scroll={false} prefetch={false}>ir</Link>
         
-        
            </td>
 
+        <td className='d-flex justify-content-center align-items-center'>
+    
+        <button
+          className={styles.StyleIconosForm}
+          onClick={() => aprobarPedido(item)}
 
-        <td className='d-flex justify-content-center align-items-center'
+          disabled={autorizado ? true :false  } 
+          >
+          {imagen}
+      
+        </button>
+      
+      </td>
+      <td className=' justify-content-center align-items-center' >
 
-      onClick={() => aprobarPedido(item)}>
+      <button
+          className={styles.StyleIconosForm}
+          onClick={() => cancelarPedido(item)}
 
-      {imagen}</td>
-      <td className=' justify-content-center align-items-center'
+          disabled={autorizado ? true :false  } 
+          >
+      {denegar}
+      
+        </button>
 
-      onClick={() => cancelarPedido(item)}>
-        {denegar}</td>
-        <button type="submit" style={{ display: 'none' }}></button>
+        </td>
+
       </tr>
     ))
     
@@ -468,5 +579,10 @@ function formatNumber(number) {
 </table>
 
     </div>
+
+
   );
+
+
+
 };
