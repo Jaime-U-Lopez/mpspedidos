@@ -443,7 +443,7 @@ function formatNumber(number) {
           
    
           <Link    
-          href={`/pedidos/confirmarPedido/${encodeURIComponent(item.dni)}/${encodeURIComponent(item.numeroPedido)}`} scroll={false} prefetch={false}>ir</Link>
+          href={`/pedidos/confirmarPedido/${encodeURIComponent(item.dni)}/${encodeURIComponent(item.codigoInterno)}`} scroll={false} prefetch={false}>ir</Link>
         
         
            </td>
