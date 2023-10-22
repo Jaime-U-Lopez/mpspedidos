@@ -25,13 +25,9 @@ export default function FormAdmonEvento({ onEventCreate }) {
 
   return (
 
-
     <div className={` ${styles.FormPedidos} `}    >
 
-
       <h1 className='mb-3 '> Administración Evento  </h1>
-
-
       <form>
 
         <div className="input-group">

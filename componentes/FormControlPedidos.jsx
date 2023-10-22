@@ -12,7 +12,7 @@ export default function FormPedidos() {
 
 const [dataInicial, setDataInicial]=useState([]);
 const [data, setData]=useState([]);
-const itemsPerPage = 10;
+
 const [currentPage, setCurrentPage] = useState(1);
 const [pageSize] = useState(10);
 const [page, setPage] = useState(1);
@@ -30,8 +30,8 @@ useEffect(() => {
 
 const consultarData = async () => {
   try {
-    const response = await axios.get('http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/');
-   // const response = await axios.get('http://localhost:8083/apiPedidosMps/v1/pedidos/');
+   // const response = await axios.get('http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/');
+    const response = await axios.get('http://localhost:8083/apiPedidosMps/v1/pedidos/');
     const dataFromApi = response.data;
   
     setData(dataFromApi);
@@ -90,8 +90,8 @@ const handleFiltroChange = event => {
 const aprobarPedido =async (pedido) => {
 
 
-  if( pedido.estado!="sinConfirmacion" &&pedido.estado!="cancelado" ){
-
+  if( pedido.estado!="sinConfirmacion" && pedido.estado!="cancelado" ){
+if( pedido.estado!="aprobado"){
  Swal.fire({
     icon: 'success',
     title: 'Estas aprobando',
@@ -107,8 +107,8 @@ const aprobarPedido =async (pedido) => {
        
 
       var cod= pedido.codigoInterno;
-       const url= `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/email/`
-      // const url= `http://localhost:8083/apiPedidosMps/v1/pedidos/email/`
+       //const url= `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/email/`
+      const url= `http://localhost:8083/apiPedidosMps/v1/pedidos/email/`
       
       const pedidoInicial = { codigoInterno: cod,  estado: "aprobado",   correoAsesor: pedido.correoAsesor }
        const response = await axios.post(url,pedidoInicial);
@@ -143,7 +143,15 @@ const aprobarPedido =async (pedido) => {
       } 
 
     }});
-  
+}else {
+
+  Swal.fire({
+    icon: 'error',
+    title: 'El estado del pedido ya figura aprobado',
+    showConfirmButton: false,
+    timer: 2000,
+  });
+}
 
 }else {
 
@@ -157,11 +165,11 @@ const aprobarPedido =async (pedido) => {
 
 
 
-
 }
 const cancelarPedido = async (pedido) => {
 
   if( pedido.estado!="sinConfirmacion" && pedido.estado !="aprobado" ){
+    if( pedido.estado!="cancelado"){
   Swal.fire({
     icon: 'warning',
     title: '¿Seguro de Denegar el Pedido?',
@@ -175,15 +183,14 @@ const cancelarPedido = async (pedido) => {
       if (result.isConfirmed) {
         var cod= pedido.codigoInterno;
   
-        const url= `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/email/`
-       // const url= `http://localhost:8083/apiPedidosMps/v1/pedidos/email/`
+       // const url= `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/email/`
+        const url= `http://localhost:8083/apiPedidosMps/v1/pedidos/email/`
 
         const pedidoInicial = { codigoInterno: cod,  estado: "cancelado",   correoAsesor: "or4846@hotmail.com" }
         const response = await axios.post(url,pedidoInicial);
         consultarData()
          const nuevoProductos = dataInicial.filter((item) => item.id == pedido.id);
-        // const idEliminar = dataTable.filter((item) => item.id == producto.id);
-  
+
           Swal.fire({
             icon: 'success',
             title: 'Pedido Cancelado con Exito',
@@ -196,6 +203,18 @@ const cancelarPedido = async (pedido) => {
 
   
   })
+
+} else {
+    Swal.fire({
+      icon: 'error',
+      title: 'El estado del pedido ya figura cancelado',
+      showConfirmButton: false,
+      timer: 2000,
+    });
+  }
+
+  
+
 
 }else {
   Swal.fire({
@@ -252,6 +271,8 @@ function formatNumber(number) {
   
   return formattedNumber;
 }
+
+
 
 //--------------------------------------------->
 
@@ -399,9 +420,11 @@ function formatNumber(number) {
       <th scope="col">Neto a Pagar</th>
       <th scope="col">Forma de pago</th>
       <th scope="col">Estado</th>
-    
+      <th scope="col">Confirmar</th>
       <th scope="col">Aprobar</th>
       <th scope="col">Denegar</th>
+   
+
     </tr>
   </thead>
   <tbody>
@@ -416,7 +439,16 @@ function formatNumber(number) {
         <td className={ styles.alineacionValoresDere} >{formatNumber(item.netoApagar)}</td>
         <td>{item.formaDePago}</td>
         <td>{item.estado}</td>
-      
+        <td     className=' justify-content-center align-items-center'>
+          
+   
+          <Link    
+          href={`/pedidos/confirmarPedido/${encodeURIComponent(item.dni)}/${encodeURIComponent(item.numeroPedido)}`} scroll={false} prefetch={false}>ir</Link>
+        
+        
+           </td>
+
+
         <td className='d-flex justify-content-center align-items-center'
 
       onClick={() => aprobarPedido(item)}>
@@ -428,7 +460,10 @@ function formatNumber(number) {
         {denegar}</td>
         <button type="submit" style={{ display: 'none' }}></button>
       </tr>
-    ))}
+    ))
+    
+ 
+    }
   </tbody>
 </table>
 

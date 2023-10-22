@@ -43,7 +43,7 @@ export default function FormPedidosProductos() {
   const [carritoEnvio, setCarritoEnvio] = useState([]);
   const [cantidades, setCantidades] = useState({});
   const [precioUnitario, setPrecioUnitario] = useState({});
-  const [totalCantidades, setTotalCantidades] = useState([]); // Estado para almacenar el total de cantidades
+  const [totalCantidades, setTotalCantidades] = useState([]); 
   const [controlInput, setControlInput] = useState(false)
   const [cantidadPedidoActuales, setCantidadPedidoActuales] = useState(0);
   const [controEnvio, setControEnvio] = useState(true)
@@ -56,20 +56,12 @@ export default function FormPedidosProductos() {
   const [actualizarProductos, setActualizarProductos] = useState(false);
 
 
-
-
-
-
   useEffect(() => {
-
-    //setContadorOrdenes(1)
-
-    //conteoPedidos()
 
     extraerIdClienteSinPromesa(pathname)
     axios
-      .get('http://192.190.42.51:8083/apiPedidosMps/v1/productos/marcas/')
       //.get('http://localhost:8083/apiPedidosMps/v1/productos/marcas/')
+      .get('http://192.190.42.51:8083/apiPedidosMps/v1/productos/marcas/')
       .then((response2) => {
         // Actualizar el estado con la lista de marcas recibida de la API
 
@@ -82,20 +74,20 @@ export default function FormPedidosProductos() {
         console.error(error);
         Swal.fire('Error', 'Sin marcas para seleccionar en Base de datos.', 'error');
       });
-  }, [clienteId,clientePed]); // Este efecto se ejecuta una vez al cargar el componente para obtener la lista de marcas
+  }, [clienteId,clientePed]); 
 
 
 
   const conteoPedidos =()=>{
 
     axios
-      .get('http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/conteo/')
-      //.get('http://localhost:8083/apiPedidosMps/v1/pedidos/conteo/')
+    //  .get('http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/conteo/')
+        .get('http://localhost:8083/apiPedidosMps/v1/pedidos/conteo/')
       .then((response2) => {
         // Actualizar el estado con la lista de marcas recibida de la API
 
         const conteo = response2.data;
-    console.log(conteo)
+
         setContadorOrdenes(conteo+1)
       })
 
@@ -155,7 +147,7 @@ export default function FormPedidosProductos() {
 
 
   const handleChange = (e) => {
-    // Actualiza el estado cuando se cambia el valor de un campo del formulario
+
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
 
@@ -203,7 +195,7 @@ export default function FormPedidosProductos() {
   
 
     } else {
-      // Muestra un mensaje de error si la cantidad es menor o igual a cero
+
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -250,15 +242,6 @@ export default function FormPedidosProductos() {
   };
 
 
-  function generarCodigoAleatorio(longitud) {
-    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let codigo = '';
-    for (let i = 0; i < longitud; i++) {
-      const indiceAleatorio = Math.floor(Math.random() * caracteres.length);
-      codigo += caracteres.charAt(indiceAleatorio);
-    }
-    return codigo;
-  }
 
 
   const handleSubmitGet = async (e) => {
@@ -324,7 +307,7 @@ export default function FormPedidosProductos() {
     setIsLoading(true); 
     setError(false); 
 
-    const codigoUnico = uuidv4();
+
  
     const url = pathname;
     
@@ -336,8 +319,8 @@ export default function FormPedidosProductos() {
 
     //enviamos pedido
 
-   let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
-   // let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/`;
+  // let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
+   let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/`;
 
 
     let numRetries = 0;
@@ -349,7 +332,9 @@ export default function FormPedidosProductos() {
 
       
       try {
-       
+        
+        conteoPedidos()
+
         const cliente = await extraerIdCliente(url);
 
         setClientePed(cliente)
@@ -371,17 +356,17 @@ export default function FormPedidosProductos() {
         if (error.response) {
            const responseData = error.response.data.message;
       
-          console.log("Mensaje de error:", responseData); // Accede al mensaje de error específico
-          console.log("Código de estado:", error.response.status); // Accede al código de estado HTTP (en este caso, 400)
-          setError(true); // Establece el estado de error en true
+          console.log("Mensaje de error:", responseData); 
+          console.log("Código de estado:", error.response.status); 
+          setError(true); 
           Swal.fire('Error', 'No se pudo guardar el pedido, error: ' + responseData, 'error');
         } else {
           console.log("Error sin respuesta del servidor:", error.message);
-          setError(true); // Establece el estado de error en true
+          setError(true); 
           Swal.fire('Error', 'No se pudo guardar el pedido, error: ' + error.message, 'error');
         }
       } finally {
-        setIsLoading(false); // Establece isLoading en false después de la carga
+        setIsLoading(false); 
 
       }
    
@@ -562,7 +547,7 @@ export default function FormPedidosProductos() {
           <button
             className="btn w-100 mt-4 mb-3 btn-primary"
             type="submit"
-          //disabled={isLoading} // Deshabilita el botón durante la carga
+      
           >
             Buscar
           </button>
