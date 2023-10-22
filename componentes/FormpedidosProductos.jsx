@@ -356,7 +356,7 @@ console.log(codigoInterno)
       const codigoInternote = `${clienteId}${codigoAleatorio}`;
       setCodigoInterno(codigoInternote);
   
-  console.log(codigoInterno)
+        console.log(codigoInterno)
 
         try {
 

@@ -45,8 +45,8 @@ function FormPedidos({contadorPedidos}) {
   const endIndex = startIndex + itemsPerPage;
   const dataToShow = dataTable.slice(startIndex, endIndex);
 
-
-
+  const [controlCancelar, setControlCancelar] = useState(false);
+  
 
   var totalProductos = data.length;
   var totalProductosEnCarrito = 0;
@@ -391,21 +391,21 @@ if(formData.formaPago!="null"){
       console.error(error);
 
       if (error.response) {
-        // Si la respuesta del servidor está presente en el error, accede a ella.
+        
         const responseData = error.response.data.message;
     
-        console.log("Mensaje de error:", responseData); // Accede al mensaje de error específico
-        console.log("Código de estado:", error.response.status); // Accede al código de estado HTTP (en este caso, 400)
-        // Otras propiedades de la respuesta, como headers, statusText, etc., también están disponibles en error.response
-        setError(true); // Establece el estado de error en true
+        console.log("Mensaje de error:", responseData); 
+        console.log("Código de estado:", error.response.status); 
+       
+        setError(true); 
         Swal.fire('Error', 'No se pudo guardar el pedido, error: ' + responseData, 'error');
       } else {
         console.log("Error sin respuesta del servidor:", error.message);
-        setError(true); // Establece el estado de error en true
+        setError(true); 
         Swal.fire('Error', 'No se pudo guardar el pedido, error: ' + error.message, 'error');
       }
     } finally {
-      setIsLoading(false); // Establece isLoading en false después de la carga
+      setIsLoading(false); 
 
     }
  
@@ -437,8 +437,55 @@ const goToPage = (page) => {
 };
 
 
+const cancelarPedido = async()=>{
+
+  if( formData.estado=="sinConfirmacion" ){
+
+  Swal.fire({
+    icon: 'question',
+    title: '¿Estás seguro de cancelar el pedido? ',
+    text: `¿Quieres eliminar ${formData.numeroPedido} ?`,
+    showCancelButton: true,
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'No, guardar para luego continuar',
+  }).then(async(result) => {
+    if (result.isConfirmed) {
+  
+       // await axios.delete(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/codigo/${cliente}`);
+        await axios.delete(`http://localhost:8083/apiPedidosMps/v1/pedidos/codigo/${cliente}`);
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Pedido eliminado con exito',
+          text: `${formData.numeroPedido} ha sido eliminado.`,
+          showConfirmButton: false,
+          timer: 2000,
+        });
+  
+        setControlCancelar(true);
+    }else{
+
+    }
+  });
 
 
+}else{
+
+  Swal.fire({
+    icon: 'danger',
+    title: 'El pedido no se puede eliminar',
+    text: `Este estado no se puede eliminar.`,
+    showConfirmButton: false,
+    timer: 2000,
+  });
+
+}
+
+
+
+
+
+}
 
 
   //<<<<<<<<___________________________________>>>>>>>>>>>>>
@@ -794,10 +841,24 @@ const goToPage = (page) => {
         <Link href="/pedidos/buscarCliente"
         className={styles.linkCancelarPedido} >Realizar Nuevo Pedido </Link>
        :
-       <Link href="/pedidos/buscarCliente"
-       className={styles.linkCancelarPedido} >Cancelar Pedido</Link>
+      <button 
+      className="btn w100- mt-3 mb-14 btn-danger"
+      type="button"
+            onClick={cancelarPedido}
+
+      >Eliminar Pedido</button>
+
+      
+       }
+
+
+<Link href="/pedidos/buscarCliente"
+   className={styles.linkCancelarPedido} >Cancelar  </Link>:<p></p>
+ 
+
+      
      
-      }
+
             </li>
         </ul>
 
