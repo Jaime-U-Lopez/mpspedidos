@@ -8,15 +8,18 @@ import { router, usePathname, useSearchParams } from 'next/navigation'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4,  } from 'uuid';
 import numeral from 'numeral';
 
 
 
-export default function FormPedidosProductos() {
+export default function FormPedidosProductos({contadorPedidos}) {
+
+
+
 
   const pathname = usePathname()
-  let codigoInterno = 0;
+  let codigoInternot="";
   const [data, setData] = useState([]);
   const [marcas, setMarcas] = useState([]);
   const [formData, setFormData] = useState({
@@ -28,7 +31,7 @@ export default function FormPedidosProductos() {
     precioUnitarioInp:0,
   });
   const [codigoInternoTraspaso,setCodigoInternoTraspaso]=useState();
-
+  const [codigoInterno, setCodigoInterno] = useState('');
   const [itemsPerPage,setItemsPerPage]=useState(0);
   const [pageSize] = useState(10);
   const [page, setPage] = useState(1);
@@ -47,21 +50,25 @@ export default function FormPedidosProductos() {
   const [controlInput, setControlInput] = useState(false)
   const [cantidadPedidoActuales, setCantidadPedidoActuales] = useState(0);
   const [controEnvio, setControEnvio] = useState(true)
-
-
+  
+  const [actualizarProductos, setActualizarProductos] = useState(true)
   const [clientePed, setClientePed] = useState()
   const [clienteId, setClienteId] = useState()
 
-  const [contadorOrdenes, setContadorOrdenes] = useState(null);
-  const [actualizarProductos, setActualizarProductos] = useState(false);
+  
+
 
 
   useEffect(() => {
 
-    extraerIdClienteSinPromesa(pathname)
+   extraerIdClienteSinPromesa(pathname)
+   
+
+
+
     axios
-      //.get('http://localhost:8083/apiPedidosMps/v1/productos/marcas/')
-      .get('http://192.190.42.51:8083/apiPedidosMps/v1/productos/marcas/')
+      .get('http://localhost:8083/apiPedidosMps/v1/productos/marcas/')
+      //.get('http://192.190.42.51:8083/apiPedidosMps/v1/productos/marcas/')
       .then((response2) => {
         // Actualizar el estado con la lista de marcas recibida de la API
 
@@ -74,29 +81,27 @@ export default function FormPedidosProductos() {
         console.error(error);
         Swal.fire('Error', 'Sin marcas para seleccionar en Base de datos.', 'error');
       });
+
+ 
   }, [clienteId,clientePed]); 
 
 
 
-  const conteoPedidos =()=>{
-
-    axios
-    //  .get('http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/conteo/')
-        .get('http://localhost:8083/apiPedidosMps/v1/pedidos/conteo/')
-      .then((response2) => {
-        // Actualizar el estado con la lista de marcas recibida de la API
-
-        const conteo = response2.data;
-
-        setContadorOrdenes(conteo+1)
-      })
-
-      .catch((error) => {
-        console.error(error);
-       
-      });
-
+  function generarCodigoAleatorio(longitud) {
+    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let codigo = '';
+    for (let i = 0; i < longitud; i++) {
+      const indiceAleatorio = Math.floor(Math.random() * caracteres.length);
+      codigo += caracteres.charAt(indiceAleatorio);
+    }
+    return codigo;
   }
+
+
+
+
+
+
 
 
 
@@ -135,9 +140,7 @@ export default function FormPedidosProductos() {
 
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-
     setControlInput(true);
-
 
 
   };
@@ -248,7 +251,7 @@ export default function FormPedidosProductos() {
 
 
     var v=marcas[0]
-    conteoPedidos()
+  
     e.preventDefault();
     setIsLoading(true); // Establece isLoading en true durante la carga
     setError(false); // Reinicia el estado de error
@@ -268,6 +271,16 @@ export default function FormPedidosProductos() {
       apiUrl += `marcas/${formData.marca}`;
 
     }
+
+
+
+    const codigoAleatorio = generarCodigoAleatorio(4);
+    const codigoInternote = `${clienteId}${codigoAleatorio}`;
+    setCodigoInterno(codigoInternote);
+
+console.log(codigoInterno)
+
+
 
     try {
       const response = await axios.get(apiUrl);
@@ -306,11 +319,7 @@ export default function FormPedidosProductos() {
 
     setIsLoading(true); 
     setError(false); 
-
-
- 
     const url = pathname;
-    
     const ListaProductosMapeados = totalCantidades.map((item) => ({
       id: item.id,
       cantidad: item.cantidad,
@@ -330,17 +339,28 @@ export default function FormPedidosProductos() {
 
       let dataInicial="";
 
-      
-      try {
-        
-        conteoPedidos()
+      //var  contador = `${generarNumeroConLetraAleatoria(contadorOrdenes)}`
 
-        const cliente = await extraerIdCliente(url);
 
-        setClientePed(cliente)
+      const cliente = await extraerIdCliente(url);
+      setClientePed(cliente)
 
-        console.log(clienteId)
-        const pedidoInicial = { idCliente: cliente, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno: contadorOrdenes }
+
+
+      var codigo=codigoInternot;
+      setCodigoInternoTraspaso(codigo);
+      console.log(codigoInternoTraspaso)
+      console.log(codigo)
+
+      const codigoAleatorio = generarCodigoAleatorio(4);
+      const codigoInternote = `${clienteId}${codigoAleatorio}`;
+      setCodigoInterno(codigoInternote);
+  
+  console.log(codigoInterno)
+
+        try {
+
+        const pedidoInicial = { idCliente: cliente, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno:     codigoInterno }
 
         console.log(pedidoInicial)
 
@@ -562,7 +582,7 @@ export default function FormPedidosProductos() {
     <Link
       onClick={continuarPedido}
     
-    href={`/pedidos/confirmarPedido/${encodeURIComponent(clienteId)}/${encodeURIComponent(contadorOrdenes)}`} scroll={false} prefetch={false}>Continuar Pedido</Link>
+    href={`/pedidos/confirmarPedido/${encodeURIComponent(clienteId)}/${encodeURIComponent(codigoInterno)}`} scroll={false} prefetch={false}>Continuar Pedido</Link>
          </li> 
       ):( 
         <li>

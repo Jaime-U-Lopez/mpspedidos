@@ -12,7 +12,9 @@ import Layout from './Layout';
 import numeral from 'numeral';
 
 
-function FormPedidos({info}) {
+function FormPedidos({contadorPedidos}) {
+
+
 
 
   const pathname = usePathname();
@@ -471,7 +473,7 @@ const goToPage = (page) => {
               placeholder="Numero orden"
               name="todoNombre"
               disabled
-              value={data.length > 0 ? data[0].codigoInterno : ''}
+              value={data.length > 0 ? data[0].numeroPedido : ''}
             />
           </div>
 

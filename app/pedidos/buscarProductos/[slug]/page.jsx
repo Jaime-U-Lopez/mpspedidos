@@ -1,13 +1,20 @@
+
+
+'use client';
+
 import Image from 'next/image'
 import styles from 'app/page.module.css'
 import FormPedidosProductos from '@/componentes/FormpedidosProductos'
 import NavbarBotones from '@/componentes/NavbarBotones'
 import Navbar from '@/componentes/Navbar'
 import Flooter from '@/componentes/Flooter'
-
-
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 export default function Home() {
+
+
+
   return (
     
     <main className={styles.main}>
@@ -23,7 +30,7 @@ export default function Home() {
         
 
       <div className={styles.ventaderecha}>
-      <FormPedidosProductos />
+      <FormPedidosProductos  />
  
       </div>
       
