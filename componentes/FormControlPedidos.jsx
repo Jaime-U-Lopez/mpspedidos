@@ -53,7 +53,7 @@ const { username } = state;
 
 
 
-
+console.log(data)  
 
 useEffect(() => {
   consultarData();
@@ -206,14 +206,14 @@ if( pedido.estado!="aprobado"){
 
       try {
        
-
+        var nombre = sessionStorage.getItem('usernameMPS');
       var cod= pedido.codigoInterno;
        //const url= `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/email/`
       const url= `http://localhost:8083/apiPedidosMps/v1/pedidos/email/`
       
       const pedidoInicial = { codigoInterno: cod,  estado: "aprobado",   correoAsesor: pedido.correoAsesor }
        const response = await axios.post(url,pedidoInicial);
-     
+console.log(pedidoInicial)       
      const id  = pedido.id;
      consultarData()
          Swal.fire({

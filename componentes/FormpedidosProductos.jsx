@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-
+import NumberFormat from 'react-number-format';
 
 
 
@@ -591,7 +591,10 @@ export default function FormPedidosProductos({contadorPedidos}) {
       </form>
 
 
+      <div>
 
+    
+    </div>
       
    
       <p>Productos Encontrados : {totalProductosActualesTable} de   {totalProductos}   </p>

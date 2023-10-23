@@ -80,17 +80,11 @@ function FormPedidos({contadorPedidos}) {
  mostraCliente()
 
    
- if (!datoUser) {
-  localStorage.setItem('usernameMPS', 'defaultValue');
 
-  var datoUserDefaul = 'defaultValue';
-  setDatoUser(datoUserDefaul);
-
-}
-var dato= localStorage.getItem('usernameMPS');
+var dato= sessionStorage.getItem('usernameMPS');
 setDatoUser(dato)
 
-     
+console.log(dato)
     
  
   }, [cliente,clienteId]); // Este efecto se ejecuta una vez al cargar el componente para obtener la lista de marcas
