@@ -9,11 +9,9 @@ function Formulario({ initialData }) {
 
 
 
-
-    // Definimos un estado para los datos y lo inicializamos con los valores iniciales
     const [formData, setFormData] = useState(initialData);
   
-    // Manejar cambios en los campos de entrada
+
     const handleInputChange = (event) => {
       const { name, value } = event.target;
       setFormData({
@@ -22,10 +20,10 @@ function Formulario({ initialData }) {
       });
     };
   
-    // Manejar el envío del formulario
+
     const handleSubmit = (event) => {
       event.preventDefault();
-      // Aquí puedes hacer algo con los datos actualizados, como enviarlos a una API.
+
       console.log('Datos actualizados:', formData);
     };
   

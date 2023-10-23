@@ -50,7 +50,9 @@ const validacionRol = async () => {
 
 
   try {
-    const response = await axios.get(`http://localhost:8083/apiPedidosMps/v1/usuarios/usuario/${nombre}`);
+    const response = await axios.get(`http://192.190.42.51:8083/apiPedidosMps/v1/usuarios/usuario/${nombre}`);
+    
+    //const response = await axios.get(`http://localhost:8083/apiPedidosMps/v1/usuarios/usuario/${nombre}`);
     const info = response.data;
 
 

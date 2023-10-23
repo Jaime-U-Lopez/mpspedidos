@@ -66,8 +66,8 @@ const dataToShow = data.slice(startIndex, endIndex);
     extraerIdCodigoInternoCancelar(pathname)
     extraerIdCodigoInternoId(pathname)
     axios
-     // .get('http://192.190.42.51:8083/apiPedidosMps/v1/productos/marcas/')
-      .get('http://localhost:8083/apiPedidosMps/v1/productos/marcas/')
+      .get('http://192.190.42.51:8083/apiPedidosMps/v1/productos/marcas/')
+     // .get('http://localhost:8083/apiPedidosMps/v1/productos/marcas/')
       .then((response2) => {
         // Actualizar el estado con la lista de marcas recibida de la API
 
@@ -307,8 +307,8 @@ const dataToShow = data.slice(startIndex, endIndex);
     
     //enviamos pedido
 
-   // let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/addProduct/`;
-     let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/addProduct/`;
+   let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/addProduct/`;
+    // let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/addProduct/`;
 
 
     let numRetries = 0;

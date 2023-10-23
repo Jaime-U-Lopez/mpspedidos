@@ -29,7 +29,7 @@ const[filtroEstado, setFiltroEstado]=useState()
 const [numeroPedido, setNumeroPedido] = useState();
 const [resultadoBusqueda,  setResultadoBusqueda]=useState(null);
 const [autorizado,setAutorizado]=useState(true)
-
+const [error,setError]=useState(false)
 const [formData, setFormData] = useState({
 
   dni: '',
@@ -63,7 +63,7 @@ useEffect(() => {
 
 const consultarData = async () => {
   try {
-   // const response = await axios.get('http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/');
+  // const response = await axios.get('http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/');
     const response = await axios.get('http://localhost:8083/apiPedidosMps/v1/pedidos/');
     const dataFromApi = response.data;
   
@@ -79,7 +79,8 @@ const validacionRol = async () => {
   var nombre = sessionStorage.getItem('usernameMPS');
 
   try {
-    const response = await axios.get(`http://localhost:8083/apiPedidosMps/v1/usuarios/usuario/${nombre}`);
+    const response = await axios.get(`http://192.190.42.51:8083/apiPedidosMps/v1/usuarios/usuario/${nombre}`);
+   // const response = await axios.get(`http://localhost:8083/apiPedidosMps/v1/usuarios/usuario/${nombre}`);
     const info = response.data;
 
 
@@ -208,7 +209,7 @@ if( pedido.estado!="aprobado"){
        
         var nombre = sessionStorage.getItem('usernameMPS');
       var cod= pedido.codigoInterno;
-       //const url= `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/email/`
+     // const url= `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/email/`
       const url= `http://localhost:8083/apiPedidosMps/v1/pedidos/email/`
       
       const pedidoInicial = { codigoInterno: cod,  estado: "aprobado",   correoAsesor: pedido.correoAsesor }
@@ -287,7 +288,7 @@ const cancelarPedido = async (pedido) => {
        // const url= `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/email/`
         const url= `http://localhost:8083/apiPedidosMps/v1/pedidos/email/`
 
-        const pedidoInicial = { codigoInterno: cod,  estado: "cancelado",   correoAsesor: "or4846@hotmail.com" }
+        const pedidoInicial = { codigoInterno: cod,  estado: "cancelado",   correoAsesor: pedido.correoAsesor}
         const response = await axios.post(url,pedidoInicial);
         consultarData()
          const nuevoProductos = dataInicial.filter((item) => item.id == pedido.id);
@@ -295,7 +296,7 @@ const cancelarPedido = async (pedido) => {
           Swal.fire({
             icon: 'success',
             title: 'Pedido Cancelado con Exito',
-            text: `Producto cancelado.`,
+            text: `Pedido cancelado.`,
             showConfirmButton: false,
             timer: 2000,
           });

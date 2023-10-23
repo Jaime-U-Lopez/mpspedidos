@@ -6,9 +6,6 @@ export default function Layout({ children, home, title, description }) {
 
 
 
-
-
-
     return (
       <div >
       

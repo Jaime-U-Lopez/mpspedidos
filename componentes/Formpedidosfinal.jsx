@@ -44,7 +44,7 @@ function FormPedidos({contadorPedidos}) {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const dataToShow = dataTable.slice(startIndex, endIndex);
-
+  const [bloqueClick , setBloqueClick] = useState(false);
   const [controlCancelar, setControlCancelar] = useState(false);
   
 
@@ -73,7 +73,6 @@ function FormPedidos({contadorPedidos}) {
 
   useEffect(() => {
 
-
   extraerCodigoInterno(url)
 
 
@@ -94,7 +93,7 @@ console.log(dato)
 const mostraCliente=()=>{
 
   axios
- // get(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`)
+  //.get(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`)
   .get(`http://localhost:8083/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`)
   .then((response2) => {
     const dataFromApi = response2.data;
@@ -162,11 +161,10 @@ const getEvento=()=>{
     let id=0;
     let fechaCreacion=""
 
- 
-    // Calcular la suma del valor total y el IVA
+
     dataFromApi.forEach((producto) => {
 
-      // Suponiendo que el IVA es el 15% del precio (puedes ajustarlo según tus necesidades)
+
       nombreComercial = producto.nombreComercial
       personaContacto = producto.personaContacto,
         direccion = producto.direccion,
@@ -221,7 +219,7 @@ setNetoAPagar(netoAPagar);
 
  
 
-  // Manejar cambios en los campos de entrada
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData({
@@ -230,10 +228,10 @@ setNetoAPagar(netoAPagar);
     });
   };
 
-  // Manejar el envío del formulario
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Aquí puedes hacer algo con los datos actualizados, como enviarlos a una API.
+
   
   };
 
@@ -283,7 +281,7 @@ setNetoAPagar(netoAPagar);
       return formattedNumber;
     }
     
-    // Función para obtener el número sin el signo de pesos
+
     function getNumberWithoutCurrency(formattedNumber) {
       return parseFloat(formattedNumber.replace(/[^0-9,.-]/g, '').replace(',', '.'));
     }
@@ -301,13 +299,12 @@ setNetoAPagar(netoAPagar);
         if (result.isConfirmed) {
       
          
-            // Realiza la solicitud DELETE con Axios
+
             const id  = producto.id;
  
-          // await axios.delete(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/{id}?id=${id}`);
-           await axios.delete(`http://localhost:8083/apiPedidosMps/v1/pedidos/{id}?id=${id}`);
+           await axios.delete(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/{id}?id=${id}`);
+         //  await axios.delete(`http://localhost:8083/apiPedidosMps/v1/pedidos/{id}?id=${id}`);
     
-            // Actualiza el carrito y la lista de cantidades después de eliminar el producto
            const nuevoProductos = dataTable.filter((item) => item.id !== producto.id);
            const nuevoProductosdata = data.filter((item) => item.id !== producto.id);
            setDataTable(nuevoProductos)
@@ -329,6 +326,9 @@ setNetoAPagar(netoAPagar);
       });
     };
       
+    console.log(formData.formaPago)
+
+
 
     const confirmarPedido = async () => {
      
@@ -338,7 +338,7 @@ setNetoAPagar(netoAPagar);
        
       //enviamos pedido
   
-    //  let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
+     //let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
       let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/`;
 
 
@@ -354,17 +354,18 @@ setNetoAPagar(netoAPagar);
 
 
 if(formData.formaPago!="null"){
+  if(formData.formaPago!=1){
 
   if(dataTable.length>0) {
     try {
-     
+      setBloqueClick(true)
       const pedidoInicial = { codigoInterno: cliente, datosUpdate: cambiosAenviar , estado: "Confirmado",  evento:evento.nombreEvento, correoAsesor: datoUser }
      console.log(pedidoInicial);
       const response = await axios.patch(apiUrl, pedidoInicial);
 
 
       setConfirmados(true)
-
+      
       Swal.fire({
         icon: 'sucess',
         title: 'Cargando exitosamente...',
@@ -380,10 +381,11 @@ if(formData.formaPago!="null"){
 
       }, 1500);
   
+    
      // setControEnvio(true);
     } catch (error) {
       console.error(error);
-
+      setBloqueClick(false)
       if (error.response) {
         
         const responseData = error.response.data.message;
@@ -407,7 +409,7 @@ if(formData.formaPago!="null"){
   }else{
 
     Swal.fire('Error', 'Debe seleccionar como minimo un producto.', 'error');
-  }
+  }}
 }else{
 
   Swal.fire('Error', 'Debe seleccionar la forma de pago.', 'error');
@@ -445,8 +447,8 @@ const cancelarPedido = async()=>{
   }).then(async(result) => {
     if (result.isConfirmed) {
   
-       // await axios.delete(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/codigo/${cliente}`);
-        await axios.delete(`http://localhost:8083/apiPedidosMps/v1/pedidos/codigo/${cliente}`);
+        await axios.delete(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/codigo/${cliente}`);
+       // await axios.delete(`http://localhost:8083/apiPedidosMps/v1/pedidos/codigo/${cliente}`);
 
         Swal.fire({
           icon: 'success',
@@ -823,7 +825,7 @@ const cancelarPedido = async()=>{
       
         <button     className="btn w100- mt-3 mb-14 btn-primary" type="Button" onClick={() => confirmarPedido()} 
         
-        disabled={confirmados || formData.estado=="Confirmado"? true :false  } 
+        disabled={bloqueClick || formData.estado=="Confirmado"? true :false  } 
         >
         Confirmar Pedido
           </button>
@@ -933,7 +935,7 @@ const cancelarPedido = async()=>{
                     onClick={() => eliminarDelCarrito(item)}
                
 
-                    disabled={confirmados || formData.estado=="Confirmado"? true :false  } 
+                    disabled={ bloqueClick  || formData.estado=="Confirmado"? true :false  } 
              
                     >
                     {imagenBasuraDelete}

@@ -4,15 +4,15 @@
 import { useState, useEffect } from 'react';
 
 const ProductForm = () => {
-  const [productos, setProductos] = useState([]); // Estado para almacenar los productos
-  const [cantidades, setCantidades] = useState({}); // Estado para almacenar las cantidades
+  const [productos, setProductos] = useState([]); 
+  const [cantidades, setCantidades] = useState({}); 
 
   
 
   const handleCantidadChange = (e, productoId) => {
     const nuevaCantidad = parseInt(e.target.value, 10);
 
-    // Actualiza el estado de las cantidades con la nueva cantidad
+  
     setCantidades((prevCantidades) => ({
       ...prevCantidades,
       [productoId]: nuevaCantidad,
@@ -23,7 +23,7 @@ const ProductForm = () => {
   console.log('Productos:', productos);
   console.log('Cantidades:', cantidades);
   const handleSubmit = () => {
-    // Puedes realizar acciones con los productos y las cantidades ingresadas
+  
 
     e.preventDefault();
 
