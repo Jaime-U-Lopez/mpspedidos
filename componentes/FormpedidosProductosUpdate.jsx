@@ -308,7 +308,7 @@ const dataToShow = data.slice(startIndex, endIndex);
     //enviamos pedido
 
    let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/addProduct/`;
-    // let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/addProduct/`;
+   //  let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/addProduct/`;
 
 
     let numRetries = 0;

@@ -80,10 +80,11 @@ function FormPedidos({contadorPedidos}) {
 
    
 
+
 var dato= sessionStorage.getItem('usernameMPS');
 setDatoUser(dato)
 
-console.log(dato)
+console.log(data)
     
  
   }, [cliente,clienteId]); // Este efecto se ejecuta una vez al cargar el componente para obtener la lista de marcas
@@ -93,8 +94,8 @@ console.log(dato)
 const mostraCliente=()=>{
 
   axios
-  //.get(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`)
-  .get(`http://localhost:8083/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`)
+  .get(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`)
+  //.get(`http://localhost:8083/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`)
   .then((response2) => {
     const dataFromApi = response2.data;
     setDataInicial(dataFromApi)
@@ -123,8 +124,8 @@ const mostraCliente=()=>{
 const getEvento=()=>{
 
   axios
-  //.get(`http://192.190.42.51:8083/apiPedidosMps/v1/eventos/1`)
-  .get(`http://localhost:8083/apiPedidosMps/v1/eventos/1`)
+  .get(`http://192.190.42.51:8083/apiPedidosMps/v1/eventos/1`)
+  //.get(`http://localhost:8083/apiPedidosMps/v1/eventos/1`)
   
   .then((response2) => {
     const dataFromApi = response2.data;
@@ -338,8 +339,8 @@ setNetoAPagar(netoAPagar);
        
       //enviamos pedido
   
-     //let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
-      let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/`;
+      let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
+      //let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/`;
 
 
       const datofijos={valorTotalPedido:valorTotal   , netoApagar: netoAPagar   ,  ivaTotalPed : ivaTotal   }
@@ -385,7 +386,10 @@ if(formData.formaPago!="null"){
      // setControEnvio(true);
     } catch (error) {
       console.error(error);
-      setBloqueClick(false)
+      if( formData.estado=="sinConfirmacion" ){
+                setBloqueClick(false)
+      }
+
       if (error.response) {
         
         const responseData = error.response.data.message;
@@ -802,7 +806,7 @@ const cancelarPedido = async()=>{
               placeholder="Observaciones "
               name="observaciones"
               rows="4"
-
+              disabled={ bloqueClick  || formData.estado=="Confirmado"|| formData.estado=="aprobado" || formData.estado=="cancelado"? true :false  } 
               value={formData ? formData.observaciones : ''}
               onChange={handleInputChange}
             />
@@ -812,11 +816,13 @@ const cancelarPedido = async()=>{
       
 
         <li>
-        <div style={{ pointerEvents: confirmados || formData.estado === "Confirmado" ? "none" : "auto" }}>
+        <div style={{ pointerEvents: confirmados || formData.estado === "Confirmado" || formData.estado=="aprobado" || formData.estado=="cancelado" ? "none" : "auto" }}>
             <Link
               href={`/pedidos/actualizarPedido/${encodeURIComponent(clienteId)}/${encodeURIComponent(cliente)}`}
               scroll={false}
               prefetch={false}
+              disabled={ bloqueClick  || formData.estado=="Confirmado"|| formData.estado=="aprobado" || formData.estado=="cancelado"? true :false  } 
+       
             >
               Agregar Productos
             </Link>
@@ -825,7 +831,8 @@ const cancelarPedido = async()=>{
       
         <button     className="btn w100- mt-3 mb-14 btn-primary" type="Button" onClick={() => confirmarPedido()} 
         
-        disabled={bloqueClick || formData.estado=="Confirmado"? true :false  } 
+        disabled={ bloqueClick  || formData.estado=="Confirmado"|| formData.estado=="aprobado" || formData.estado=="cancelado"? true :false  } 
+      
         >
         Confirmar Pedido
           </button>
@@ -935,7 +942,8 @@ const cancelarPedido = async()=>{
                     onClick={() => eliminarDelCarrito(item)}
                
 
-                    disabled={ bloqueClick  || formData.estado=="Confirmado"? true :false  } 
+                    disabled={ bloqueClick  || formData.estado=="Confirmado"|| formData.estado=="aprobado" || formData.estado=="cancelado"? true :false  } 
+       
              
                     >
                     {imagenBasuraDelete}

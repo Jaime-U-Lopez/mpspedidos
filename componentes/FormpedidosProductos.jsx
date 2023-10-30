@@ -65,7 +65,7 @@ export default function FormPedidosProductos({contadorPedidos}) {
   
 
     axios
-     // .get('http://localhost:8083/apiPedidosMps/v1/productos/marcas/')
+      //.get('http://localhost:8083/apiPedidosMps/v1/productos/marcas/')
       .get('http://192.190.42.51:8083/apiPedidosMps/v1/productos/marcas/')
       .then((response2) => {
         // Actualizar el estado con la lista de marcas recibida de la API
@@ -241,15 +241,15 @@ export default function FormPedidosProductos({contadorPedidos}) {
 
   const handleSubmitGet = async (e) => {
 
-
     var v=marcas[0]
   
     e.preventDefault();
     setIsLoading(true); // Establece isLoading en true durante la carga
     setError(false); // Reinicia el estado de error
 
-
-    let apiUrl = "http://192.190.42.51:8083/apiPedidosMps/v1/productos/";
+   // let apiUrlPorNumuro=  'http://localhost:8083/apiPedidosMps/v1/productos/numeroParte/?numeroParte=1100AS-128GB-'
+   ///let apiUrl = "http://192.190.42.51:8083/apiPedidosMps/v1/productos/";
+   let apiUrl = "http://localhost:8083/apiPedidosMps/v1/productos/";
 
     if (formData.marca !== "no" && formData.numerodeparte == '0' || formData.numerodeparte == '' || formData.numerodeparte == null) {
       apiUrl += `marcas/${formData.marca}`;
@@ -258,12 +258,10 @@ export default function FormPedidosProductos({contadorPedidos}) {
         apiUrl += `/${formData.marca}/${formData.numerodeparte}`;
       }
     } else if (formData.numerodeparte) {
-      apiUrl += `filtro/${formData.numerodeparte}`;
+      apiUrl += `numeroParte/?numeroParte=${formData.numerodeparte}`;
     } else {
       apiUrl += `marcas/${formData.marca}`;
-
     }
-
 
 
     const codigoAleatorio = generarCodigoAleatorio(4);
@@ -317,8 +315,10 @@ export default function FormPedidosProductos({contadorPedidos}) {
 
     //enviamos pedido
 
-   // let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
-   let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/`;
+    let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
+   //  let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/`;
+
+
 
 
     let numRetries = 0;

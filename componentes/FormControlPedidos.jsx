@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 
 import { useUser } from './UserContext';
 import { locale } from 'numeral';
-
+import TablaUser from './TablaConsultaPersonalizada';
 
 
 export default function FormPedidos( {autorizacion}) {
@@ -18,6 +18,9 @@ export default function FormPedidos( {autorizacion}) {
 
 const [dataInicial, setDataInicial]=useState([]);
 const [data, setData]=useState([]);
+const [dataConsulta, setDataConsulta]=useState([]);
+
+
 
 const [currentPage, setCurrentPage] = useState(1);
 const [pageSize] = useState(10);
@@ -25,20 +28,26 @@ const [page, setPage] = useState(1);
 const startIndex = (page - 1) * pageSize;
 const endIndex = startIndex + pageSize;
 const dataToShow = data.slice(startIndex, endIndex);
+const usersToDisplay = dataConsulta.slice(startIndex, endIndex);
 const[filtroEstado, setFiltroEstado]=useState()
 const [numeroPedido, setNumeroPedido] = useState();
 const [resultadoBusqueda,  setResultadoBusqueda]=useState(null);
 const [autorizado,setAutorizado]=useState(true)
 const [error,setError]=useState(false)
+const [ventana,setVentana]=useState(true)
+
 const [formData, setFormData] = useState({
 
   dni: '',
   nombreComercial: '',
   numeroPedido: '',
   fecha: '',
-
+  valorConsulta:0,
 });
 
+
+console.log(dataConsulta)
+console.log(formData.valorConsulta)
 const handleChange = (e) => {
 
   const { name, value } = e.target;
@@ -48,12 +57,7 @@ const handleChange = (e) => {
 
 const { state, dispatch } = useUser();
 
-
 const { username } = state;
-
-
-
-console.log(data)  
 
 useEffect(() => {
   consultarData();
@@ -63,10 +67,10 @@ useEffect(() => {
 
 const consultarData = async () => {
   try {
-  // const response = await axios.get('http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/');
-    const response = await axios.get('http://localhost:8083/apiPedidosMps/v1/pedidos/');
+   const response = await axios.get('http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/');
+  //  const response = await axios.get('http://localhost:8083/apiPedidosMps/v1/pedidos/');
     const dataFromApi = response.data;
-  
+
     setData(dataFromApi);
     setDataInicial(dataFromApi);
   } catch (error) {
@@ -89,6 +93,23 @@ const validacionRol = async () => {
     }
 
 
+
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+
+const consultaPersonalizada = async () => {
+
+
+  try {
+    const response = await axios.get(`http://localhost:8083/apiPedidosMps/v1/pedidos/consulta/valor/{valor}?valor=${formData.valorConsulta}`);
+     const info = response.data;
+
+     setDataConsulta(info);
+     setVentana(false)
 
   } catch (error) {
     console.error(error);
@@ -125,7 +146,7 @@ return originalData;
 
 const filterDatas = () => {
 
-
+  setVentana(true)
   if (formData.numeroPedido.trim() != '') {
   
   const buscar = parseInt(formData.numeroPedido);
@@ -209,12 +230,11 @@ if( pedido.estado!="aprobado"){
        
         var nombre = sessionStorage.getItem('usernameMPS');
       var cod= pedido.codigoInterno;
-     // const url= `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/email/`
-      const url= `http://localhost:8083/apiPedidosMps/v1/pedidos/email/`
+      const url= `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/email/`
+     // const url= `http://localhost:8083/apiPedidosMps/v1/pedidos/email/`
       
       const pedidoInicial = { codigoInterno: cod,  estado: "aprobado",   correoAsesor: pedido.correoAsesor }
        const response = await axios.post(url,pedidoInicial);
-console.log(pedidoInicial)       
      const id  = pedido.id;
      consultarData()
          Swal.fire({
@@ -285,8 +305,8 @@ const cancelarPedido = async (pedido) => {
       if (result.isConfirmed) {
         var cod= pedido.codigoInterno;
   
-       // const url= `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/email/`
-        const url= `http://localhost:8083/apiPedidosMps/v1/pedidos/email/`
+        const url= `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/email/`
+       // const url= `http://localhost:8083/apiPedidosMps/v1/pedidos/email/`
 
         const pedidoInicial = { codigoInterno: cod,  estado: "cancelado",   correoAsesor: pedido.correoAsesor}
         const response = await axios.post(url,pedidoInicial);
@@ -374,16 +394,10 @@ function formatNumber(number) {
   return formattedNumber;
 }
 
-
-
 //--------------------------------------------->
-
-
 
   return (
 
-
- 
 
     <div className={` ${styles.FormPedidos} `}    >
 
@@ -394,96 +408,133 @@ function formatNumber(number) {
       <form>
 
 
+      <div>
 
       <div className="input-group">
-          <span className="input-group-text">Orden pedido </span>
+                <span className="input-group-text">Orden pedido </span>
 
-          <input
-            className="form-control "
-            type="number"
-            placeholder="Numero de orden "
-            name="numeroPedido"
-            onChange={handleChange}
-          />
-        </div>
-        <div className="input-group">
-          <span className="input-group-text">Documento DNI </span>
+                <input
+                  className="form-control "
+                  type="number"
+                  placeholder="Numero de orden "
+                  name="numeroPedido"
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="input-group">
+                <span className="input-group-text">Documento DNI </span>
 
-          <input
-            className="form-control "
-            type="number"
-            placeholder="Ingresar el Nit o CC"
-            name='dni'
-            onChange={handleChange}
+                <input
+                  className="form-control "
+                  type="number"
+                  placeholder="Ingresar el Nit o CC"
+                  name='dni'
+                  onChange={handleChange}
+                
+                />
+              </div>
+        
+
+              <div className="input-group">
+                <span className="input-group-text">Razon Social</span>
+
+                <input
+                  className="form-control "
+                  type="text"
+                  placeholder="Nombre comercial "
+                  name="nombreComercial"
+                  onChange={handleChange}
+                />
+              </div>
+
           
-          />
-        </div>
+              <div className="input-group">
+                <span className="input-group-text">Fecha orden  </span>
+
+                <input
+                  className="form-control rounded-lg shadow bg-primary text-white"
+                  type="date"
+                  placeholder="Ingresar el Nit o CC"
+                  name="fecha"
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="input-group">
+                <span className="input-group-text">Estado Pedido   </span>
+
+                <select defaultValue="Seleccione el Estado"  
+                className="form-select form-select-lg "
+                  aria-label=".form-select-lg example"
+                  
+                  value={filtroEstado}
+                  onChange={(e) => {
+                    const valorFiltro = e.target.value;
+                    const datosFiltrados = filterData(dataInicial, valorFiltro);
+                    setData(datosFiltrados) }}
+                  >
+                  <option value="0">Seleccione el Estado</option>
+                  <option value="1">Pendiente Aprobación </option>
+                  <option value="2">Sin Confirmación </option>
+                  <option value="3">Aprobado</option>
+                  <option value="4">Cancelado</option>
+                  </select>
+          
+              </div>
+
+              <div className="input-group">
+                <span className="input-group-text">Consultar Pedidos tope  </span>
+
+                <input
+                  className="form-control "
+                  type="number"
+                  placeholder="Ingresa el valor total neto por cliente a consultar  "
+                  name="valorConsulta"
+                  onChange={handleChange}
+                />
+              </div>
+
+
+
+      </div>        
+
+
+
+
+      <div >
+      <button
+        className="btn w-50 mt-4 mb-3 btn-primary"
+        type="button"
   
+      onClick={filterDatas}
+      >
+        Buscar
+      </button>
 
-        <div className="input-group">
-          <span className="input-group-text">Razon Social</span>
+      </div>
 
-          <input
-            className="form-control "
-            type="text"
-            placeholder="Nombre comercial "
-            name="nombreComercial"
-            onChange={handleChange}
-          />
-        </div>
+      <div >
+      <button
+        className="btn w-50 mt-4 mb-3 btn-green"
+        type="button"
+        onClick={consultaPersonalizada}
+      >
+        Consulta personalizada
+      </button>
+
+      </div>
 
     
-        <div className="input-group">
-          <span className="input-group-text">Fecha orden  </span>
+    </form>
 
-          <input
-            className="form-control rounded-lg shadow bg-primary text-white"
-            type="date"
-            placeholder="Ingresar el Nit o CC"
-            name="fecha"
-            onChange={handleChange}
-          />
-        </div>
-        <div className="input-group">
-          <span className="input-group-text">Estado Pedido   </span>
 
-          <select defaultValue="Seleccione el Estado"  
-           className="form-select form-select-lg "
-            aria-label=".form-select-lg example"
-            
-            value={filtroEstado}
-            onChange={(e) => {
-              const valorFiltro = e.target.value;
-              const datosFiltrados = filterData(dataInicial, valorFiltro);
-              setData(datosFiltrados) }}
-            >
-            <option value="0">Seleccione el Estado</option>
-            <option value="1">Pendiente Aprobación </option>
-            <option value="2">Sin Confirmación </option>
-            <option value="3">Aprobado</option>
-            <option value="4">Cancelado</option>
-            </select>
+
+        {ventana?   
+             <div>
+             <p>Pedidos Encontrados : {totalProductosActualesTable} de {pedidosTotales}  </p>
      
-        </div>
-
-        <div >
-        <button
-          className="btn w-50 mt-4 mb-3 btn-primary"
-          type="button"
-   
-        onClick={filterDatas}
-        >
-          Buscar
-        </button>
-
-        </div>
-    
-      </form>
-      <p>Pedidos Encontrados : {totalProductosActualesTable} de {pedidosTotales}  </p>
-   
+         
       <div className={styles.btnAtrasAdelante}>
-
-
+         
           <button     
           
           onClick={() => setPage(page - 1)} disabled={page === 1}
@@ -498,91 +549,95 @@ function formatNumber(number) {
           {imagenDerecha}
         </button>
 
+    </div>     </div>:<p></p>}
 
-       
 
-</div>
-    
-    
 
+
+    {ventana?  
      <table className={`${styles.TablePedidos} table-responsive table table-hover table-bordered border-primary`}>
-  <thead>
-    <tr className='table-primary'>
-      <th scope="col">N°</th>
-      <th scope="col">Orden</th>
-      <th scope="col">Nit o CC</th>
-      <th scope="col">Nombre comercial</th>
-      <th scope="col">Valor Total</th>
-      <th scope="col">Iva</th>
-      <th scope="col">Neto a Pagar</th>
-      <th scope="col">Forma de pago</th>
-      <th scope="col">Estado</th>
-      <th scope="col">Confirmar</th>
-      <th scope="col">Aprobar</th>
-      <th scope="col">Denegar</th>
-   
-
-    </tr>
-  </thead>
-  <tbody>
-    {dataToShow.map((item, index) => (
-      <tr key={index}>
-   <th scope="row">{startIndex + index + 1}</th>
-        <td>{item.numeroPedido}</td>
-        <td>{item.dni}</td>
-        <td>{item.nombreComercial}</td>
-        <td className={ styles.alineacionValoresDere} >{formatNumber(item.valorTotal)}</td>
-        <td className={ styles.alineacionValoresDere}  >{formatNumber(item.totalIva)}</td>
-        <td className={ styles.alineacionValoresDere} >{formatNumber(item.netoApagar)}</td>
-        <td>{item.formaDePago}</td>
-        <td>{item.estado}</td>
-        <td     className=' justify-content-center align-items-center'>
-          
-   
-          <Link    
-          href={`/pedidos/confirmarPedido/${encodeURIComponent(item.dni)}/${encodeURIComponent(item.codigoInterno)}`} scroll={false} prefetch={false}>ir</Link>
-        
-           </td>
-
-        <td className='d-flex justify-content-center align-items-center'>
+    <thead>
+      <tr className='table-primary'>
+        <th scope="col">N°</th>
+        <th scope="col">Orden</th>
+        <th scope="col">Nit o CC</th>
+        <th scope="col">Nombre comercial</th>
+        <th scope="col">Valor Total</th>
+        <th scope="col">Iva</th>
+        <th scope="col">Neto a Pagar</th>
+        <th scope="col">Forma de pago</th>
+        <th scope="col">Estado</th>
+        <th scope="col">Confirmar</th>
+        <th scope="col">Aprobar</th>
+        <th scope="col">Denegar</th>
     
-        <button
-          className={styles.StyleIconosForm}
-          onClick={() => aprobarPedido(item)}
-
-          disabled={autorizado ? true :false  } 
-          >
-          {imagen}
-      
-        </button>
-      
-      </td>
-      <td className=' justify-content-center align-items-center' >
-
-      <button
-          className={styles.StyleIconosForm}
-          onClick={() => cancelarPedido(item)}
-
-          disabled={autorizado ? true :false  } 
-          >
-      {denegar}
-      
-        </button>
-
-        </td>
 
       </tr>
-    ))
+    </thead>
+    <tbody>
+      {dataToShow.map((item, index) => (
+        <tr key={index}>
+    <th scope="row">{startIndex + index + 1}</th>
+          <td>{item.numeroPedido}</td>
+          <td>{item.dni}</td>
+          <td>{item.nombreComercial}</td>
+          <td className={ styles.alineacionValoresDere} >{formatNumber(item.valorTotal)}</td>
+          <td className={ styles.alineacionValoresDere}  >{formatNumber(item.totalIva)}</td>
+          <td className={ styles.alineacionValoresDere} >{formatNumber(item.netoApagar)}</td>
+          <td>{item.formaDePago}</td>
+          <td>{item.estado}</td>
+          <td     className=' justify-content-center align-items-center'>
+            
     
+            <Link    
+            href={`/pedidos/confirmarPedido/${encodeURIComponent(item.dni)}/${encodeURIComponent(item.codigoInterno)}`} scroll={false} prefetch={false}>ir</Link>
+          
+            </td>
+
+          <td className='d-flex justify-content-center align-items-center'>
+      
+          <button
+            className={styles.StyleIconosForm}
+            onClick={() => aprobarPedido(item)}
+
+            disabled={autorizado ? true :false  } 
+            >
+            {imagen}
+        
+          </button>
+        
+        </td>
+        <td className=' justify-content-center align-items-center' >
+
+        <button
+            className={styles.StyleIconosForm}
+            onClick={() => cancelarPedido(item)}
+
+            disabled={autorizado ? true :false  } 
+            >
+        {denegar}
+        
+          </button>
+
+          </td>
+
+        </tr>
+      ))
+      
+  
+      }
+    </tbody>
+    </table>
+:<TablaUser data={dataConsulta} />
+}
+      
  
-    }
-  </tbody>
-</table>
 
     </div>
 
 
   );
+
 
 
 

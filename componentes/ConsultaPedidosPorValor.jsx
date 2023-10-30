@@ -14,6 +14,7 @@ export default function ConsultaPedidosPorValor() {
   const consultarPedidosPorValor = async () => {
     try {
 
+      //const response = await axios.get(`http://localhost:8082/apiPedidosMps/v1/pedidos/consulta/valor/{valor}?valor=${valor}`);
 
       const response = await axios.get(`http://localhost:8082/apiPedidosMps/v1/pedidos/consulta/valor/{valor}?valor=${valor}`);
       setResultados(response.data);
