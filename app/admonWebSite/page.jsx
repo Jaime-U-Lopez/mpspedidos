@@ -10,24 +10,23 @@ import FormAdmonUser from '@/componentes/FormAdmonUser'
 export default function Home() {
 
 
-
-
-
   return (
     
-    <main className={styles.main}>
-    
+    <main className={styles.main}>    
       <Navbar/>   
-
       <div className={styles.container}>
-        
+      <div className={styles.navmenuClienteYProductos}>
+        <NavbarBotones />
     
-    
+      </div>
+
       <div className={styles.ventaderecha}>
 
+
+      <FormAdmonUser/>
       </div>
       
-      <FormAdmonUser/>
+
 
         </div>
         

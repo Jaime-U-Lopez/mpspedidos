@@ -34,7 +34,7 @@ const dataToShow = data.slice(startIndex, endIndex);
 
 
   const [cliente, setCliente] = useState(0);
-  
+  const [clienteNombre, setClienteNombre] = useState("");
 
   const clientesEncontrados= data.length;
   const clientesActuales= dataToShow.length;
@@ -109,6 +109,7 @@ const dataToShow = data.slice(startIndex, endIndex);
   function seleccionarCliente(item) {
 
     setCliente(item.nit);
+    setClienteNombre(item.nombre)
     Swal.fire({
       title: 'Cliente seleccionado',
       text: `Cliente ${item.nombre} ingresado al pedido!`,
@@ -129,13 +130,27 @@ const dataToShow = data.slice(startIndex, endIndex);
     height={50}></Image>
 
 
-
   return (
 
 
     <div className={` ${styles.FormPedidos} `}    >
 
       <h1 className='mb-3 '> Solicitud de Pedido  </h1>
+ {cliente==0?
+ ( <div>
+  <h4 className='mb-3'> Cliente: </h4>
+  <h4 className='mb-3'> Nombre:  </h4>
+</div>
+):
+(  <div>
+  <h4 className='mb-3'> Cliente: <span>{cliente} </span> </h4>
+  <h4 className='mb-3'> Nombre: <span>{clienteNombre} </span>  </h4>
+</div>)
+
+
+ }
+  
+
       <h2 className='mb-3' > Buscar Cliente :    </h2>
 
       <form onSubmit={handleSubmit}>
@@ -186,11 +201,11 @@ const dataToShow = data.slice(startIndex, endIndex);
         {cliente!=0? (
        
            <li>
-              <Link href={`/pedidos/buscarProductos/${encodeURIComponent(cliente)}`} scroll={false} prefetch={false}>Continuar Pedido</Link>
+              <Link className='success' href={`/pedidos/buscarProductos/${encodeURIComponent(cliente)}`} scroll={false} prefetch={false}>Continuar Pedido</Link>
           </li> 
           ):( 
             <li>
-            <Link href={`/pedidos/buscarCliente`} scroll={false} prefetch={false}>Continuar Pedido</Link>
+            <Link  className='success' href={`/pedidos/buscarCliente`} scroll={false} prefetch={false}>Continuar Pedido</Link>
           </li> 
           )}
         </ul>

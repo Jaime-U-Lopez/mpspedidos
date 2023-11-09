@@ -9,18 +9,15 @@ import Swal from 'sweetalert2';
 
 import { useUser } from './UserContext';
 import { locale } from 'numeral';
-import TablaUser from './TablaConsultaPersonalizada';
+import TablaConsulta from './TablaConsultaPersonalizada';
 
 
 export default function FormPedidos( {autorizacion}) {
 
 
-
 const [dataInicial, setDataInicial]=useState([]);
 const [data, setData]=useState([]);
 const [dataConsulta, setDataConsulta]=useState([]);
-
-
 
 const [currentPage, setCurrentPage] = useState(1);
 const [pageSize] = useState(10);
@@ -37,7 +34,6 @@ const [error,setError]=useState(false)
 const [ventana,setVentana]=useState(true)
 
 const [formData, setFormData] = useState({
-
   dni: '',
   nombreComercial: '',
   numeroPedido: '',
@@ -46,8 +42,6 @@ const [formData, setFormData] = useState({
 });
 
 
-console.log(dataConsulta)
-console.log(formData.valorConsulta)
 const handleChange = (e) => {
 
   const { name, value } = e.target;
@@ -87,29 +81,9 @@ const validacionRol = async () => {
    // const response = await axios.get(`http://localhost:8083/apiPedidosMps/v1/usuarios/usuario/${nombre}`);
     const info = response.data;
 
-
     if(info.rol==="Cartera") {
       setAutorizado(false)
     }
-
-
-
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-
-
-const consultaPersonalizada = async () => {
-
-
-  try {
-    const response = await axios.get(`http://localhost:8083/apiPedidosMps/v1/pedidos/consulta/valor/{valor}?valor=${formData.valorConsulta}`);
-     const info = response.data;
-
-     setDataConsulta(info);
-     setVentana(false)
 
   } catch (error) {
     console.error(error);
@@ -452,7 +426,7 @@ function formatNumber(number) {
                 <span className="input-group-text">Fecha orden  </span>
 
                 <input
-                  className="form-control rounded-lg shadow bg-primary text-white"
+                  className="form-control rounded-lg shadow bg text-black"
                   type="date"
                   placeholder="Ingresar el Nit o CC"
                   name="fecha"
@@ -481,18 +455,7 @@ function formatNumber(number) {
           
               </div>
 
-              <div className="input-group">
-                <span className="input-group-text">Consultar Pedidos tope  </span>
-
-                <input
-                  className="form-control "
-                  type="number"
-                  placeholder="Ingresa el valor total neto por cliente a consultar  "
-                  name="valorConsulta"
-                  onChange={handleChange}
-                />
-              </div>
-
+            
 
 
       </div>        
@@ -512,21 +475,9 @@ function formatNumber(number) {
 
       </div>
 
-      <div >
-      <button
-        className="btn w-50 mt-4 mb-3 btn-green"
-        type="button"
-        onClick={consultaPersonalizada}
-      >
-        Consulta personalizada
-      </button>
+      
 
-      </div>
-
-    
     </form>
-
-
 
         {ventana?   
              <div>
@@ -550,9 +501,6 @@ function formatNumber(number) {
         </button>
 
     </div>     </div>:<p></p>}
-
-
-
 
     {ventana?  
      <table className={`${styles.TablePedidos} table-responsive table table-hover table-bordered border-primary`}>
@@ -578,8 +526,8 @@ function formatNumber(number) {
       {dataToShow.map((item, index) => (
         <tr key={index}>
     <th scope="row">{startIndex + index + 1}</th>
-          <td>{item.numeroPedido}</td>
-          <td>{item.dni}</td>
+          <td  className="text-center" >{item.numeroPedido}</td>
+          <td className={ styles.alineacionValoresDere} >{item.dni}</td>
           <td>{item.nombreComercial}</td>
           <td className={ styles.alineacionValoresDere} >{formatNumber(item.valorTotal)}</td>
           <td className={ styles.alineacionValoresDere}  >{formatNumber(item.totalIva)}</td>
@@ -590,8 +538,7 @@ function formatNumber(number) {
             
     
             <Link    
-            href={`/pedidos/confirmarPedido/${encodeURIComponent(item.dni)}/${encodeURIComponent(item.codigoInterno)}`} scroll={false} prefetch={false}>ir</Link>
-          
+            href={`/pedidos/confirmarPedido/${encodeURIComponent(item.dni)}/${encodeURIComponent(item.codigoInterno)}`} scroll={false} prefetch={false}>ir</Link>    
             </td>
 
           <td className='d-flex justify-content-center align-items-center'>
@@ -624,18 +571,13 @@ function formatNumber(number) {
         </tr>
       ))
       
-  
       }
     </tbody>
     </table>
-:<TablaUser data={dataConsulta} />
+:<p></p>
 }
-      
- 
 
-    </div>
-
-
+  </div>
   );
 
 

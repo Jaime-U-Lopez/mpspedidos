@@ -11,6 +11,8 @@ import TablaUser from './TablaUser';
 
 
 export default function FormAdmonUser() {
+
+
   const [formData, setFormData] = useState({
     nombre: '',
     usuario: '',
@@ -40,7 +42,6 @@ export default function FormAdmonUser() {
 
     setErrors(newErrors);
 
-
     return Object.keys(newErrors).length === 0;
   };
 
@@ -57,8 +58,6 @@ export default function FormAdmonUser() {
     // const response = await axios.post('http://localhost:8083/apiPedidosMps/v1/usuarios/', formData);
      const response = await axios.post('http://192.190.42.51:8083/apiPedidosMps/v1/usuarios/', formData);
       
-
-
       Swal.fire({
         icon: 'success',
         title: 'Usuario Creado con exito ',

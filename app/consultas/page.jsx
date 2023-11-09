@@ -1,45 +1,41 @@
-
-'use client';
-
 import Image from 'next/image'
 import styles from 'app/page.module.css'
 import FormControlPedidos from '@/componentes/FormControlPedidos'
 import NavbarBotones from '@/componentes/NavbarBotones'
 import Navbar from '@/componentes/Navbar'
 import Flooter from '@/componentes/Flooter'
-import ConsultaPedidosPorValor from '@/componentes/ConsultaPedidosPorValor'
-import Layout from '@/componentes/Layout';
-import { useState, useEffect } from 'react';
+import FormAdmonUser from '@/componentes/FormAdmonUser'
+import TablaConsulta from '@/componentes/TablaConsultaPersonalizada'
 
-export default function Home() {
+
+export default function Consulta() {
+
+
 
 
   return (
-    <Layout> 
-    <main className={styles.main}>
     
+    <main className={styles.main}>    
       <Navbar/>   
-
       <div className={styles.container}>
-        
+
       <div className={styles.navmenuClienteYProductos}>
         <NavbarBotones />
     
       </div>
     
+
       <div className={styles.ventaderecha}>
-      <FormControlPedidos  />
-  
+
+      <TablaConsulta  />
+
+      </div>      
+   
       </div>
       
-      </div>
-        
 <div className={styles.flooter}>
 <Flooter/>
 </div>
     </main>
-
-
-    </Layout> 
   )
 }

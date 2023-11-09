@@ -249,7 +249,7 @@ const dataToShow = data.slice(startIndex, endIndex);
         apiUrl += `/${formData.marca}/${formData.numerodeparte}`;
       }
     } else if (formData.numerodeparte) {
-      apiUrl += `filtro/${formData.numerodeparte}`;
+      apiUrl += `numeroParte/?numeroParte=${formData.numerodeparte}`;
     } else {
       apiUrl += `marcas/${formData.marca}`;
 
@@ -492,9 +492,9 @@ try {
   
         <p> {imagenCarrito} = {totalProductosEnCarrito}</p>
       </div>
-      <h3 className='mb-3 '> Agregar nuevos productos  </h3>
-      <h4 className='mb-3 '> Cliente: {clientePed}  </h4>
-      <h2 className='mb-3' > Seleccionar Articulos :    </h2>
+      <h2 className='mb-3 '> Agregar nuevos productos  </h2>
+      <h4 className='mb-3 '> Cliente: <span>{clientePed} </span>   </h4>
+      <h3 className='mb-3' > Seleccionar Articulos :    </h3>
 
       <form onSubmit={handleSubmitGet}>
         <div className="input-group">

@@ -83,8 +83,6 @@ function FormPedidos({contadorPedidos}) {
 
 var dato= sessionStorage.getItem('usernameMPS');
 setDatoUser(dato)
-
-console.log(data)
     
  
   }, [cliente,clienteId]); // Este efecto se ejecuta una vez al cargar el componente para obtener la lista de marcas
@@ -95,7 +93,7 @@ const mostraCliente=()=>{
 
   axios
   .get(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`)
-  //.get(`http://localhost:8083/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`)
+ // .get(`http://localhost:8083/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`)
   .then((response2) => {
     const dataFromApi = response2.data;
     setDataInicial(dataFromApi)
@@ -149,8 +147,8 @@ const getEvento=()=>{
   const actualizacionDatos = (dataFromApi) => {
     let iva = 0;
     let nombreComercial = "";
-    let evento = "Evento de ejemplo";
-    let idCliente = 123; // ID del cliente
+    let evento = "";
+    let idCliente = 0; 
     let personaContacto = "";
     let direccion = "";
     let celular = "";
@@ -326,11 +324,7 @@ setNetoAPagar(netoAPagar);
         }
       });
     };
-      
-    console.log(formData.formaPago)
-
-
-
+    
     const confirmarPedido = async () => {
      
       setError(false); // Reinicia el estado de error
@@ -480,10 +474,6 @@ const cancelarPedido = async()=>{
   });
 
 }
-
-
-
-
 
 }
 

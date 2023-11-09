@@ -33,10 +33,10 @@ const getUsuarios=()=>{
   const usersToDisplay = users.slice(startIndex, endIndex);
 
   const handleDeleteUser = (userId) => {
-    console.log(userId)
+
 
  const id= userId.id
- console.log(id)
+
     // Realiza una solicitud DELETE para eliminar el usuario por su ID
     axios.delete(`http://192.190.42.51:8083/apiPedidosMps/v1/usuarios/{id}?id=${id}`)
       .then(() => {

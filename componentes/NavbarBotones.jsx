@@ -30,6 +30,9 @@ export default function NavbarBotones() {
       <li>
         <Link href="/admonWebSite"  prefetch={false}>Administracion</Link>
       </li>
+      <li>
+        <Link href="/consultas"  prefetch={false}>Acumulado</Link>
+      </li>
   
     </ul>
 

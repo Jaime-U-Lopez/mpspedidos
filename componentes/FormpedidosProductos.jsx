@@ -49,13 +49,14 @@ export default function FormPedidosProductos({contadorPedidos}) {
   const [totalCantidades, setTotalCantidades] = useState([]); 
   const [controlInput, setControlInput] = useState(false)
   const [cantidadPedidoActuales, setCantidadPedidoActuales] = useState(0);
-  const [controEnvio, setControEnvio] = useState(true)
+  const [controEnvio, setControEnvio] = useState(false)
   
   const [actualizarProductos, setActualizarProductos] = useState(true)
   const [clientePed, setClientePed] = useState()
   const [clienteId, setClienteId] = useState()
+  const [datoUser, setDatoUser] = useState()
 
-  
+    
 
 
 
@@ -80,6 +81,9 @@ export default function FormPedidosProductos({contadorPedidos}) {
         Swal.fire('Error', 'Sin marcas para seleccionar en Base de datos.', 'error');
       });
 
+
+      var dato= sessionStorage.getItem('usernameMPS');
+setDatoUser(dato)
  
   }, [clienteId,clientePed]); 
 
@@ -248,8 +252,8 @@ export default function FormPedidosProductos({contadorPedidos}) {
     setError(false); // Reinicia el estado de error
 
    // let apiUrlPorNumuro=  'http://localhost:8083/apiPedidosMps/v1/productos/numeroParte/?numeroParte=1100AS-128GB-'
-   ///let apiUrl = "http://192.190.42.51:8083/apiPedidosMps/v1/productos/";
-   let apiUrl = "http://localhost:8083/apiPedidosMps/v1/productos/";
+   let apiUrl = "http://192.190.42.51:8083/apiPedidosMps/v1/productos/";
+   //let apiUrl = "http://localhost:8083/apiPedidosMps/v1/productos/";
 
     if (formData.marca !== "no" && formData.numerodeparte == '0' || formData.numerodeparte == '' || formData.numerodeparte == null) {
       apiUrl += `marcas/${formData.marca}`;
@@ -291,13 +295,32 @@ export default function FormPedidosProductos({contadorPedidos}) {
 
     } catch (error) {
       console.error(error);
-      setError(true); // Establece el estado de error en true
+      setError(true); 
       Swal.fire('Error', 'La marca ingresada no registra en la base de datos, intenta nuevamente!.', 'error');
+
+      if (error.response) {
+        
+        const responseData = error.response.data.message;
+        console.log("Mensaje de error:", responseData); 
+        console.log("Código de estado:", error.response.status); 
+       
+        setError(true); 
+        Swal.fire('Error', 'No se pudo realizar la busqueda, error: ' + responseData, 'error');
+      } else {
+        console.log("Error sin respuesta del servidor:", error.message);
+        setError(true); 
+        Swal.fire('Error', 'No se pudo realizar la busqueda, Error sin respuesta del servidor: ' + error.message, 'error');
+      }   
+   
     } finally {
       setIsLoading(false); // Establece isLoading en false después de la carga
-
-
     }
+
+
+  
+
+
+
 
 
   };
@@ -316,10 +339,7 @@ export default function FormPedidosProductos({contadorPedidos}) {
     //enviamos pedido
 
     let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
-   //  let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/`;
-
-
-
+    // let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/`;
 
     let numRetries = 0;
     let success = true;
@@ -327,9 +347,6 @@ export default function FormPedidosProductos({contadorPedidos}) {
     if(ListaProductosMapeados.length>=1){
 
       let dataInicial="";
-
-      //var  contador = `${generarNumeroConLetraAleatoria(contadorOrdenes)}`
-
 
       const cliente = await extraerIdCliente(url);
       setClientePed(cliente)
@@ -344,13 +361,9 @@ export default function FormPedidosProductos({contadorPedidos}) {
       const codigoInternote = `${clienteId}${codigoAleatorio}`;
       setCodigoInterno(codigoInternote);
   
-     
+      try {
 
-        try {
-
-        const pedidoInicial = { idCliente: cliente, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno:     codigoInterno }
-
-        console.log(pedidoInicial)
+        const pedidoInicial = { idCliente: cliente, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno:  codigoInterno,  correoAsesor : datoUser}
 
         const response = await axios.post(apiUrl, pedidoInicial);
          dataInicial = response.data.message;
@@ -512,13 +525,15 @@ export default function FormPedidosProductos({contadorPedidos}) {
       <div className={styles.ajusteCarrito} >
 
  
-        <h1 className='mb-3 '> Solicitud de Pedido  </h1>
+        <h1 className='mb-3 '> Solicitud de Pedido </h1>
 
 
         <p> {imagenCarrito} = {totalProductosEnCarrito}</p>
       </div>
-      <h2 className='mb-3 '> Cliente: {clientePed}  </h2>
-      <h2 className='mb-3' > Seleccionar Articulos :    </h2>
+      <h4 className='mb-3'> Cliente:  <span>{clientePed}</span> </h4>
+  
+     
+      <h2 className='mb-3' > Seleccionar Articulos : </h2>
 
       <form onSubmit={handleSubmitGet}>
         <div className="input-group">
@@ -555,15 +570,11 @@ export default function FormPedidosProductos({contadorPedidos}) {
           <button
             className="btn w-100 mt-4 mb-3 btn-primary"
             type="submit"
-      
           >
             Buscar
           </button>
-     
-
 </div>
         
-
 <ul>
 {controEnvio? (
        <li>
@@ -578,10 +589,8 @@ export default function FormPedidosProductos({contadorPedidos}) {
       onClick={continuarPedido}
     
     href={`/pedidos/buscarProductos/${encodeURIComponent(clienteId)}`} scroll={false} prefetch={false}>Continuar Pedido</Link>
-
             </li> 
       )}
-
           <li >
             <Link href="/" className={styles.linkCancelar} >Cancelar Pedido</Link>
           </li>
@@ -590,13 +599,9 @@ export default function FormPedidosProductos({contadorPedidos}) {
 
       </form>
 
-
-      <div>
-
-    
+      <div>    
     </div>
       
-   
       <p>Productos Encontrados : {totalProductosActualesTable} de   {totalProductos}   </p>
       <div className={styles.btnAtrasAdelante}>
 
@@ -631,7 +636,6 @@ export default function FormPedidosProductos({contadorPedidos}) {
             <th scope="col" >Color </th>
             <th scope="col" >Marca </th>
             <th scope="col" >Stock </th>
-
             <th scope="col" >Valor Unitario  </th>
             <th scope="col">Precio Unit COP</th>
             <th scope="col">Precio Unit USD</th>
@@ -661,7 +665,7 @@ export default function FormPedidosProductos({contadorPedidos}) {
                     name='precioUnitarioInp'
                     placeholder="Ingresa el precio"
                     className={styles.inputCantidad}
-                    value={   precioUnitario[producto.id] || ''}
+                    value={(precioUnitario[producto.id]) || ''}
                     onChange={(e) => handlePrecioChange(e, producto.id)}
                     disabled="true"
                   />
@@ -669,12 +673,12 @@ export default function FormPedidosProductos({contadorPedidos}) {
 
                 ) : (
                   <input
-                    type="number"
+                    type="text"
                     name='precioUnitarioInp'
                     placeholder="Ingresa el precio"
                     
                     className={styles.inputCantidad}
-                    value={ precioUnitario[producto.id] || ''}
+                    value={(precioUnitario[producto.id]) || ''}
                     onChange={(e) => handlePrecioChange(e, producto.id)}
 
                   />
@@ -702,6 +706,7 @@ export default function FormPedidosProductos({contadorPedidos}) {
                     type="number"
                     name='cantidadInp'
                     placeholder="Ingresa Cantidad"
+
                     className={styles.inputCantidad}
                     value={cantidades[producto.id] || ''}
                     onChange={(e) => handleCantidadChange(e, producto.id)}
