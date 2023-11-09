@@ -10,6 +10,8 @@ export default function BotonesAdmon( { habilitarEvento, habilitarUsuarios, habi
 
 
 
+    
+
 <div  className={styles.admonWeb}>
 
 <h1>Administración WebSite</h1>
@@ -18,13 +20,15 @@ export default function BotonesAdmon( { habilitarEvento, habilitarUsuarios, habi
 <div  className={styles.btnAdmon}>
 
 
-<button onClick={habilitarEvento}>Evento</button>
+  <button onClick={habilitarEvento}>Evento</button>
  <button onClick={habilitarUsuarios}>Usuarios</button>
  <button onClick={habilitarPlanos}>Planos</button>
 
 
 
 </div>
+
+
 
 
 </div>

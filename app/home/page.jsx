@@ -7,8 +7,7 @@ import NavbarBotonesHome from '@/componentes/NavbarBotonesHome'
 import Navbar from '@/componentes/Navbar'
 import Flooter from '@/componentes/Flooter'
 
-import ProductForm from '@/componentes/formulario'
-import Formulario from '@/componentes/formulariopruebas'
+
 import {useState, useEffect} from 'react';
 import FormLogin from '@/componentes/FormLogin';
 import axios from 'axios';

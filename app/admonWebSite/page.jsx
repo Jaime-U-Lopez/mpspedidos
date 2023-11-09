@@ -5,6 +5,8 @@ import NavbarBotones from '@/componentes/NavbarBotones'
 import Navbar from '@/componentes/Navbar'
 import Flooter from '@/componentes/Flooter'
 import FormAdmonUser from '@/componentes/FormAdmonUser'
+import FormAdmonPlanos from '@/componentes/FormAdmonPlanos'
+import BotonesAdmon from '@/componentes/BotonesAdmon'
 
 
 export default function Home() {
@@ -21,9 +23,14 @@ export default function Home() {
       </div>
 
       <div className={styles.ventaderecha}>
+<BotonesAdmon/>
 
 
       <FormAdmonUser/>
+    
+    
+<FormAdmonPlanos></FormAdmonPlanos>
+
       </div>
       
 
