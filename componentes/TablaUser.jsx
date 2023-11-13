@@ -17,7 +17,7 @@ const getUsuarios=()=>{
 
     axios.get(`http://192.190.42.51:8083/apiPedidosMps/v1/usuarios/`)
     .then((response) => {
-      // Actualiza el estado con los datos de los usuarios
+     
       setUsers(response.data);
     })
     .catch((error) => {
@@ -26,7 +26,7 @@ const getUsuarios=()=>{
 
 }
 
-  // Calcula el índice de inicio y fin para la paginación
+ 
   const startIndex = (page - 1) * pageSize;
   const endIndex = startIndex + pageSize;
 
@@ -37,10 +37,10 @@ const getUsuarios=()=>{
 
  const id= userId.id
 
-    // Realiza una solicitud DELETE para eliminar el usuario por su ID
+   
     axios.delete(`http://192.190.42.51:8083/apiPedidosMps/v1/usuarios/{id}?id=${id}`)
       .then(() => {
-        // Actualiza la lista de usuarios después de eliminar
+       
         setUsers(users.filter((user) => user.id !== userId.id));
 
         getUsuarios()
@@ -60,6 +60,7 @@ const getUsuarios=()=>{
           <tr className="table-primary">
             <th scope="col">N°</th>
             <th scope="col">Nombre usuario</th>
+            <th scope="col">usuario</th>
             <th scope="col">Rol</th>
             <th scope="col">Eliminar</th>
           </tr>
@@ -69,6 +70,7 @@ const getUsuarios=()=>{
             <tr key={user.id}>
               <th scope="row">{startIndex + index + 1}</th>
               <td>{user.nombreUsuario}</td>
+              <td>{user.usuario}</td>
               <td>{user.rol}</td>
               <td className="d-flex justify-content-center align-items-center">
                 <button

@@ -392,12 +392,12 @@ if(formData.formaPago!="null"){
         console.log("Código de estado:", error.response.status); 
        
         setError(true); 
-        Swal.fire('Error', 'No se pudo guardar el pedido, error: ' + responseData, 'error');
+       Swal.fire('Error', 'No se pudo guardar el pedido, error: ' + responseData, 'error');
       } else {
         console.log("Error sin respuesta del servidor:", error.message);
         setError(true); 
         Swal.fire('Error', 'No se pudo guardar el pedido, error: ' + error.message, 'error');
-      }
+      } 
     } finally {
       setIsLoading(false); 
 

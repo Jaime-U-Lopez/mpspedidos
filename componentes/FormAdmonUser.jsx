@@ -14,10 +14,10 @@ export default function FormAdmonUser() {
 
 
   const [formData, setFormData] = useState({
-    nombre: '',
+    nombreUsuario: '',
     usuario: '',
     password: '',
-    rol: '1', // Valor por defecto
+    rol: '1', 
   });
 
   const [errors, setErrors] = useState({});
@@ -27,21 +27,54 @@ export default function FormAdmonUser() {
     const newErrors = {};
 
     // Verifica si los campos están en blanco
-    if (!formData.nombre) {
-      newErrors.nombre = 'El campo Nombre es obligatorio';
+    if (!formData.nombreUsuario) {
+      newErrors.nombreUsuario = 'El campo Nombre es obligatorio';
+      Swal.fire({
+        icon: 'error',
+        title: 'El campo Nombre es obligatorio',
+  
+        showConfirmButton: false,
+        timer: 2000,
+      });
     }
     if (!formData.usuario) {
       newErrors.usuario = 'El campo Usuario es obligatorio';
+      Swal.fire({
+        icon: 'error',
+        title: 'El campo Usuario es obligatorio',
+  
+        showConfirmButton: false,
+        timer: 2000,
+      });
     }
     if (!formData.password) {
       newErrors.password = 'El campo Password es obligatorio';
+
+      Swal.fire({
+        icon: 'error',
+        title: 'El campo Password es obligatorio',
+  
+        showConfirmButton: false,
+        timer: 2000,
+      });
+
     }
     if (formData.rol === '1') {
       newErrors.rol = 'Debe seleccionar un Rol';
+      Swal.fire({
+        icon: 'error',
+        title: 'Debe seleccionar un Rol',
+  
+        showConfirmButton: false,
+        timer: 2000,
+      });
+  
     }
 
     setErrors(newErrors);
-
+  
+   
+    
     return Object.keys(newErrors).length === 0;
   };
 
@@ -55,8 +88,8 @@ export default function FormAdmonUser() {
     event.preventDefault();
     if (validateForm()) {
     try {
-    // const response = await axios.post('http://localhost:8083/apiPedidosMps/v1/usuarios/', formData);
-     const response = await axios.post('http://192.190.42.51:8083/apiPedidosMps/v1/usuarios/', formData);
+     const response = await axios.post('http://localhost:8083/apiPedidosMps/v1/usuarios/', formData);
+    // const response = await axios.post('http://192.190.42.51:8083/apiPedidosMps/v1/usuarios/', formData);
       
       Swal.fire({
         icon: 'success',
@@ -65,6 +98,15 @@ export default function FormAdmonUser() {
         showConfirmButton: false,
         timer: 2000,
       });
+
+      setFormData({
+        nombreUsuario: '',
+        usuario: '',
+        password: '',
+        rol: '1', 
+      })
+
+
 
 
     } catch (error) {
@@ -92,8 +134,8 @@ export default function FormAdmonUser() {
             className="form-control"
             type="text"
             placeholder="Ingresa el nombre de usuario"
-            name="nombre"
-            value={formData.nombre}
+            name="nombreUsuario"
+            value={formData.nombreUsuario}
             onChange={handleChange}
           />
         </div>
@@ -102,7 +144,7 @@ export default function FormAdmonUser() {
           <input
             className="form-control"
             type="text"
-            placeholder="Ingresa el nombre de usuario"
+            placeholder="Correo usuario"
             name="usuario"
             value={formData.usuario}
             onChange={handleChange}
@@ -112,7 +154,7 @@ export default function FormAdmonUser() {
           <span className="input-group-text">Password</span>
           <input
             className="form-control"
-            type="password"
+            type="text"
             placeholder="Ingresa el Password"
             name="password"
             value={formData.password}
@@ -129,10 +171,10 @@ export default function FormAdmonUser() {
             onChange={handleChange}
           >
             <option value="1">Seleccione el Rol</option>
-            <option value="2">Administrador</option>
-            <option value="3">Cartera</option>
-            <option value="4">Comercial</option>
-            <option value="5">Ventas</option>
+            <option value="Administrador">Administrador</option>
+            <option value="Cartera">Cartera</option>
+            <option value="Comercial">Comercial</option>
+            <option value="Ventas">Ventas</option>
           </select>
         </div>
         <div>
@@ -140,13 +182,9 @@ export default function FormAdmonUser() {
             Crear
           </button>
         </div>
-        <div>
-          <button className="btn w-50 mt-2 mb-3 btn-danger" type="button">
-            Resetear Password
-          </button>
-        </div>
+      
       </form>
-      <p>Usuarios Creados:</p>
+
 
       <TablaUser/>
 

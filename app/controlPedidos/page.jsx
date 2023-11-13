@@ -4,12 +4,13 @@
 import Image from 'next/image'
 import styles from 'app/page.module.css'
 import FormControlPedidos from '@/componentes/FormControlPedidos'
-import NavbarBotones from '@/componentes/NavbarBotones'
+
 import Navbar from '@/componentes/Navbar'
 import Flooter from '@/componentes/Flooter'
-import ConsultaPedidosPorValor from '@/componentes/ConsultaPedidosPorValor'
+
 import Layout from '@/componentes/Layout';
 import { useState, useEffect } from 'react';
+import NavbarBotonesControlPed from '@/componentes/NavbarBotonesControlPed';
 
 export default function Home() {
 
@@ -23,7 +24,7 @@ export default function Home() {
       <div className={styles.container}>
         
       <div className={styles.navmenuClienteYProductos}>
-        <NavbarBotones />
+        <NavbarBotonesControlPed />
     
       </div>
     

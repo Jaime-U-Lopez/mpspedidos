@@ -50,7 +50,7 @@ export default function FormPedidosProductos({contadorPedidos}) {
   const [controlInput, setControlInput] = useState(false)
   const [cantidadPedidoActuales, setCantidadPedidoActuales] = useState(0);
   const [controEnvio, setControEnvio] = useState(false)
-  
+  const [controlClik, setControlClik] = useState(false)
   const [actualizarProductos, setActualizarProductos] = useState(true)
   const [clientePed, setClientePed] = useState()
   const [clienteId, setClienteId] = useState()
@@ -99,12 +99,8 @@ setDatoUser(dato)
     return codigo;
   }
 
-
-
   const handleCantidadChange = (e, productoId) => {
-
     const nuevaCantidad = parseInt(e.target.value, 10);
-
     setCantidades((prevCantidades) => ({
       ...prevCantidades,
       [productoId]:
@@ -115,16 +111,12 @@ setDatoUser(dato)
 
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-
     setControlInput(true);
-
   };
 
 
   const handlePrecioChange = (e, productoId) => {
-
     const nuevoPrecio = parseInt(e.target.value, 10);
-
     setPrecioUnitario((prevPrecioUnitario) => ({
       ...prevPrecioUnitario,
       [productoId]:
@@ -133,12 +125,9 @@ setDatoUser(dato)
       preciocompra: nuevoPrecio
     }));
 
-
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     setControlInput(true);
-
-
   };
 
 
@@ -401,9 +390,10 @@ setDatoUser(dato)
 
  
   function continuarPedido() {
-    handleSubmitPost()
 
-    
+  
+    handleSubmitPost()
+    setControlClik(true)
   }
 
 
@@ -579,9 +569,15 @@ setDatoUser(dato)
 {controEnvio? (
        <li>
     <Link
-      onClick={continuarPedido}
     
-    href={`/pedidos/confirmarPedido/${encodeURIComponent(clienteId)}/${encodeURIComponent(codigoInterno)}`} scroll={false} prefetch={false}>Continuar Pedido</Link>
+    onClick={continuarPedido}
+    href={`/pedidos/confirmarPedido/${encodeURIComponent(clienteId)}/${encodeURIComponent(codigoInterno)}`}
+    scroll={false}
+    prefetch={false}
+    //style={{ pointerEvents: (controEnvio) ? 'none' : 'auto' }}
+      
+  >
+      Continuar Pedido</Link>
          </li> 
       ):( 
         <li>

@@ -45,9 +45,9 @@ const consultaPersonalizada = async () => {
 
   try {
     
-    const response = await axios.get(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/consulta/valor/{valor}?valor=${formData.valorConsulta}`);
+   // const response = await axios.get(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/consulta/valor/{valor}?valor=${formData.valorConsulta}`);
     
-    //const response = await axios.get(`http://localhost:8083/apiPedidosMps/v1/pedidos/consulta/valor/{valor}?valor=${formData.valorConsulta}`);
+    const response = await axios.get(`http://localhost:8083/apiPedidosMps/v1/pedidos/consulta/valor/{valor}?valor=${formData.valorConsulta}`);
       const info = response.data;
 
       setDataConsulta(info);
@@ -78,10 +78,60 @@ const consultaPersonalizada = async () => {
   }
 
 
+  function formatNumberTabla(number) {
+    if (typeof number !== 'number') {
+      // Si el valor no es un número, intenta convertirlo a un número.
+      number = parseFloat(number);
+    }
+  
+    // Formatea el número con coma como separador de miles
+    return number.toLocaleString('es-ES', { maximumFractionDigits: 2, minimumFractionDigits: 2 });
+  
 
-  const exportToExcel = () => {
+  
+    // Agregar la hoja al libro de trabajo
+    XLSX.utils.book_append_sheet(workBook, workSheet, 'SheetJS');
+  
+    // Guardar el libro de trabajo como archivo Excel
+    XLSX.writeFile(workBook, 'DataSheet.xlsx');
+  };
+
+
+  const exportToExcel= () => {
+    
     const table = document.getElementById('myTable');
-    const workBook = XLSX.utils.table_to_book(table, { sheet: 'SheetJS' });
+
+    // Obtener las filas de la tabla
+    const rows = Array.from(table.querySelectorAll('tr'));
+  
+    // Obtener los datos de texto sin formato agrupados por filas y columnas
+    const textData = rows.map(row => Array.from(row.children).map(cell => cell.textContent.trim()));
+  
+    // Crear un nuevo libro de trabajo
+    const workBook = XLSX.utils.book_new();
+    const workSheet = XLSX.utils.aoa_to_sheet(textData);
+  
+    // Agregar la hoja al libro de trabajo
+    XLSX.utils.book_append_sheet(workBook, workSheet, 'SheetJS');
+  
+    // Guardar el libro de trabajo como archivo Excel
+    XLSX.writeFile(workBook, 'DataSheet.xlsx');
+
+
+
+
+
+  };
+  
+  
+  
+  
+  
+  
+
+  const exportToExcel2 = () => {
+    const table = document.getElementById('myTable');
+    const workBook = XLSX.utils.table_to_book(table, { sheet: 'SheetJS' , rawNumbers: true });
     XLSX.writeFile(workBook, 'DataSheet.xlsx');
   };
 
@@ -92,6 +142,11 @@ const consultaPersonalizada = async () => {
   const usersToDisplay = dataConsulta.slice(startIndex, endIndex);
 
   var totalClientesActuales = usersToDisplay.length;
+
+
+
+  const valorTotal = dataConsulta.reduce((total, pedidos) => total + pedidos.totalPagado, 0);
+
 //<________________________________________________________>
 
   return (
@@ -100,8 +155,12 @@ const consultaPersonalizada = async () => {
     <div  className={styles.TablePedidos}  >
 
         <div className={styles.FormPedidos}>
-        <h2 className='mb-3'>Acumulado  de Aprobados:</h2>
+        <h2 className='mb-3'>Acumulado de Pedidos Aprobados:</h2>
+
+      <p>Valor acumulado actual : {formatNumber(valorTotal)}</p>
+
         </div>
+
       <form>
 
 
@@ -174,7 +233,7 @@ const consultaPersonalizada = async () => {
               <td  className="text-center" >{pedidos.estado}</td>
 
 
-              <td className={ styles.alineacionValoresDere}  >{formatNumber(pedidos.netoApagar )}</td>
+              <td className={ styles.alineacionValoresDere}  >{formatNumberTabla(pedidos.totalPagado )}</td>
 
             
               <td className="text-center" >{pedidos.unidadesAcumuladas}</td>

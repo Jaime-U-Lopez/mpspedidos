@@ -9,7 +9,7 @@ import {useContext, useState} from 'react'
 import { images } from '@/next.config'
 import { useEffect } from "react";
 
-
+import axios from 'axios';
 export default function NavbarBotones() {
 
 

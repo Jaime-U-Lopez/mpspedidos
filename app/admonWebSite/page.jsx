@@ -23,14 +23,8 @@ export default function Home() {
       </div>
 
       <div className={styles.ventaderecha}>
-<BotonesAdmon/>
-
-
-      <FormAdmonUser/>
-    
-    
-<FormAdmonPlanos></FormAdmonPlanos>
-
+      <BotonesAdmon/>
+ 
       </div>
       
 
