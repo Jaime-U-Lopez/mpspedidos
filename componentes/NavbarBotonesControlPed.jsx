@@ -1,15 +1,14 @@
 import Image from 'next/image'
 import styles from 'app/page.module.css'
 import Link from 'next/link'
-
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import ValidadorRol from './ValidadorRol';
 
 export default function NavbarBotonesControlPed() {
   
 
-  const usernameMPS = 'usernameMPS';
 
-
-  
 
 
   return (
@@ -26,7 +25,8 @@ export default function NavbarBotonesControlPed() {
       </li>
   
       <li>
-        <Link href="/admonWebSite"  prefetch={false}>Administracion</Link>
+      <ValidadorRol/>
+
       </li>
       <li>
         <Link href="/consultas"  prefetch={false}>Acumulado</Link>

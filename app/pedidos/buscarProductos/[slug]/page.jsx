@@ -10,8 +10,10 @@ import Navbar from '@/componentes/Navbar'
 import Flooter from '@/componentes/Flooter'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import withAuth from '@/componentes/withAuth' 
 
-export default function Home() {
+
+const Home= ()=> {
 
 
 
@@ -43,3 +45,4 @@ export default function Home() {
     </main>
   )
 }
+export default withAuth(Home);

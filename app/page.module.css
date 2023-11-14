@@ -217,17 +217,52 @@ padding: auto;;
 
 
 
-
-
-
-
 .FormPedidos{
 
   color: #fed700;
   width: auto;
   font-family: var(--font-mono);
-
 }
+
+.BtnProductos {
+
+  font-family: var(--font-mono);
+  width: 30%;
+
+  padding: 0;
+  background-color: #f5f5f3;
+  border: 1px;
+  border-radius: 5px;
+  color: #000;
+  font-weight: bold;
+  text-align: center !important;
+  box-sizing: border-box;
+ 
+}
+
+.BtnProductos a {
+
+margin: 0% !important;
+
+text-decoration: none !important;
+
+  width: 100% !important;
+  padding: none;
+
+ 
+}
+
+.BtnProductos a:hover {
+  background-color: #fed700;
+  color: #000;
+  font-weight: bold;
+  border-radius: 5px;
+  width: 100%;
+  border: 1px !important;
+  color: #000;
+}
+
+
 
 .FormPedidos h1{
 
@@ -323,7 +358,7 @@ font-family: var(--font-mono);
 }
 
 .tabledark{
-background-color: rgb(219, 6, 6) !important;
+background-color: rgb(204, 180, 180) !important;
 
 }
 
@@ -627,7 +662,7 @@ color: black
 
 
   .navmenuClienteYProductos{
-    display: none;
+    display: flex;
   }
 
 
@@ -639,12 +674,20 @@ color: black
 }
 
 
+.lupa {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border: 2px solid #333;
+  border-radius: 50%;
 
-.PlanoTexto{
+
+  border: 2px solid #333;
 
 
-  background-color: red !important;
+
 }
+
 
 .PlanoTexto button{
 

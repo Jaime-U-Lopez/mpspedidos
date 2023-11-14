@@ -1,16 +1,13 @@
+"use client"
 import Image from 'next/image'
 import styles from 'app/page.module.css'
 import Link from 'next/link'
-
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import ValidadorRol from './ValidadorRol';
 
 export default function NavbarBotones() {
   
-
-  const usernameMPS = 'usernameMPS';
-
-
-  
-
 
   return (
 
@@ -28,7 +25,7 @@ export default function NavbarBotones() {
         <Link href="/controlPedidos"  prefetch={false}>Control Pedidos</Link>
       </li>
       <li>
-        <Link href="/admonWebSite"  prefetch={false}>Administracion</Link>
+      <ValidadorRol/>
       </li>
       <li>
         <Link href="/consultas"  prefetch={false}>Acumulado</Link>

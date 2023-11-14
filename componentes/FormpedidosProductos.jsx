@@ -327,8 +327,8 @@ setDatoUser(dato)
 
     //enviamos pedido
 
-    let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
-    // let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/`;
+   // let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
+     let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/`;
 
     let numRetries = 0;
     let success = true;
@@ -505,6 +505,78 @@ setDatoUser(dato)
 
 
 
+
+
+    function MASK(form, n, mask, format) {
+      if (format == "undefined") format = false;
+      if (format || NUM(n)) {
+       var dec = 0, point = 0;
+       var x = mask.indexOf(".")+1;
+        if (x) { dec = mask.length - x; }
+    
+        if (dec) {
+          n = NUM(n, dec)+"";
+          x = n.indexOf(".")+1;
+          if (x) { point = n.length - x; } else { n += "."; }
+        } else {
+          n = NUM(n, 0)+"";
+        } 
+        for (var x = point; x < dec ; x++) {
+          n += "0";
+        }
+       var  x = n.length, y = mask.length, XMASK = "";
+        while ( x || y ) {
+          if ( x ) {
+            while ( y && "#0.".indexOf(mask.charAt(y-1)) == -1 ) {
+              if ( n.charAt(x-1) != "-")
+                XMASK = mask.charAt(y-1) + XMASK;
+              y--;
+            }
+            XMASK = n.charAt(x-1) + XMASK, x--;
+          } else if ( y && "$0".indexOf(mask.charAt(y-1))+1 ) {
+            XMASK = mask.charAt(y-1) + XMASK;
+          }
+          if ( y ) { y-- }
+        }
+      } else {
+         XMASK="";
+      }
+      if (form) { 
+        form.value = XMASK;
+        if (NUM(n)<0) {
+          form.style.color="#FF0000";
+        } else {
+          form.style.color="#000000";
+        }
+      }
+      return XMASK;
+    }
+    
+    // Convierte una cadena alfanumérica a numérica (incluyendo formulas aritméticas)
+    //
+    // s   = cadena a ser convertida a numérica
+    // dec = numero de decimales a redondear
+    //
+    // La función devuelve el numero redondeado
+    
+    function NUM(s, dec) {
+      for (var s = s+"", num = "", x = 0 ; x < s.length ; x++) {
+       var c = s.charAt(x);
+        if (".-+/*".indexOf(c)+1 || c != " " && !isNaN(c)) { num+=c; }
+      }
+      if (isNaN(num)) { num = eval(num); }
+      if (num == "")  { num=0; } else { num = parseFloat(num); }
+      if (dec != undefined) {
+       var r=.5; if (num<0) r=-r;
+       var e=Math.pow(10, (dec>0) ? dec : 0 );
+        return parseInt(num*e+r) / e;
+      } else {
+        return num;
+      }
+    }
+
+
+
   //<<<<<<<<___________________________________>>>>>>>>>>>>>
 
 
@@ -567,28 +639,53 @@ setDatoUser(dato)
         
 <ul>
 {controEnvio? (
-       <li>
+<li>
+
+  <button
+
+className={` ${styles.BtnProductos} `}
+        
+      disabled={ controlClik  ? true :false  } 
+      > 
     <Link
     
     onClick={continuarPedido}
     href={`/pedidos/confirmarPedido/${encodeURIComponent(clienteId)}/${encodeURIComponent(codigoInterno)}`}
     scroll={false}
     prefetch={false}
-    //style={{ pointerEvents: (controEnvio) ? 'none' : 'auto' }}
-      
+  
   >
       Continuar Pedido</Link>
+
+      </button>
          </li> 
       ):( 
         <li>
+
+<button
+      
+      
+      className={` ${styles.BtnProductos} `}
+      
+     
+      > 
       <Link
       onClick={continuarPedido}
-    
-    href={`/pedidos/buscarProductos/${encodeURIComponent(clienteId)}`} scroll={false} prefetch={false}>Continuar Pedido</Link>
+      
+        href={`/pedidos/buscarProductos/${encodeURIComponent(clienteId)}`} scroll={false} prefetch={false}>   Continuar Pedido
+        
+        
+        </Link>
+        </button>
+       
             </li> 
+
+
+
+
       )}
           <li >
-            <Link href="/" className={styles.linkCancelar} >Cancelar Pedido</Link>
+            <Link href="/home" className={styles.linkCancelar} >Cancelar Pedido</Link>
           </li>
 
  </ul>
@@ -622,7 +719,7 @@ setDatoUser(dato)
       </div>
 
       {data.length > 0 && formData.numerodeparte !== '' || formData.marca !== 'no' ? (
-      <table className={`${styles.TablePedidos} table-responsive table  table-hover  table-bordered border-primary     `}>
+      <table className={`${styles.TablePedidos} ${styles.lupa} table-responsive table  table-hover  table-bordered border-primary     `}>
         <thead>
           <tr className='text-center'>
             <th scope="col">N°</th>
@@ -662,7 +759,11 @@ setDatoUser(dato)
                     placeholder="Ingresa el precio"
                     className={styles.inputCantidad}
                     value={(precioUnitario[producto.id]) || ''}
-                    onChange={(e) => handlePrecioChange(e, producto.id)}
+                    onChange={(e) => {
+                      MASK(this, e.target.value, '-$##,###,##0.00', 1);
+                      handlePrecioChange(e, producto.id);
+                    }}
+                  
                     disabled="true"
                   />
 
@@ -675,8 +776,10 @@ setDatoUser(dato)
                     
                     className={styles.inputCantidad}
                     value={(precioUnitario[producto.id]) || ''}
-                    onChange={(e) => handlePrecioChange(e, producto.id)}
-
+                    onChange={(e) => {
+                      MASK(this, e.target.value, '-$##,###,##0.00', 1);
+                      handlePrecioChange(e, producto.id);
+                    }}
                   />
                 )}
 

@@ -9,34 +9,29 @@ import Flooter from '@/componentes/Flooter'
 
 
 import {useState, useEffect} from 'react';
-import FormLogin from '@/componentes/FormLogin';
+
 import axios from 'axios';
 
+import { UserProvider } from '@/componentes/UserContext'
+import withAuth from '@/componentes/withAuth' 
 
 
 
-
-export default function Home({cliente}) {
+const Home= ()=> {
 
 
 
 
   return (
-    
+    <UserProvider>
     <main className={styles.main}>
-    
       <Navbar/>   
-
       <div className={styles.container}>
-        
       <div className={styles.navmenu}>
       <NavbarBotonesHome />
       </div>
-    
       <div className={styles.ventaderecha}>
-     
-      </div>
-        
+      </div>    
         </div>
       
       
@@ -44,5 +39,8 @@ export default function Home({cliente}) {
 <Flooter/>
 </div>
     </main>
+
+</UserProvider>
   )
 }
+export default withAuth(Home);

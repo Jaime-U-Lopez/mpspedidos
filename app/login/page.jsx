@@ -1,22 +1,25 @@
 import Image from 'next/image'
 import styles from 'app/page.module.css'
-import FormLogin from '@/componentes/FormLogin'
+
 import NavbarBotones from '@/componentes/NavbarBotones'
 import Navbar from '@/componentes/Navbar'
 import Flooter from '@/componentes/Flooter'
 import { UserProvider } from '@/componentes/UserContext'
+import FormLogin from '@/componentes/FormLogin'
 
-export default function Home({ Component, pageProps }) {
+const Login =({ Component, pageProps })=> {
+
+  
   return (
-    
+    <UserProvider>
     <main className={styles.main}>
     
  
      
       <div className={styles.ventaderecha}>
-      <UserProvider>
+    
       <FormLogin  {...pageProps} />
-      </UserProvider>
+
   
       </div>
       
@@ -28,5 +31,7 @@ export default function Home({ Component, pageProps }) {
 <Flooter/>
 </div>
     </main>
+    </UserProvider>
   )
 }
+export default Login;

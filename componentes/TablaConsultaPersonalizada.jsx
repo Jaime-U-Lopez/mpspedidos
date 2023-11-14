@@ -37,7 +37,7 @@ const handleChange = (e) => {
   const handlePageSizeChange = (e) => {
     const newSize = parseInt(e.target.value);
     setPageSize(newSize);
-    setPage(1); // Volver a la primera página cuando cambia el tamaño de la página
+    setPage(1); 
   };
 
 
@@ -51,7 +51,7 @@ const consultaPersonalizada = async () => {
       const info = response.data;
 
       setDataConsulta(info);
-      setVentana(false)
+     
 
   } catch (error) {
     console.error(error);
@@ -80,19 +80,14 @@ const consultaPersonalizada = async () => {
 
   function formatNumberTabla(number) {
     if (typeof number !== 'number') {
-      // Si el valor no es un número, intenta convertirlo a un número.
+    
       number = parseFloat(number);
     }
   
-    // Formatea el número con coma como separador de miles
     return number.toLocaleString('es-ES', { maximumFractionDigits: 2, minimumFractionDigits: 2 });
   
-
-  
-    // Agregar la hoja al libro de trabajo
     XLSX.utils.book_append_sheet(workBook, workSheet, 'SheetJS');
-  
-    // Guardar el libro de trabajo como archivo Excel
+
     XLSX.writeFile(workBook, 'DataSheet.xlsx');
   };
 
@@ -100,41 +95,16 @@ const consultaPersonalizada = async () => {
   const exportToExcel= () => {
     
     const table = document.getElementById('myTable');
-
-    // Obtener las filas de la tabla
     const rows = Array.from(table.querySelectorAll('tr'));
-  
-    // Obtener los datos de texto sin formato agrupados por filas y columnas
     const textData = rows.map(row => Array.from(row.children).map(cell => cell.textContent.trim()));
-  
-    // Crear un nuevo libro de trabajo
     const workBook = XLSX.utils.book_new();
     const workSheet = XLSX.utils.aoa_to_sheet(textData);
-  
-    // Agregar la hoja al libro de trabajo
     XLSX.utils.book_append_sheet(workBook, workSheet, 'SheetJS');
-  
-    // Guardar el libro de trabajo como archivo Excel
     XLSX.writeFile(workBook, 'DataSheet.xlsx');
 
-
-
-
-
   };
+   
   
-  
-  
-  
-  
-  
-
-  const exportToExcel2 = () => {
-    const table = document.getElementById('myTable');
-    const workBook = XLSX.utils.table_to_book(table, { sheet: 'SheetJS' , rawNumbers: true });
-    XLSX.writeFile(workBook, 'DataSheet.xlsx');
-  };
-
 
   const totalClientes = dataConsulta.length;
   const startIndex = (page - 1) * pageSize;
@@ -142,8 +112,6 @@ const consultaPersonalizada = async () => {
   const usersToDisplay = dataConsulta.slice(startIndex, endIndex);
 
   var totalClientesActuales = usersToDisplay.length;
-
-
 
   const valorTotal = dataConsulta.reduce((total, pedidos) => total + pedidos.totalPagado, 0);
 
@@ -156,13 +124,10 @@ const consultaPersonalizada = async () => {
 
         <div className={styles.FormPedidos}>
         <h2 className='mb-3'>Acumulado de Pedidos Aprobados:</h2>
-
       <p>Valor acumulado actual : {formatNumber(valorTotal)}</p>
 
         </div>
-
       <form>
-
 
       <div>
               <div className="input-group">
@@ -220,6 +185,7 @@ const consultaPersonalizada = async () => {
             <th scope="col">N° identificacion</th>
             <th scope="col">Nombre Comercial</th>
             <th scope="col">Estado</th>
+            <th scope="col">Conteo Pedidos</th>
             <th scope="col">Total a pagar sin iva</th>
             <th scope="col">Unid Totales</th>
           </tr>
@@ -231,7 +197,7 @@ const consultaPersonalizada = async () => {
               <td className={ styles.alineacionValoresDere}>{pedidos.dni}</td>
               <td>{pedidos.nombreComercial}</td>
               <td  className="text-center" >{pedidos.estado}</td>
-
+              <td>{pedidos.conteoPedidos}</td>
 
               <td className={ styles.alineacionValoresDere}  >{formatNumberTabla(pedidos.totalPagado )}</td>
 

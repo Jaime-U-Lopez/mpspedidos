@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-import { useUser } from './UserContext';
+import { useAuth } from './UserContext';
 import { locale } from 'numeral';
 import TablaConsulta from './TablaConsultaPersonalizada';
 
@@ -49,7 +49,7 @@ const handleChange = (e) => {
 
 };
 
-const { state, dispatch } = useUser();
+const { state, dispatch } = useAuth();
 
 const { username } = state;
 

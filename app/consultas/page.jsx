@@ -1,3 +1,5 @@
+
+'use client';
 import Image from 'next/image'
 import styles from 'app/page.module.css'
 import FormControlPedidos from '@/componentes/FormControlPedidos'
@@ -6,9 +8,9 @@ import Navbar from '@/componentes/Navbar'
 import Flooter from '@/componentes/Flooter'
 import FormAdmonUser from '@/componentes/FormAdmonUser'
 import TablaConsulta from '@/componentes/TablaConsultaPersonalizada'
+import withAuth from '@/componentes/withAuth' 
 
-
-export default function Consulta() {
+const Consulta=()=> { 
 
 
 
@@ -39,3 +41,4 @@ export default function Consulta() {
     </main>
   )
 }
+export default withAuth(Consulta);

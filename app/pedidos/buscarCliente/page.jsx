@@ -1,12 +1,14 @@
+'use client';
 import Image from 'next/image'
 import styles from 'app/page.module.css'
 import FormPedidosClientes from '@/componentes/FormpedidosClientes'
 import NavbarBotones from '@/componentes/NavbarBotones'
 import Navbar from '@/componentes/Navbar'
 import Flooter from '@/componentes/Flooter'
+import withAuth from '@/componentes/withAuth' 
 
 
-export default function Home() {
+const Home= ()=> {
   return (
     
     <main className={styles.main}>
@@ -36,3 +38,4 @@ export default function Home() {
     </main>
   )
 }
+export default withAuth(Home);

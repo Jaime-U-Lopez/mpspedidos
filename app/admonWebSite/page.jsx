@@ -1,3 +1,4 @@
+'use client';
 import Image from 'next/image'
 import styles from 'app/page.module.css'
 import FormControlPedidos from '@/componentes/FormControlPedidos'
@@ -7,9 +8,9 @@ import Flooter from '@/componentes/Flooter'
 import FormAdmonUser from '@/componentes/FormAdmonUser'
 import FormAdmonPlanos from '@/componentes/FormAdmonPlanos'
 import BotonesAdmon from '@/componentes/BotonesAdmon'
+import withAuth from '@/componentes/withAuth' 
 
-
-export default function Home() {
+const Home=()=> {
 
 
   return (
@@ -39,3 +40,4 @@ export default function Home() {
     </main>
   )
 }
+export default  withAuth(Home);

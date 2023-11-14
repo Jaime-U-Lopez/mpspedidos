@@ -8,9 +8,10 @@ import Navbar from '@/componentes/Navbar'
 import Flooter from '@/componentes/Flooter'
 import axios from 'axios';
 import React, { useState , useEffect} from 'react'
+import withAuth from '@/componentes/withAuth' 
 
-export default function ConfirmarPedidos() {
 
+const Home= ()=> {
   return (
     
     <main className={styles.main}>
@@ -35,3 +36,4 @@ export default function ConfirmarPedidos() {
     </main>
   )
 }
+export default withAuth(Home);

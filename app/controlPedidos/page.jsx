@@ -11,8 +11,9 @@ import Flooter from '@/componentes/Flooter'
 import Layout from '@/componentes/Layout';
 import { useState, useEffect } from 'react';
 import NavbarBotonesControlPed from '@/componentes/NavbarBotonesControlPed';
+import withAuth from '@/componentes/withAuth' 
 
-export default function Home() {
+const Home=()=> {
 
 
   return (
@@ -44,3 +45,4 @@ export default function Home() {
     </Layout> 
   )
 }
+export default  withAuth(Home);

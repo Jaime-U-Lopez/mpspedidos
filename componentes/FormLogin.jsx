@@ -2,17 +2,20 @@
 import Image from 'next/image'
 import { useState, useHistory} from 'react';
 import styles from 'app/page.module.css'
-import { useRouter } from 'next/router';
+
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { UserProvider, useUser } from './UserContext';
-import Link from 'next/link';
+import  {useAuth } from './UserContext';
 
 export default function FormLogin() {
 
+  //const { state, dispatch } = useUser();
+  const { setUser, login , state} = useAuth();
 
-  const { state, dispatch } = useUser();
 
+
+ 
   const handleUsernameChange = (e) => {
     dispatch({ type: 'SET_USERNAME', payload: e });
   };
@@ -25,7 +28,7 @@ export default function FormLogin() {
   };
 
 
-  const {setUser}  = useUser();
+  //const {setUser}  = useUser();
   
 
     const [usuario, setUsuario] = useState('');
@@ -57,7 +60,8 @@ export default function FormLogin() {
 
 
 
-       let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/usuarios/validarUser`;
+      //let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/usuarios/validarUser`;
+      let apiUrl = `http://localhost:8083/apiPedidosMps/v1/usuarios/validarUser`;
 
       const usuarioSt= `${usuario}`;
 
@@ -65,8 +69,13 @@ export default function FormLogin() {
          try {
            const validacion = { usuario: usuario, password: password }
            const response = await axios.post(apiUrl, validacion);
+
            sessionStorage.setItem('usernameMPS', usuarioSt);
            sessionStorage.setItem('isLoggedIn', 'true');
+           await login(validacion.usuario, validacion.password);
+
+           const { username } = state;
+           //state="prueba"
 
            Swal.fire({
              title: 'Validación exitosa...',
@@ -95,22 +104,16 @@ export default function FormLogin() {
              console.log("Código de estado:", error.response.status); 
              
             
-             Swal.fire('Error', 'Sin credenciales validas: ');
+             Swal.fire('Error', 'Sin credenciales validas : '+responseData);
            } else {
              console.log("Error sin respuesta del servidor:", error.message);
-        
            }
          } finally {
-          
+        
          }
-      
-   
        
      };
 
-
-
-     
 
   return (
 
@@ -123,14 +126,15 @@ export default function FormLogin() {
 <h1   >MPS Control de pedidos </h1>
 
 
-<h2>Login   </h2>
+
 
 </div>
 
 
   <form id="login-form" 
   className={` ${styles.login} `}
-  method="POST" action="http://192.190.42.51:8083/apiPedidosMps/v1/usuarios/validarUser">
+  //method="POST" action="http://192.190.42.51:8083/apiPedidosMps/v1/usuarios/validarUser">
+  method="POST" action="http://localhost:8083/apiPedidosMps/v1/usuarios/validarUser">
     <div className="">
       <label htmlFor="usuario" className="form-label">
         Usuario <span className="text-danger">*</span>
@@ -178,32 +182,20 @@ export default function FormLogin() {
         </label>
       </div>
     </div>
-
     <button
-    
-    type="button"
+        type="button"
     onClick={validacionLogin}
-
 
     className="btn w40- mt-4 mb-3 btn-primary"
     >
       Ingresar
     </button>
-
     <ul>
-
  
 </ul>
-
   </form>
-
-
-
 
 </div>
   
-
-
-
   );
 };

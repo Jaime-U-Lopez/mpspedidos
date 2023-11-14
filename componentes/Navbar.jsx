@@ -14,9 +14,8 @@ export default function NavbarBotones() {
 
 
 
-
   const [datoUser, setDatoUser] = useState();
-
+  const [Autorizado, setAutorizado] = useState();
 
   const usernameMPS = 'usernameMPS';
 
@@ -27,13 +26,12 @@ export default function NavbarBotones() {
       sessionStorage.setItem('usernameMPS2', 'defaultValue');
 
       var datoUserDefaul = 'defaultValue';
-      //setDatoUser(datoUserDefaul);
     
     }
     var dato= sessionStorage.getItem('usernameMPS');
 
 validacionRol()
-setDatoUser(dato)
+
   }, []);
 
 
@@ -41,6 +39,7 @@ const cerrarSeccion = ()=>{
 
   const usernameMPS = 'usernameMPS';
   sessionStorage.removeItem(usernameMPS);
+  sessionStorage.removeItem('qwqetd');
 
 }
 
@@ -50,18 +49,19 @@ const validacionRol = async () => {
 
 
   try {
-    const response = await axios.get(`http://192.190.42.51:8083/apiPedidosMps/v1/usuarios/usuario/${nombre}`);
+    //const response = await axios.get(`http://192.190.42.51:8083/apiPedidosMps/v1/usuarios/usuario/${nombre}`);
     
-    //const response = await axios.get(`http://localhost:8083/apiPedidosMps/v1/usuarios/usuario/${nombre}`);
+    const response = await axios.get(`http://localhost:8083/apiPedidosMps/v1/usuarios/usuario/${nombre}`);
     const info = response.data;
 
-
+    setDatoUser(info.nombreUsuario)
     if(info.rol==="Cartera") {
       setAutorizado(false)
+
     }
     var nombreUsu= info.nombreUsuario
    
-    console.log(nombreUsu)
+   
   } catch (error) {
     console.error(error);
   }

@@ -8,21 +8,46 @@ const UserContext = createContext();
 
 export function UserProvider({ children }) {
 
+  const [user, setUser] = useState(null);
+  const [user2, setUser2] = useState();
+  const [state, dispatch] = useReducer(userReducer, { username: ""});
+  
+  const login = async (username, password) => {
+  
+        if (username) {
+
+          sessionStorage.setItem('qwqetd', "erdfy"); 
 
 
-  const [state, dispatch] = useReducer(userReducer, { username: '' });
+          dispatch({ type: 'SET_USERNAME', payload: { username } });
 
+    } else {
+      throw new Error('Credenciales inválidas');
+    }
+
+  };
+  const logout = () => {
+
+    setUser(null);
+  };
+  
  
 
+
+
   return (
-    <UserContext.Provider value={{ state, dispatch }}>
+    <UserContext.Provider value={{state, dispatch , user, setUser, login}}>
    {children}
     </UserContext.Provider>
   );
 }
 
-export function useUser() {
-  return useContext(UserContext);
+export function useAuth() {
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error('useAuth debe ser usado dentro de un UserProvider');
+  }
+  return context;
 }
 
 function userReducer(state, action) {
