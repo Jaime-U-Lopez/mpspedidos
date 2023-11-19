@@ -9,8 +9,7 @@ export default function NavbarBotones() {
   return (  
 
 
-    <div className="mb-3 mb-md-0">© <a href="#" >MPS</a> - Todos los
-    Derechos Reservados
+    <div className="mb-3 mb-md-0">© <a href="#" >MPS</a> - Creado por Teo Soluciones Para MPS 
     
     </div>
 

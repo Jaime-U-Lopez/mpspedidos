@@ -29,7 +29,8 @@ export default function FormAdmonEvento({ onEventCreate }) {
   const handleSubmitGet = async (e) => {
 
    
-    let apiUrl = 'http://localhost:8083/apiPedidosMps/v1/eventos/1';
+    //let apiUrl = 'http://localhost:8083/apiPedidosMps/v1/eventos/1';
+    let apiUrl = 'http://192.190.42.51:8083/apiPedidosMps/v1/eventos/1';
    
     try {
       const response = await axios.get(apiUrl);
@@ -63,8 +64,8 @@ export default function FormAdmonEvento({ onEventCreate }) {
 
 
   const handleSubmitPost = async () => {
-    // let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/eventos/`;
-    let apiUrl = `http://localhost:8083/apiPedidosMps/v1/eventos/`;
+     let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/eventos/`;
+    //let apiUrl = `http://localhost:8083/apiPedidosMps/v1/eventos/`;
 
     const evento = { id: 1, nombreEvento: eventName };
 

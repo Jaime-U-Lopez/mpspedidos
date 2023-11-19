@@ -45,9 +45,9 @@ const consultaPersonalizada = async () => {
 
   try {
     
-   // const response = await axios.get(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/consulta/valor/{valor}?valor=${formData.valorConsulta}`);
+    const response = await axios.get(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/consulta/valor/{valor}?valor=${formData.valorConsulta}`);
     
-    const response = await axios.get(`http://localhost:8083/apiPedidosMps/v1/pedidos/consulta/valor/{valor}?valor=${formData.valorConsulta}`);
+   // const response = await axios.get(`http://localhost:8083/apiPedidosMps/v1/pedidos/consulta/valor/{valor}?valor=${formData.valorConsulta}`);
       const info = response.data;
 
       setDataConsulta(info);

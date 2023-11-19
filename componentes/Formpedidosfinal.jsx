@@ -89,16 +89,16 @@ setDatoUser(dato)
 
 
 
-const mostraCliente=()=>{
+const mostraCliente= async ()=>{
 
   axios
-  .get(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`)
- // .get(`http://localhost:8083/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`)
+  //.get(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`)
+  .get(`http://localhost:8083/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`)
   .then((response2) => {
     const dataFromApi = response2.data;
     setDataInicial(dataFromApi)
 
-
+console.log(dataFromApi);
    seleccionarPedido(dataFromApi)
    totales(dataFromApi)
    })
@@ -484,8 +484,6 @@ const cancelarPedido = async()=>{
   return (
     <Layout>  
 
-  
-
     <div className={` ${styles.FormPedidos} `}    >
 
       <div className={styles.ajusteCarrito} >
@@ -803,7 +801,7 @@ const cancelarPedido = async()=>{
           </div>
   
         <ul>
-      
+            
 
         <li>
         <div style={{ pointerEvents: confirmados || formData.estado === "Confirmado" || formData.estado=="aprobado" || formData.estado=="cancelado" ? "none" : "auto" }}>
@@ -840,19 +838,13 @@ const cancelarPedido = async()=>{
             onClick={cancelarPedido}
 
       >Eliminar Pedido</button>
-
-      
        }
 
 
-<Link href="/pedidos/buscarCliente"
-   className={styles.linkCancelarPedido} >Cancelar  </Link>:<p></p>
- 
+      <Link href="/pedidos/buscarCliente"
+        className={styles.linkCancelarPedido} >Cancelar  </Link>:<p></p>
 
-      
-     
-
-            </li>
+        </li>
         </ul>
 
       </form>
@@ -888,8 +880,8 @@ const cancelarPedido = async()=>{
             <th scope="col">Marca </th>
             <th scope="col" >Unid </th>
             <th scope="col" >Precio Unit   </th>
-            <th scope="col" >Neto a Pagar PDN  </th>
-            <th scope="col" >Valor Min COP   </th>
+            <th scope="col" >Neto a Pagar PDN </th>
+            <th scope="col" >Valor Min COP </th>
             <th scope="col" >Valor Min USD </th>
             <th scope="col" >Iva   </th>
             <th scope="col" > Carrito </th>
@@ -919,7 +911,7 @@ const cancelarPedido = async()=>{
 
                 <td className={ styles.alineacionValoresDere} >   {formatNumberWithCurrency(item.valorUnitario)} </td>
                 <td className={ styles.alineacionValoresDere} >{formatNumberWithCurrency( item.valorNetoPorProd)}</td>
-                <td className={ styles.alineacionValoresDere} >   {  item.preciominimocop} </td>
+                <td className={ styles.alineacionValoresDere} >   {formatNumberWithCurrency(getNumberWithoutCurrency(item.preciominimocop))} </td>
                 <td className={ styles.alineacionValoresDere} >   {item.preciominimousd} </td>
                 <td className={ styles.alineacionValoresDere} >   {formatNumberWithCurrency(item.iva) } </td>
                
@@ -933,8 +925,7 @@ const cancelarPedido = async()=>{
                
 
                     disabled={ bloqueClick  || formData.estado=="Confirmado"|| formData.estado=="aprobado" || formData.estado=="cancelado"? true :false  } 
-       
-             
+          
                     >
                     {imagenBasuraDelete}
                
@@ -953,14 +944,8 @@ const cancelarPedido = async()=>{
             ))}
           </tbody>
         )}
-
-
       </table>
-
-
     </div>
-
-        
     </Layout>
   );
 

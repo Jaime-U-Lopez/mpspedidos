@@ -49,25 +49,23 @@ export default function FormPedidosProductos({contadorPedidos}) {
   const [totalCantidades, setTotalCantidades] = useState([]); 
   const [controlInput, setControlInput] = useState(false)
   const [cantidadPedidoActuales, setCantidadPedidoActuales] = useState(0);
-  const [controEnvio, setControEnvio] = useState(false)
-  const [controlClik, setControlClik] = useState(false)
+  const [controEnvio, setControEnvio] = useState(true)
+  const [controlClik, setControlClik] = useState(true)
   const [actualizarProductos, setActualizarProductos] = useState(true)
   const [clientePed, setClientePed] = useState()
   const [clienteId, setClienteId] = useState()
   const [datoUser, setDatoUser] = useState()
-
-    
+  const [continueConteoProd, setContinueConteoProd] = useState(0);
+  
 
 
 
   useEffect(() => {
-
    extraerIdClienteSinPromesa(pathname)
-  
-
+   let apiUrl = `http://localhost:8083/apiPedidosMps/v1/productos/marcas/`;
+   //let apiUrl ='http://192.190.42.51:8083/apiPedidosMps/v1/productos/marcas/';
     axios
-      //.get('http://localhost:8083/apiPedidosMps/v1/productos/marcas/')
-      .get('http://192.190.42.51:8083/apiPedidosMps/v1/productos/marcas/')
+      .get(apiUrl)
       .then((response2) => {
         // Actualizar el estado con la lista de marcas recibida de la API
 
@@ -145,15 +143,13 @@ setDatoUser(dato)
 
 
 
-    if (cantidades[producto.id] > 0 && precioUnitario[producto.id] !== undefined && precioUnitario[producto.id] >= 0) {
-      
+    if (cantidades[producto.id] > 0 && precioUnitario[producto.id] !== undefined && precioUnitario[producto.id] >= 0) {      
       setCarrito([...carrito, producto]);
       setCarritoEnvio([...carritoEnvio, producto]);
 
       const cantidadesInput={ 
         id:cantidades.id,
        cantidad: cantidades.cantidad}
-      
       
        const precioUnitarioInput={
         id:precioUnitario.id,
@@ -169,7 +165,8 @@ setDatoUser(dato)
       const valorTotal=cantidadPedidoActuales+valor;
       
        setCantidadPedidoActuales(valorTotal)
-      
+       //setControlClik(false)
+       setContinueConteoProd(1);
             Swal.fire({
               icon: 'success',
               title: 'Producto agregado al carrito',
@@ -241,8 +238,8 @@ setDatoUser(dato)
     setError(false); // Reinicia el estado de error
 
    // let apiUrlPorNumuro=  'http://localhost:8083/apiPedidosMps/v1/productos/numeroParte/?numeroParte=1100AS-128GB-'
-   let apiUrl = "http://192.190.42.51:8083/apiPedidosMps/v1/productos/";
-   //let apiUrl = "http://localhost:8083/apiPedidosMps/v1/productos/";
+   //let apiUrl = "http://192.190.42.51:8083/apiPedidosMps/v1/productos/";
+   let apiUrl = "http://localhost:8083/apiPedidosMps/v1/productos/";
 
     if (formData.marca !== "no" && formData.numerodeparte == '0' || formData.numerodeparte == '' || formData.numerodeparte == null) {
       apiUrl += `marcas/${formData.marca}`;
@@ -302,17 +299,22 @@ setDatoUser(dato)
       }   
    
     } finally {
-      setIsLoading(false); // Establece isLoading en false después de la carga
+      setIsLoading(false); 
     }
 
 
-  
-
-
-
-
-
   };
+
+
+
+
+  const sinSeleccionProductos = async () => {
+    Swal.fire('Error', 'Debe seleccionar como minimo un producto.', 'error');
+
+  }
+
+
+
 
   const handleSubmitPost = async () => {
 
@@ -327,8 +329,8 @@ setDatoUser(dato)
 
     //enviamos pedido
 
-   // let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
-     let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/`;
+    //let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
+    let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/`;
 
     let numRetries = 0;
     let success = true;
@@ -340,29 +342,31 @@ setDatoUser(dato)
       const cliente = await extraerIdCliente(url);
       setClientePed(cliente)
 
-
-
       var codigo=codigoInternot;
       setCodigoInternoTraspaso(codigo);
    
-
       const codigoAleatorio = generarCodigoAleatorio(4);
       const codigoInternote = `${clienteId}${codigoAleatorio}`;
-      setCodigoInterno(codigoInternote);
-  
+    
+      if(controlClik){
+        setCodigoInterno(codigoInternote);
+      }
+        
+      setControlClik(false)
+   
       try {
 
         const pedidoInicial = { idCliente: cliente, listaProductos: ListaProductosMapeados, estado: "sinConfirmacion", codigoInterno:  codigoInterno,  correoAsesor : datoUser}
-
         const response = await axios.post(apiUrl, pedidoInicial);
-         dataInicial = response.data.message;
-
+        dataInicial = response.data.message;
+        console.log(pedidoInicial);
+        console.log(dataInicial);
 
         setActualizarProductos(true)
-        setControEnvio(true);
+        //setControEnvio(true);
       } catch (error) {
         console.error(error);
-
+        setControlClik(false)
         if (error.response) {
            const responseData = error.response.data.message;
       
@@ -380,20 +384,19 @@ setDatoUser(dato)
 
       }
    
-
     }else{
-
       Swal.fire('Error', 'Debe seleccionar como minimo un producto.', 'error');
     }
   };
-
-
  
   function continuarPedido() {
+    
 
-  
-    handleSubmitPost()
-    setControlClik(true)
+         
+    if(controlClik){
+      handleSubmitPost()
+    }
+    
   }
 
 
@@ -452,6 +455,7 @@ setDatoUser(dato)
 
 
     const extraerIdCliente = (url) => {
+      
       return new Promise((resolve, reject) => {
         const numeroMatch = url.match(/\/(\d+)$/);
         if (numeroMatch) {
@@ -471,8 +475,6 @@ setDatoUser(dato)
 
     const extraerIdClienteSinPromesa = (url) => {
       const numeroMatch = url.match(/\/(\d+)$/);
-
-    
       if (numeroMatch) {
         try {
           const numero = parseInt(numeroMatch[1]);
@@ -576,9 +578,7 @@ setDatoUser(dato)
     }
 
 
-
   //<<<<<<<<___________________________________>>>>>>>>>>>>>
-
 
   return (
 
@@ -638,57 +638,33 @@ setDatoUser(dato)
 </div>
         
 <ul>
-{controEnvio? (
-<li>
 
-  <button
-
-className={` ${styles.BtnProductos} `}
-        
-      disabled={ controlClik  ? true :false  } 
-      > 
-    <Link
+{continueConteoProd!=0? (
+       
+          <li>              
+          <Link className='success' 
+          href={`/pedidos/confirmarPedido/${encodeURIComponent(clienteId)}/${encodeURIComponent(codigoInterno)}`}
+          onClick={continuarPedido} 
+          >
+            
+            Continuar Pedido
+          </Link>
+</li> 
     
-    onClick={continuarPedido}
-    href={`/pedidos/confirmarPedido/${encodeURIComponent(clienteId)}/${encodeURIComponent(codigoInterno)}`}
-    scroll={false}
-    prefetch={false}
-  
-  >
-      Continuar Pedido</Link>
-
-      </button>
-         </li> 
       ):( 
         <li>
-
-<button
+       <Link className='success' href={`/pedidos/buscarProductos/${encodeURIComponent(clienteId)}`} scroll={false} prefetch={false}
       
-      
-      className={` ${styles.BtnProductos} `}
-      
-     
-      > 
-      <Link
-      onClick={continuarPedido}
-      
-        href={`/pedidos/buscarProductos/${encodeURIComponent(clienteId)}`} scroll={false} prefetch={false}>   Continuar Pedido
-        
-        
-        </Link>
-        </button>
-       
-            </li> 
-
-
-
-
+       onClick={ sinSeleccionProductos} 
+       >Continuar Pedido</Link>
+  
+      </li> 
       )}
-          <li >
+
+         <li >
             <Link href="/home" className={styles.linkCancelar} >Cancelar Pedido</Link>
           </li>
-
- </ul>
+     </ul>
 
       </form>
 

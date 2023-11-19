@@ -58,9 +58,11 @@ export default function FormAdmonPlanos({formulario}) {
           },
         });
 
+        
 
+//        const response = await axios.post(`http://localhost:8083/apiPedidosMps/v1/${endpoint}/cargar`, formData, {
 
-        const response = await axios.post(`http://localhost:8083/apiPedidosMps/v1/${endpoint}/cargar`, formData, {
+        const response = await axios.post(`http://192.190.42.51:8083/apiPedidosMps/v1/${endpoint}/cargar`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
