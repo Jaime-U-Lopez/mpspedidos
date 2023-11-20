@@ -55,9 +55,8 @@ const dataToShow = data.slice(startIndex, endIndex);
 
 
 
-
-
-
+  //let url='http://localhost:8083/apiPedidosMps/v1/productos/marcas/';
+  let url='http://192.190.42.51:8083/apiPedidosMps/v1/productos/marcas/';
 
 
   useEffect(() => {
@@ -66,8 +65,7 @@ const dataToShow = data.slice(startIndex, endIndex);
     extraerIdCodigoInternoCancelar(pathname)
     extraerIdCodigoInternoId(pathname)
     axios
-      .get('http://192.190.42.51:8083/apiPedidosMps/v1/productos/marcas/')
-     // .get('http://localhost:8083/apiPedidosMps/v1/productos/marcas/')
+      .get(url)
       .then((response2) => {
         // Actualizar el estado con la lista de marcas recibida de la API
 

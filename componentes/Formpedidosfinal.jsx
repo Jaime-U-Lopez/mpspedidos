@@ -87,13 +87,15 @@ setDatoUser(dato)
  
   }, [cliente,clienteId]); // Este efecto se ejecuta una vez al cargar el componente para obtener la lista de marcas
 
+ //let url2=`http://localhost:8083/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`
 
+ let url2=`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`
+ 
 
 const mostraCliente= async ()=>{
 
   axios
-  //.get(`http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`)
-  .get(`http://localhost:8083/apiPedidosMps/v1/pedidos/orden/{orden}?orden=${cliente}`)
+  .get(url2)
   .then((response2) => {
     const dataFromApi = response2.data;
     setDataInicial(dataFromApi)

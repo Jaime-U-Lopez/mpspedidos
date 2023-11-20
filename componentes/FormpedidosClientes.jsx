@@ -57,8 +57,8 @@ const dataToShow = data.slice(startIndex, endIndex);
     setIsLoading(true); // Establece isLoading en true durante la carga
     setError(false); // Reinicia el estado de error
 
-    let apiUrl = `http://localhost:8083/apiPedidosMps/v1/clientes/`;
-    //let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/clientes/`;
+    //let apiUrl = `http://localhost:8083/apiPedidosMps/v1/clientes/`;
+    let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/clientes/`;
 
     if (formData.nit >= 0 && formData.nombre == '') {
       apiUrl += `nit/?nit=${formData.nit}`;

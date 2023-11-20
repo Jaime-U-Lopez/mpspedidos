@@ -62,8 +62,8 @@ export default function FormPedidosProductos({contadorPedidos}) {
 
   useEffect(() => {
    extraerIdClienteSinPromesa(pathname)
-   let apiUrl = `http://localhost:8083/apiPedidosMps/v1/productos/marcas/`;
-   //let apiUrl ='http://192.190.42.51:8083/apiPedidosMps/v1/productos/marcas/';
+   //let apiUrl = `http://localhost:8083/apiPedidosMps/v1/productos/marcas/`;
+   let apiUrl ='http://192.190.42.51:8083/apiPedidosMps/v1/productos/marcas/';
     axios
       .get(apiUrl)
       .then((response2) => {
@@ -238,8 +238,8 @@ setDatoUser(dato)
     setError(false); // Reinicia el estado de error
 
    // let apiUrlPorNumuro=  'http://localhost:8083/apiPedidosMps/v1/productos/numeroParte/?numeroParte=1100AS-128GB-'
-   //let apiUrl = "http://192.190.42.51:8083/apiPedidosMps/v1/productos/";
-   let apiUrl = "http://localhost:8083/apiPedidosMps/v1/productos/";
+   let apiUrl = "http://192.190.42.51:8083/apiPedidosMps/v1/productos/";
+   //let apiUrl = "http://localhost:8083/apiPedidosMps/v1/productos/";
 
     if (formData.marca !== "no" && formData.numerodeparte == '0' || formData.numerodeparte == '' || formData.numerodeparte == null) {
       apiUrl += `marcas/${formData.marca}`;
@@ -329,8 +329,8 @@ setDatoUser(dato)
 
     //enviamos pedido
 
-    //let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
-    let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/`;
+    let apiUrl = `http://192.190.42.51:8083/apiPedidosMps/v1/pedidos/`;
+    //let apiUrl = `http://localhost:8083/apiPedidosMps/v1/pedidos/`;
 
     let numRetries = 0;
     let success = true;
@@ -348,11 +348,7 @@ setDatoUser(dato)
       const codigoAleatorio = generarCodigoAleatorio(4);
       const codigoInternote = `${clienteId}${codigoAleatorio}`;
     
-      if(controlClik){
-        setCodigoInterno(codigoInternote);
-      }
-        
-      setControlClik(false)
+     
    
       try {
 
@@ -362,11 +358,18 @@ setDatoUser(dato)
         console.log(pedidoInicial);
         console.log(dataInicial);
 
+
+        if(controlClik){
+          setCodigoInterno(codigoInternote);
+        }
+          
+        setControlClik(false)
+
         setActualizarProductos(true)
         //setControEnvio(true);
       } catch (error) {
         console.error(error);
-        setControlClik(false)
+        setControlClik(true)
         if (error.response) {
            const responseData = error.response.data.message;
       
@@ -504,8 +507,6 @@ setDatoUser(dato)
       
       return formattedNumber;
     }
-
-
 
 
 
